@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -12,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     public Transform cameraTransform;
     private CharacterController controller;
     public Animator animator;
+    public TMP_InputField campoTexto;
+    bool mouseTravado = true;
 
     float rotacaoX = 0f;
 
@@ -20,10 +23,22 @@ public class PlayerMovement : MonoBehaviour
     controller = GetComponent<CharacterController>();
 
     Cursor.lockState = CursorLockMode.Locked;
+    Cursor.visible = false;
 }
 
     void Update()
     {
+        if (!mouseTravado)
+{
+    if (Input.GetKeyDown(KeyCode.V))
+    {
+        mouseTravado = true;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+
+    return;
+}
         // Mouse
         float mouseX = Input.GetAxis("Mouse X") * sensibilidadeMouse * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sensibilidadeMouse * Time.deltaTime;
@@ -48,5 +63,24 @@ public class PlayerMovement : MonoBehaviour
                Input.GetAxisRaw("Vertical") != 0;
 
 animator.SetBool("isWalking", andando);
+
+if (Input.GetKeyDown(KeyCode.V))
+{
+    mouseTravado = !mouseTravado;
+
+    if (mouseTravado)
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    else
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        campoTexto.ActivateInputField();
+        campoTexto.Select();
+    }
+}
     }
 }
