@@ -100,10 +100,10 @@ TextureImporter:
       name: Captura de tela 2026-07-12 005616_0
       rect:
         serializedVersion: 2
-        x: 367
-        y: 149
-        width: 280
-        height: 188
+        x: 0
+        y: 0
+        width: 647
+        height: 337
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}

@@ -4,7 +4,6 @@ using TMPro;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
 {
-
     [Header("Movimento")]
     public float velocidade = 5f;
 
@@ -20,19 +19,35 @@ public class PlayerMovement : MonoBehaviour
     public TMP_InputField campoTexto;
     bool mouseTravado = true;
 
+    private PcInteragir ultimoPC;
+
+    // --- controle de uso do computador ---
+    public bool usandoComputador = false;
+    private ComputadorInteract computadorEmUso;
+
     float rotacaoX = 0f;
     float velocidadeY = 0f;
 
     void Start()
     {
         controller = GetComponent<CharacterController>();
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
+        // Enquanto estiver usando o computador, só escuta a tecla de sair
+        if (usandoComputador)
+        {
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (computadorEmUso != null)
+                    computadorEmUso.SairComputador(this);
+            }
+            return;
+        }
+
         if (!mouseTravado)
         {
             if (Input.GetKeyDown(KeyCode.V))
@@ -41,9 +56,9 @@ public class PlayerMovement : MonoBehaviour
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-
             return;
         }
+
         // Mouse
         float mouseX = Input.GetAxis("Mouse X") * sensibilidadeMouse * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * sensibilidadeMouse * Time.deltaTime;
@@ -80,8 +95,61 @@ public class PlayerMovement : MonoBehaviour
         controller.Move(movimento * Time.deltaTime);
 
         bool andando = horizontal != 0 || vertical != 0;
-
         animator.SetBool("isWalking", andando);
+
+        // Interação com o computador (raycast)
+        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        {
+            PcInteragir pc = hit.collider.GetComponentInParent<PcInteragir>();
+
+            if (pc != null)
+            {
+                if (ultimoPC != pc)
+                {
+                    if (ultimoPC != null)
+                        ultimoPC.RemoverDestaque();
+
+                    pc.Destacar();
+                    ultimoPC = pc;
+                }
+
+                if (Input.GetKeyDown(KeyCode.E))
+                {
+                    Debug.Log("Tecla E pressionada, objeto acertado: " + hit.collider.gameObject.name);
+
+                    ComputadorInteract comp = hit.collider.GetComponentInParent<ComputadorInteract>();
+                    if (comp != null)
+                    {
+                        Debug.Log("ComputadorInteract encontrado em: " + comp.gameObject.name);
+                        computadorEmUso = comp;
+                        comp.UsarComputador(this);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Nenhum ComputadorInteract encontrado no objeto ou nos pais de: " + hit.collider.gameObject.name);
+                    }
+                }
+            }
+            else
+            {
+                if (ultimoPC != null)
+                {
+                    ultimoPC.RemoverDestaque();
+                    ultimoPC = null;
+                }
+            }
+        }
+        else
+        {
+            if (ultimoPC != null)
+            {
+                ultimoPC.RemoverDestaque();
+                ultimoPC = null;
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.V))
         {
