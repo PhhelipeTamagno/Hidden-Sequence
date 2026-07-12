@@ -21,6 +21,9 @@ public class PlayerMovement : MonoBehaviour
 
     private PcInteragir ultimoPC;
 
+    [Header("UI de interação")]
+    public PromptInteracaoUI promptInteracao; // arraste o painel com o script PromptInteracaoUI
+
     // --- controle de uso do computador ---
     public bool usandoComputador = false;
     private ComputadorInteract computadorEmUso;
@@ -114,6 +117,9 @@ public class PlayerMovement : MonoBehaviour
 
                     pc.Destacar();
                     ultimoPC = pc;
+
+                    if (promptInteracao != null)
+                        promptInteracao.Mostrar();
                 }
 
                 if (Input.GetKeyDown(KeyCode.E))
@@ -126,6 +132,9 @@ public class PlayerMovement : MonoBehaviour
                         Debug.Log("ComputadorInteract encontrado em: " + comp.gameObject.name);
                         computadorEmUso = comp;
                         comp.UsarComputador(this);
+
+                        if (promptInteracao != null)
+                            promptInteracao.Esconder();
                     }
                     else
                     {
@@ -139,6 +148,9 @@ public class PlayerMovement : MonoBehaviour
                 {
                     ultimoPC.RemoverDestaque();
                     ultimoPC = null;
+
+                    if (promptInteracao != null)
+                        promptInteracao.Esconder();
                 }
             }
         }
@@ -148,6 +160,9 @@ public class PlayerMovement : MonoBehaviour
             {
                 ultimoPC.RemoverDestaque();
                 ultimoPC = null;
+
+                if (promptInteracao != null)
+                    promptInteracao.Esconder();
             }
         }
 

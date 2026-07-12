@@ -7,6 +7,10 @@ public class ComputadorInteract : MonoBehaviour
     public Transform cameraPC;
     public float velocidadeZoom = 2f;
 
+    [Header("Mensagem ao abrir o pc")]
+    public IntroUI introUI; // arraste o objeto que tem o script IntroUI
+    public string mensagemAoAbrir = "Olhe o seu email";
+
     private Vector3 posOriginal;
     private Quaternion rotOriginal;
     private Transform camTransform;
@@ -57,6 +61,9 @@ public class ComputadorInteract : MonoBehaviour
 
         if (telaPC != null)
             telaPC.SetActive(true);
+
+        if (introUI != null)
+            introUI.MostrarMensagem(mensagemAoAbrir);
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
