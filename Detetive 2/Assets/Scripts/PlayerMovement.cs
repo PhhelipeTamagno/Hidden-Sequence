@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     public float gravidade = -9.81f;
     public float velocidadeQueda = -2f; // valor pequeno pra manter "grudado" no chão
 
+    [Header("Pulo")]
+    public float forcaPulo = 5f;
+
     [Header("Mouse")]
     public float sensibilidadeMouse = 100f;
     public Transform cameraTransform;
@@ -87,6 +90,11 @@ public class PlayerMovement : MonoBehaviour
         {
             if (velocidadeY < 0)
                 velocidadeY = velocidadeQueda;
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                velocidadeY = forcaPulo;
+            }
         }
         else
         {

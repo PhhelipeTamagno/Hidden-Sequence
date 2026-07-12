@@ -2199,6 +2199,10 @@ PrefabInstance:
       value: 1.781
       objectReference: {fileID: 0}
     - target: {fileID: 5773442340393182167, guid: c429cb8c037bc3b40ab1fe6825ff164f, type: 3}
+      propertyPath: forcaPulo
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5773442340393182167, guid: c429cb8c037bc3b40ab1fe6825ff164f, type: 3}
       propertyPath: campoTexto
       value: 
       objectReference: {fileID: 1155430244}
