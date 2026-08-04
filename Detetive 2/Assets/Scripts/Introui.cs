@@ -11,23 +11,22 @@ public class IntroUI : MonoBehaviour
     [Header("Mensagem popup")]
     public RectTransform mensagemPC;    // arraste o RectTransform do painel/texto da mensagem
     public float duracaoAnimacaoPopup = 0.6f;
-    public float atrasoAposFade = 0.3f; // espera um pouco depois do fade antes de mostrar a mensagem
 
     [Header("Texto (efeito máquina de escrever)")]
     public TMP_Text textoMensagem;              // arraste o componente TMP do texto
-    [TextArea] public string mensagemInicial = "Cheque o computador";
     public float velocidadeEscrita = 0.04f;     // segundos entre cada letra
 
     private Vector2 posicaoFinalPopup;
     private Vector2 posicaoInicialPopup;
     private Coroutine sequenciaAtual;
+    private bool primeiraExibicao = true; // só anima na primeira vez que a mensagem aparece
 
     void Start()
     {
         if (mensagemPC != null)
         {
             posicaoFinalPopup = mensagemPC.anchoredPosition;
-            posicaoInicialPopup = posicaoFinalPopup + new Vector2(0f, 150f); // começa 150px acima
+            posicaoInicialPopup = posicaoFinalPopup + new Vector2(0f, 250f); // começa 150px acima
             mensagemPC.anchoredPosition = posicaoInicialPopup;
 
             CanvasGroup cgMsg = mensagemPC.GetComponent<CanvasGroup>();
@@ -58,10 +57,6 @@ public class IntroUI : MonoBehaviour
             }
             fadeCanvasGroup.alpha = 0f;
         }
-
-        yield return new WaitForSeconds(atrasoAposFade);
-
-        yield return StartCoroutine(MostrarPopupComTexto(mensagemInicial));
     }
 
     // Chame esse método de qualquer script (ex: ComputadorInteract) pra
@@ -71,7 +66,32 @@ public class IntroUI : MonoBehaviour
         if (sequenciaAtual != null)
             StopCoroutine(sequenciaAtual);
 
-        sequenciaAtual = StartCoroutine(MostrarPopupComTexto(texto));
+        if (primeiraExibicao)
+        {
+            // primeira vez: roda a animação de slide + máquina de escrever
+            primeiraExibicao = false;
+            sequenciaAtual = StartCoroutine(MostrarPopupComTexto(texto));
+        }
+        else
+        {
+            // próximas vezes: mostra direto, sem resetar/reanimar
+            MostrarInstantaneo(texto);
+        }
+    }
+
+    // Mostra o popup já na posição final, com o texto completo, sem animação.
+    void MostrarInstantaneo(string texto)
+    {
+        if (mensagemPC != null)
+        {
+            mensagemPC.anchoredPosition = posicaoFinalPopup;
+            CanvasGroup cgMsg = mensagemPC.GetComponent<CanvasGroup>();
+            if (cgMsg != null)
+                cgMsg.alpha = 1f;
+        }
+
+        if (textoMensagem != null)
+            textoMensagem.text = texto;
     }
 
     IEnumerator MostrarPopupComTexto(string texto)
