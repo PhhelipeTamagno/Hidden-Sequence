@@ -181,7 +181,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 7f2d3e1714053b248b0a0230cb36027f, type: 3}
       propertyPath: m_Name
-      value: 1344 Message Board 02
+      value: Quadro
       objectReference: {fileID: 0}
     - target: {fileID: 6377559830241279323, guid: 7f2d3e1714053b248b0a0230cb36027f, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -412,7 +412,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: dc24a96beddcc6a489563d9e0afcc803, type: 3}
       propertyPath: m_Name
-      value: Chair_4 (1)
+      value: Cadeira
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -837,7 +837,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 7566c9333089b3e43a0daf433fe5ef46, type: 2}
     - target: {fileID: 919132149155446097, guid: 64041bfabe2e7844196bcb2bb322ec4e, type: 3}
       propertyPath: m_Name
-      value: CHAHIN_COFFEE_CUP
+      value: "Caf\xE9"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2137,7 +2137,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: dc24a96beddcc6a489563d9e0afcc803, type: 3}
       propertyPath: m_Name
-      value: Chair_4
+      value: Cadeira
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3138,7 +3138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 2132b6ffa8afa304a9f42cb902a9dfb7, type: 3}
       propertyPath: m_Name
-      value: lightbulb
+      value: Lampada
       objectReference: {fileID: 0}
     - target: {fileID: 5100068591777345685, guid: 2132b6ffa8afa304a9f42cb902a9dfb7, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
@@ -3628,7 +3628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: f65513e8d7a8e9f419a2160653ecdfcf, type: 3}
       propertyPath: m_Name
-      value: FileCabinet
+      value: Armario de Arquivos
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4336,7 +4336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 146eb4e7255b6ee4e9325518cff8676b, type: 3}
       propertyPath: m_Name
-      value: Npc
+      value: Suspeito
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4418,7 +4418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 0d60518363327cc4fa26f6e578451041, type: 3}
       propertyPath: m_Name
-      value: 517 Garbage Bin
+      value: Lixeira
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
