@@ -6,6 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/cenas/Menu.unity
+    guid: e154594b72ecd7c4da39ac6aeef03d54
+  - enabled: 1
+    path: Assets/cenas/Inicio.unity
+    guid: 23b2f1b8ba795164696bb5ec32a04b3c
+  - enabled: 1
+    path: Assets/cenas/Delegacia.unity
+    guid: 6f5fa2457d60aa243ae1be64824010b3
+  - enabled: 1
     path: Assets/cenas/CenaDoCrime.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
