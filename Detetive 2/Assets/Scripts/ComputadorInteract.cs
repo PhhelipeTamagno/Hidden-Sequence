@@ -15,6 +15,11 @@ public class ComputadorInteract : MonoBehaviour
     public CanvasGroup fadeCanvas;
     public float tempoFade = 0.5f;
 
+    [Header("Sons")]
+    public AudioSource audioSource;
+    public AudioClip somEntrar;
+    public AudioClip somSair;
+
     [Header("Mensagem")]
     public IntroUI introUI;
     public string mensagemAoAbrir = "Olhe o seu email";
@@ -25,7 +30,6 @@ public class ComputadorInteract : MonoBehaviour
         public GameObject icone;
         public GameObject tela;
     }
-
     public IconeTela[] telasPC;
     public GameObject[] semprevisiveis;
 
@@ -44,16 +48,17 @@ public class ComputadorInteract : MonoBehaviour
 
     IEnumerator Abrir(PlayerMovement player)
     {
+        if (audioSource != null && somEntrar != null)
+            audioSource.PlayOneShot(somEntrar);
+
         yield return Fade(0, 1);
 
         telaPC.SetActive(true);
-
         foreach (var t in telasPC)
         {
             if (t.tela)
                 t.tela.SetActive(false);
         }
-
         foreach (var o in semprevisiveis)
         {
             if (o)
@@ -66,7 +71,6 @@ public class ComputadorInteract : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
         dentroDoComputador = true;
 
         if (introUI)
@@ -77,6 +81,9 @@ public class ComputadorInteract : MonoBehaviour
 
     IEnumerator Fechar(PlayerMovement player)
     {
+        if (audioSource != null && somSair != null)
+            audioSource.PlayOneShot(somSair);
+
         yield return Fade(0, 1);
 
         telaPC.SetActive(false);
@@ -87,7 +94,6 @@ public class ComputadorInteract : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
         dentroDoComputador = false;
         player.usandoComputador = false;
 
@@ -97,14 +103,12 @@ public class ComputadorInteract : MonoBehaviour
     IEnumerator Fade(float a, float b)
     {
         float t = 0;
-
         while (t < tempoFade)
         {
             t += Time.deltaTime;
             fadeCanvas.alpha = Mathf.Lerp(a, b, t / tempoFade);
             yield return null;
         }
-
         fadeCanvas.alpha = b;
     }
 }
