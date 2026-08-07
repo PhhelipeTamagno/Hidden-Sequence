@@ -12,8 +12,14 @@ public class CenaDoCrimeIntro : MonoBehaviour
     public RectTransform popup;          // objeto do popup (canto superior direito)
     public CanvasGroup popupCanvasGroup; // pra fade do popup junto com a queda
     public TMP_Text textoPopup;
+
     [TextArea]
     public string mensagemPopup = "Entre no carro.";
+
+    [TextArea]
+    [Tooltip("Mensagem exibida quando o player entra no carro (chamada pelo CarroInteragir)")]
+    public string mensagemCenaDoCrime = "Vá até a cena do crime.";
+
     public float velocidadeEscrita = 0.03f;
     public float esperaAntesDoPopup = 0.3f;
 
@@ -22,6 +28,7 @@ public class CenaDoCrimeIntro : MonoBehaviour
     public float distanciaQueda = 100f; // quanto acima da posição final ele começa
 
     private Vector2 posicaoFinalPopup;
+    private Coroutine popupRoutine;
 
     void Start()
     {
@@ -38,11 +45,55 @@ public class CenaDoCrimeIntro : MonoBehaviour
     IEnumerator IntroCena()
     {
         yield return StartCoroutine(FadeParaTransparente());
-
         yield return new WaitForSeconds(esperaAntesDoPopup);
+        MostrarPopup(mensagemPopup);
+    }
+
+    // ---- Chamado de fora (ex: CarroInteragir.EntrarCarro) ----
+    public void MostrarPopupCenaDoCrime()
+    {
+        MostrarPopup(mensagemCenaDoCrime);
+    }
+
+    // Método genérico: pode ser chamado com qualquer texto, de qualquer script
+    public void MostrarPopup(string mensagem)
+    {
+        if (popupRoutine != null)
+            StopCoroutine(popupRoutine);
+
+        popupRoutine = StartCoroutine(MostrarPopupRotina(mensagem));
+    }
+
+    IEnumerator MostrarPopupRotina(string mensagem)
+    {
+        // Se já tiver um popup visível (de uma mensagem anterior), esconde ele primeiro
+        if (popup.gameObject.activeSelf)
+            yield return StartCoroutine(EsconderPopup());
 
         yield return StartCoroutine(AnimarPopup());
-        yield return StartCoroutine(EscreverTexto(textoPopup, mensagemPopup));
+        yield return StartCoroutine(EscreverTexto(textoPopup, mensagem));
+    }
+
+    IEnumerator EsconderPopup()
+    {
+        float tempo = 0f;
+        float alphaInicial = popupCanvasGroup != null ? popupCanvasGroup.alpha : 1f;
+
+        while (tempo < duracaoAnimacaoPopup)
+        {
+            tempo += Time.deltaTime;
+            float t = Mathf.Clamp01(tempo / duracaoAnimacaoPopup);
+
+            if (popupCanvasGroup != null)
+                popupCanvasGroup.alpha = Mathf.Lerp(alphaInicial, 0f, t);
+
+            yield return null;
+        }
+
+        if (popupCanvasGroup != null)
+            popupCanvasGroup.alpha = 0f;
+
+        popup.gameObject.SetActive(false);
     }
 
     IEnumerator AnimarPopup()
@@ -71,7 +122,6 @@ public class CenaDoCrimeIntro : MonoBehaviour
         }
 
         popup.anchoredPosition = posicaoFinalPopup;
-
         if (popupCanvasGroup != null)
             popupCanvasGroup.alpha = 1f;
     }
