@@ -14,6 +14,20 @@ public class CarroInteragir : MonoBehaviour
     [Header("Câmera")]
     public Camera cameraCarro;
 
+    [Header("UI")]
+    [Tooltip("GameObject da mira (Image) que fica no Canvas")]
+    public GameObject mira;
+
+    [Header("Câmera do Carro - Controle com Mouse")]
+    public float sensibilidadeMouse = 3f;
+    public float distanciaCamera = 6f;
+    public float alturaCamera = 2f;
+    public float anguloMinimoVertical = -20f;
+    public float anguloMaximoVertical = 60f;
+
+    private float rotacaoHorizontal = 0f;
+    private float rotacaoVertical = 20f;
+
     private MaterialPropertyBlock propertyBlock;
     private bool destacado = false;
 
@@ -105,45 +119,64 @@ public class CarroInteragir : MonoBehaviour
         if (carroController != null)
             carroController.enabled = true;
 
+        if (mira != null)
+            mira.SetActive(false);
+
+        // Inicializa a rotação da câmera olhando na direção atual do carro,
+        // pra ela não "pular" pra um ângulo aleatório ao entrar
+        rotacaoHorizontal = transform.eulerAngles.y;
+        rotacaoVertical = 20f;
+
+        // Trava e esconde o cursor pra liberar o mouse pro controle da câmera
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         Debug.Log("Player entrou no carro.");
     }
 
     public void SairCarro()
-{
-    if (!playerDentro) return;
-    playerDentro = false;
-
-    // Reposiciona o player ao lado do carro, na posição atual dele
-    if (playerAtual != null)
     {
-        Vector3 posicaoSaida = transform.position + transform.right * 2.5f + Vector3.up * 0.2f;
-        playerAtual.transform.position = posicaoSaida;
+        if (!playerDentro) return;
+        playerDentro = false;
+
+        // Reposiciona o player ao lado do carro, na posição atual dele
+        if (playerAtual != null)
+        {
+            Vector3 posicaoSaida = transform.position + transform.right * 2.5f + Vector3.up * 0.2f;
+            playerAtual.transform.position = posicaoSaida;
+        }
+
+        SetVisibilidadePlayer(true);
+
+        if (playerMovementAtual != null)
+            playerMovementAtual.enabled = true;
+
+        if (playerInteracaoAtual != null)
+            playerInteracaoAtual.enabled = true;
+
+        if (cameraCarro != null)
+            cameraCarro.gameObject.SetActive(false);
+
+        if (cameraPlayerAtual != null)
+            cameraPlayerAtual.gameObject.SetActive(true);
+
+        if (carroController != null)
+            carroController.enabled = false;
+
+        if (mira != null)
+            mira.SetActive(true);
+
+        // Libera o cursor de novo pro modo a pé / menus
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
+        Debug.Log("Player saiu do carro.");
+
+        playerAtual = null;
+        playerMovementAtual = null;
+        playerInteracaoAtual = null;
+        cameraPlayerAtual = null;
     }
-
-    SetVisibilidadePlayer(true);
-
-    if (playerMovementAtual != null)
-        playerMovementAtual.enabled = true;
-
-    if (playerInteracaoAtual != null)
-        playerInteracaoAtual.enabled = true;
-
-    if (cameraCarro != null)
-        cameraCarro.gameObject.SetActive(false);
-
-    if (cameraPlayerAtual != null)
-        cameraPlayerAtual.gameObject.SetActive(true);
-
-    if (carroController != null)
-        carroController.enabled = false;
-
-    Debug.Log("Player saiu do carro.");
-
-    playerAtual = null;
-    playerMovementAtual = null;
-    playerInteracaoAtual = null;
-    cameraPlayerAtual = null;
-}
 
     void SetVisibilidadePlayer(bool visivel)
     {
@@ -162,5 +195,33 @@ public class CarroInteragir : MonoBehaviour
         {
             SairCarro();
         }
+    }
+
+    void LateUpdate()
+    {
+        // Atualiza a câmera depois de tudo se mover, evita tremedeira (jitter)
+        if (playerDentro && cameraCarro != null)
+        {
+            AtualizarCameraCarro();
+        }
+    }
+
+    void AtualizarCameraCarro()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * sensibilidadeMouse;
+        float mouseY = Input.GetAxis("Mouse Y") * sensibilidadeMouse;
+
+        rotacaoHorizontal += mouseX;
+        rotacaoVertical -= mouseY;
+        rotacaoVertical = Mathf.Clamp(rotacaoVertical, anguloMinimoVertical, anguloMaximoVertical);
+
+        Quaternion rotacao = Quaternion.Euler(rotacaoVertical, rotacaoHorizontal, 0f);
+        Vector3 direcaoParaTras = rotacao * Vector3.back;
+
+        Vector3 pontoFoco = transform.position + Vector3.up * alturaCamera;
+        Vector3 posicaoDesejada = pontoFoco + direcaoParaTras * distanciaCamera;
+
+        cameraCarro.transform.position = posicaoDesejada;
+        cameraCarro.transform.LookAt(pontoFoco);
     }
 }

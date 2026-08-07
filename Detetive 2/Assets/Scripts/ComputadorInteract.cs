@@ -5,9 +5,22 @@ using System.Collections.Generic;
 
 public class ComputadorInteract : MonoBehaviour
 {
+    [Header("Computador")]
     public GameObject telaPC;
+
+    [Header("Mira do jogador")]
+    public GameObject mira; // Arraste a imagem da mira aqui
+
+    [Header("Fade")]
     public CanvasGroup fadeCanvas;
     public float tempoFade = 0.5f;
+
+    [Header("Sons")]
+    public AudioSource audioSource;
+    public AudioClip somEntrar;
+    public AudioClip somSair;
+
+    [Header("Mensagem")]
     public IntroUI introUI;
     public string mensagemAoAbrir = "Olhe o seu email";
 
@@ -35,25 +48,55 @@ public class ComputadorInteract : MonoBehaviour
 
     IEnumerator Abrir(PlayerMovement player)
     {
+        if (audioSource != null && somEntrar != null)
+            audioSource.PlayOneShot(somEntrar);
+
         yield return Fade(0, 1);
+
         telaPC.SetActive(true);
-        foreach (var t in telasPC) if (t.tela) t.tela.SetActive(false);
-        foreach (var o in semprevisiveis) if (o) o.SetActive(true);
+        foreach (var t in telasPC)
+        {
+            if (t.tela)
+                t.tela.SetActive(false);
+        }
+        foreach (var o in semprevisiveis)
+        {
+            if (o)
+                o.SetActive(true);
+        }
+
+        // Esconde a mira
+        if (mira != null)
+            mira.SetActive(false);
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         dentroDoComputador = true;
-        if (introUI) introUI.MostrarMensagem(mensagemAoAbrir);
+
+        if (introUI)
+            introUI.MostrarMensagem(mensagemAoAbrir);
+
         yield return Fade(1, 0);
     }
 
     IEnumerator Fechar(PlayerMovement player)
     {
+        if (audioSource != null && somSair != null)
+            audioSource.PlayOneShot(somSair);
+
         yield return Fade(0, 1);
+
         telaPC.SetActive(false);
+
+        // Mostra a mira novamente
+        if (mira != null)
+            mira.SetActive(true);
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         dentroDoComputador = false;
         player.usandoComputador = false;
+
         yield return Fade(1, 0);
     }
 
