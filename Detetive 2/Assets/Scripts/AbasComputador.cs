@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class AbasComputador : MonoBehaviour
 {
@@ -9,6 +9,12 @@ public class AbasComputador : MonoBehaviour
     public GameObject arquivos;
     public GameObject lixeira;
 
+    [Header("Área do Computador")]
+    public RectTransform limiteComputador;
+
+    [Header("Lixeira")]
+    public GameObject imagemLixeiraVazia;
+
     private RectTransform janelaAtual;
     private Canvas canvas;
     private Vector2 offset;
@@ -16,37 +22,40 @@ public class AbasComputador : MonoBehaviour
 
     void Start()
     {
-      
-
         canvas = GetComponentInParent<Canvas>();
+
         if (canvas == null)
             canvas = FindFirstObjectByType<Canvas>();
+
+        // Garante que a imagem da lixeira vazia comece escondida
+        if (imagemLixeiraVazia != null)
+            imagemLixeiraVazia.SetActive(false);
     }
 
     #region Abrir
 
     public void AbrirEmail()
     {
-        email.SetActive(true);
-        email.SetActive(true);
+        if (email != null)
+            email.SetActive(true);
     }
 
     public void AbrirNavegador()
     {
-        navegador.SetActive(true);
-        navegador.SetActive(true);
+        if (navegador != null)
+            navegador.SetActive(true);
     }
 
     public void AbrirArquivos()
     {
-        arquivos.SetActive(true);
-        arquivos.SetActive(true);
+        if (arquivos != null)
+            arquivos.SetActive(true);
     }
 
     public void AbrirLixeira()
     {
-        lixeira.SetActive(true);
-        lixeira.SetActive(true);
+        if (lixeira != null)
+            lixeira.SetActive(true);
     }
 
     #endregion
@@ -55,37 +64,41 @@ public class AbasComputador : MonoBehaviour
 
     public void FecharEmail()
     {
-        email.SetActive(false);
+        if (email != null)
+            email.SetActive(false);
     }
 
     public void FecharNavegador()
     {
-        navegador.SetActive(false);
+        if (navegador != null)
+            navegador.SetActive(false);
     }
 
     public void FecharArquivos()
     {
-        arquivos.SetActive(false);
+        if (arquivos != null)
+            arquivos.SetActive(false);
     }
 
     public void FecharLixeira()
     {
-        lixeira.SetActive(false);
+        if (lixeira != null)
+            lixeira.SetActive(false);
     }
 
     public void FecharTodas()
     {
-        if (email) email.SetActive(false);
-        if (navegador) navegador.SetActive(false);
-        if (arquivos) arquivos.SetActive(false);
-        if (lixeira) lixeira.SetActive(false);
+        if (email != null) email.SetActive(false);
+        if (navegador != null) navegador.SetActive(false);
+        if (arquivos != null) arquivos.SetActive(false);
+        if (lixeira != null) lixeira.SetActive(false);
     }
 
     #endregion
 
-    // ==========================
+    //=========================================
     // ARRASTAR JANELAS
-    // ==========================
+    //=========================================
 
     public void ComecarArrastar(RectTransform janela)
     {
@@ -122,10 +135,50 @@ public class AbasComputador : MonoBehaviour
             null,
             out pos))
         {
-            janelaAtual.localPosition = pos - offset;
+            Vector2 novaPos = pos - offset;
+
+            // Limita a janela à área do computador
+            if (limiteComputador != null)
+            {
+                float limiteX = limiteComputador.rect.width / 2;
+                float limiteY = limiteComputador.rect.height / 2;
+
+                float metadeJanelaX = janelaAtual.rect.width / 2;
+                float metadeJanelaY = janelaAtual.rect.height / 2;
+
+                novaPos.x = Mathf.Clamp(
+                    novaPos.x,
+                    -limiteX + metadeJanelaX,
+                    limiteX - metadeJanelaX);
+
+                novaPos.y = Mathf.Clamp(
+                    novaPos.y,
+                    -limiteY + metadeJanelaY,
+                    limiteY - metadeJanelaY);
+            }
+
+            janelaAtual.localPosition = novaPos;
         }
 
         if (Input.GetMouseButtonUp(0))
             PararArrastar();
+    }
+
+    //=========================================
+    // LIXEIRA
+    //=========================================
+
+    // Chame este método no botão "Esvaziar Lixeira"
+    public void EsvaziarLixeira()
+    {
+        if (imagemLixeiraVazia != null)
+            imagemLixeiraVazia.SetActive(true);
+    }
+
+    // Caso queira esconder novamente
+    public void RestaurarLixeira()
+    {
+        if (imagemLixeiraVazia != null)
+            imagemLixeiraVazia.SetActive(false);
     }
 }
