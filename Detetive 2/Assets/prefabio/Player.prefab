@@ -464,9 +464,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   velocidade: 4
-  sensibilidadeMouse: 50
+  gravidade: -9.81
+  velocidadeQueda: -2
+  forcaPulo: 5
+  sensibilidadeMouse: 100
   cameraTransform: {fileID: 1655735076854309160}
   animator: {fileID: 3921325228830113949}
+  campoTexto: {fileID: 0}
+  promptInteracao: {fileID: 0}
+  usandoComputador: 0
 --- !u!4 &8750964975271576506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cbf7abc57de82e644a65fc235245499c, type: 3}
