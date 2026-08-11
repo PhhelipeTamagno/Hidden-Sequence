@@ -1,7 +1,5 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 using System.Collections;
-using System.Collections.Generic;
 
 public class ComputadorInteract : MonoBehaviour
 {
@@ -9,7 +7,7 @@ public class ComputadorInteract : MonoBehaviour
     public GameObject telaPC;
 
     [Header("Mira do jogador")]
-    public GameObject mira; // Arraste a imagem da mira aqui
+    public GameObject mira;
 
     [Header("Fade")]
     public CanvasGroup fadeCanvas;
@@ -24,91 +22,317 @@ public class ComputadorInteract : MonoBehaviour
     public IntroUI introUI;
     public string mensagemAoAbrir = "Olhe o seu email";
 
+    [Header("Email")]
+    public GameObject telaEmail;
+
     [System.Serializable]
     public class IconeTela
     {
         public GameObject icone;
         public GameObject tela;
     }
+
     public IconeTela[] telasPC;
     public GameObject[] semprevisiveis;
 
-    bool dentroDoComputador;
+    private bool dentroDoComputador;
+    private bool emailAberto;
 
-    public void UsarComputador(PlayerMovement player)
+    private bool emailEstavaAtivo;
+
+    // ============================================================
+    // UPDATE
+    // ============================================================
+
+    void Update()
+    {
+        if (!dentroDoComputador)
+            return;
+
+        if (telaEmail == null)
+            return;
+
+        bool emailAtivoAgora =
+            telaEmail.activeSelf;
+
+        // ========================================================
+        // EMAIL ABRIU
+        // ========================================================
+
+        if (
+            emailAtivoAgora &&
+            !emailEstavaAtivo
+        )
+        {
+            Debug.Log(
+                "DETECTADO: Email foi aberto."
+            );
+
+            emailAberto = true;
+            emailEstavaAtivo = true;
+
+            if (introUI != null)
+            {
+                Debug.Log(
+                    "Iniciando contador de 30 segundos."
+                );
+
+                introUI.EntrouNoEmail();
+            }
+            else
+            {
+                Debug.LogError(
+                    "IntroUI não foi conectado!"
+                );
+            }
+        }
+
+        // ========================================================
+        // EMAIL FECHOU
+        // ========================================================
+
+        if (
+            !emailAtivoAgora &&
+            emailEstavaAtivo
+        )
+        {
+            Debug.Log(
+                "DETECTADO: Email foi fechado."
+            );
+
+            emailAberto = false;
+            emailEstavaAtivo = false;
+
+            if (introUI != null)
+                introUI.SaiuDoEmail();
+        }
+    }
+
+    // ============================================================
+    // USAR COMPUTADOR
+    // ============================================================
+
+    public void UsarComputador(
+        PlayerMovement player
+    )
     {
         player.usandoComputador = true;
-        StartCoroutine(Abrir(player));
+
+        StartCoroutine(
+            Abrir(player)
+        );
     }
 
-    public void SairComputador(PlayerMovement player)
+    // ============================================================
+    // SAIR DO COMPUTADOR
+    // ============================================================
+
+    public void SairComputador(
+        PlayerMovement player
+    )
     {
-        StartCoroutine(Fechar(player));
+        StartCoroutine(
+            Fechar(player)
+        );
     }
 
-    IEnumerator Abrir(PlayerMovement player)
+    // ============================================================
+    // ABRIR COMPUTADOR
+    // ============================================================
+
+    IEnumerator Abrir(
+        PlayerMovement player
+    )
     {
-        if (audioSource != null && somEntrar != null)
-            audioSource.PlayOneShot(somEntrar);
+        if (
+            audioSource != null &&
+            somEntrar != null
+        )
+        {
+            audioSource.PlayOneShot(
+                somEntrar
+            );
+        }
 
         yield return Fade(0, 1);
 
         telaPC.SetActive(true);
+
         foreach (var t in telasPC)
         {
-            if (t.tela)
+            if (t.tela != null)
                 t.tela.SetActive(false);
         }
+
         foreach (var o in semprevisiveis)
         {
-            if (o)
+            if (o != null)
                 o.SetActive(true);
         }
 
-        // Esconde a mira
         if (mira != null)
             mira.SetActive(false);
 
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState =
+            CursorLockMode.None;
+
         Cursor.visible = true;
+
         dentroDoComputador = true;
 
-        if (introUI)
-            introUI.MostrarMensagem(mensagemAoAbrir);
+        emailAberto = false;
+        emailEstavaAtivo = false;
+
+        // ========================================================
+        // MENSAGEM INICIAL
+        // ========================================================
+
+        if (introUI != null)
+        {
+            introUI.MostrarMensagem(
+                mensagemAoAbrir
+            );
+        }
 
         yield return Fade(1, 0);
     }
 
-    IEnumerator Fechar(PlayerMovement player)
+    // ============================================================
+    // ABRIR EMAIL
+    // ============================================================
+
+    public void AbrirEmail()
     {
-        if (audioSource != null && somSair != null)
-            audioSource.PlayOneShot(somSair);
+        if (!dentroDoComputador)
+            return;
+
+        if (telaEmail == null)
+            return;
+
+        telaEmail.SetActive(true);
+
+        emailAberto = true;
+        emailEstavaAtivo = true;
+
+        Debug.Log(
+            "AbrirEmail() chamado."
+        );
+
+        if (introUI != null)
+        {
+            introUI.EntrouNoEmail();
+        }
+        else
+        {
+            Debug.LogError(
+                "IntroUI não está conectado."
+            );
+        }
+    }
+
+    // ============================================================
+    // FECHAR EMAIL
+    // ============================================================
+
+    public void FecharEmail()
+    {
+        if (telaEmail == null)
+            return;
+
+        telaEmail.SetActive(false);
+
+        emailAberto = false;
+        emailEstavaAtivo = false;
+
+        Debug.Log(
+            "FecharEmail() chamado."
+        );
+
+        if (introUI != null)
+        {
+            introUI.SaiuDoEmail();
+        }
+    }
+
+    // ============================================================
+    // FECHAR COMPUTADOR
+    // ============================================================
+
+    IEnumerator Fechar(
+        PlayerMovement player
+    )
+    {
+        if (
+            audioSource != null &&
+            somSair != null
+        )
+        {
+            audioSource.PlayOneShot(
+                somSair
+            );
+        }
+
+        // ========================================================
+        // EMAIL
+        // ========================================================
+
+        if (emailAberto)
+        {
+            emailAberto = false;
+            emailEstavaAtivo = false;
+
+            if (introUI != null)
+                introUI.SaiuDoEmail();
+        }
 
         yield return Fade(0, 1);
 
         telaPC.SetActive(false);
 
-        // Mostra a mira novamente
         if (mira != null)
             mira.SetActive(true);
 
-        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.lockState =
+            CursorLockMode.Locked;
+
         Cursor.visible = false;
+
         dentroDoComputador = false;
+
         player.usandoComputador = false;
 
         yield return Fade(1, 0);
     }
 
-    IEnumerator Fade(float a, float b)
+    // ============================================================
+    // FADE
+    // ============================================================
+
+    IEnumerator Fade(
+        float a,
+        float b
+    )
     {
-        float t = 0;
+        float t = 0f;
+
         while (t < tempoFade)
         {
             t += Time.deltaTime;
-            fadeCanvas.alpha = Mathf.Lerp(a, b, t / tempoFade);
+
+            if (fadeCanvas != null)
+            {
+                fadeCanvas.alpha =
+                    Mathf.Lerp(
+                        a,
+                        b,
+                        t / tempoFade
+                    );
+            }
+
             yield return null;
         }
-        fadeCanvas.alpha = b;
+
+        if (fadeCanvas != null)
+            fadeCanvas.alpha = b;
     }
 }
