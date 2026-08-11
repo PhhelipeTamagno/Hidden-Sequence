@@ -16067,7 +16067,7 @@ MonoBehaviour:
   seta: {fileID: 1699942744}
   waypointBeacon: {fileID: 1698827700}
   cenaDoCrimeIntro: {fileID: 1138901040}
-  mensagemAoChegar: "Agora entre na casa da v\xEDtima e procure pistas."
+  mensagemAoChegar: "Entre na casa da v\xEDtima e procure pistas."
   distanciaParaConcluir: 8
   alturaNaTela: -80
   ajusteRotacao: 90
