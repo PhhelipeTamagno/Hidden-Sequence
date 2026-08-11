@@ -467,7 +467,7 @@ MonoBehaviour:
   gravidade: -9.81
   velocidadeQueda: -2
   forcaPulo: 5
-  sensibilidadeMouse: 100
+  sensibilidadeMouse: 150
   cameraTransform: {fileID: 1655735076854309160}
   animator: {fileID: 3921325228830113949}
   campoTexto: {fileID: 0}

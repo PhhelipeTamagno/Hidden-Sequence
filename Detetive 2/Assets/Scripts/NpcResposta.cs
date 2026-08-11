@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -8,6 +9,8 @@ public class NPCResposta : MonoBehaviour
     [Header("UI")]
     public TMP_InputField campoTexto;
     public TMP_Text textoNPC;
+    [Tooltip("Botão do Canvas que também envia a pergunta (opcional, além do Enter no campo de texto)")]
+    public Button botaoEnviar;
 
     [Header("Player")]
     public PlayerMovement playerMovement; // referência ao script de movimento/câmera do player
@@ -59,6 +62,12 @@ public class NPCResposta : MonoBehaviour
     void Start()
     {
         campoTexto.interactable = false;
+
+        if (botaoEnviar != null)
+        {
+            botaoEnviar.interactable = false;
+            botaoEnviar.onClick.AddListener(EnviarPergunta);
+        }
 
         if (playerMovement != null)
             playerMovement.enabled = false;
@@ -135,6 +144,9 @@ public class NPCResposta : MonoBehaviour
         campoTexto.interactable = true;
         campoTexto.ActivateInputField();
 
+        if (botaoEnviar != null)
+            botaoEnviar.interactable = true;
+
         if (playerMovement != null)
             playerMovement.enabled = true;
     }
@@ -146,6 +158,9 @@ public class NPCResposta : MonoBehaviour
         textoResposta.gameObject.SetActive(false);
         textoDigitando.gameObject.SetActive(false);
         campoTexto.gameObject.SetActive(false);
+
+        if (botaoEnviar != null)
+            botaoEnviar.gameObject.SetActive(false);
 
         textoMensagem.gameObject.SetActive(true);
         yield return StartCoroutine(EscreverTexto(textoMensagem, mensagemFinal));
