@@ -16,33 +16,51 @@ public class CarroController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        // Evita que o carro tombe (bom pra carro arcade/top-down)
-        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints =
+            RigidbodyConstraints.FreezeRotationX |
+            RigidbodyConstraints.FreezeRotationZ;
 
-        // Evita "atravessar" paredes finas em alta velocidade
         rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
 
-        // IMPORTANTE: Is Kinematic deve estar DESMARCADO no Inspector
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     void Update()
     {
-        // Input é lido a cada frame pra ficar responsivo
-        vertical = Input.GetAxis("Vertical");
-        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxisRaw("Vertical");
+        horizontal = Input.GetAxisRaw("Horizontal");
     }
 
     void FixedUpdate()
     {
+        if (!enabled)
+            return;
+
         float velAtual = vertical >= 0 ? velocidade : velocidadeRe;
 
-        Vector3 movimento = transform.forward * vertical * velAtual;
-        rb.MovePosition(rb.position + movimento * Time.fixedDeltaTime);
+        Vector3 movimento =
+            transform.forward * vertical * velAtual;
+
+        rb.MovePosition(
+            rb.position +
+            movimento * Time.fixedDeltaTime
+        );
 
         float fatorGiro = Mathf.Clamp01(Mathf.Abs(vertical));
-        float direcaoGiro = vertical >= 0 ? 1f : -1f;
-        float anguloGiro = horizontal * velocidadeRotacao * fatorGiro * direcaoGiro * Time.fixedDeltaTime;
 
-        rb.MoveRotation(rb.rotation * Quaternion.Euler(0f, anguloGiro, 0f));
+        float direcaoGiro =
+            vertical >= 0 ? 1f : -1f;
+
+        float anguloGiro =
+            horizontal *
+            velocidadeRotacao *
+            fatorGiro *
+            direcaoGiro *
+            Time.fixedDeltaTime;
+
+        rb.MoveRotation(
+            rb.rotation *
+            Quaternion.Euler(0f, anguloGiro, 0f)
+        );
     }
 }
