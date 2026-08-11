@@ -20,9 +20,11 @@ public class CarroController : MonoBehaviour
             RigidbodyConstraints.FreezeRotationX |
             RigidbodyConstraints.FreezeRotationZ;
 
-        rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        rb.collisionDetectionMode =
+            CollisionDetectionMode.ContinuousDynamic;
 
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        rb.interpolation =
+            RigidbodyInterpolation.Interpolate;
     }
 
     void Update()
@@ -36,20 +38,31 @@ public class CarroController : MonoBehaviour
         if (!enabled)
             return;
 
-        float velAtual = vertical >= 0 ? velocidade : velocidadeRe;
+        float velAtual =
+            vertical >= 0
+            ? velocidade
+            : velocidadeRe;
 
         Vector3 movimento =
-            transform.forward * vertical * velAtual;
+            transform.forward *
+            vertical *
+            velAtual;
 
         rb.MovePosition(
             rb.position +
-            movimento * Time.fixedDeltaTime
+            movimento *
+            Time.fixedDeltaTime
         );
 
-        float fatorGiro = Mathf.Clamp01(Mathf.Abs(vertical));
+        float fatorGiro =
+            Mathf.Clamp01(
+                Mathf.Abs(vertical)
+            );
 
         float direcaoGiro =
-            vertical >= 0 ? 1f : -1f;
+            vertical >= 0
+            ? 1f
+            : -1f;
 
         float anguloGiro =
             horizontal *
@@ -60,7 +73,11 @@ public class CarroController : MonoBehaviour
 
         rb.MoveRotation(
             rb.rotation *
-            Quaternion.Euler(0f, anguloGiro, 0f)
+            Quaternion.Euler(
+                0f,
+                anguloGiro,
+                0f
+            )
         );
     }
 }

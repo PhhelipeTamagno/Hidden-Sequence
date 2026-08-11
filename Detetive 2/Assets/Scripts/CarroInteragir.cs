@@ -9,17 +9,26 @@ public class CarroInteragir : MonoBehaviour
     [Range(0f, 5f)]
     public float intensidadeBrilho = 1.5f;
 
+
     [Header("Direção")]
     public CarroController carroController;
+
 
     [Header("Câmera")]
     public Camera cameraCarro;
 
+
     [Header("UI")]
     public GameObject mira;
 
+
+    [Header("Indicador de Destino")]
+    public IndicadorDestino indicadorDestino;
+
+
     [Header("Popup Cena do Crime")]
     public CenaDoCrimeIntro cenaDoCrimeIntro;
+
 
     [Header("Câmera do Carro")]
     public float sensibilidadeMouse = 3f;
@@ -28,11 +37,14 @@ public class CarroInteragir : MonoBehaviour
     public float anguloMinimoVertical = -20f;
     public float anguloMaximoVertical = 60f;
 
+
     private float rotacaoHorizontal;
     private float rotacaoVertical = 20f;
 
+
     private MaterialPropertyBlock propertyBlock;
     private bool destacado = false;
+
 
     private GameObject playerAtual;
     private PlayerMovement playerMovementAtual;
@@ -42,8 +54,10 @@ public class CarroInteragir : MonoBehaviour
 
     private bool playerDentro = false;
 
+
     private CursorLockMode cursorLockAnterior;
     private bool cursorVisivelAnterior;
+
 
     // Impede sair do carro no mesmo frame em que entrou
     private int frameDeEntrada = -1;
@@ -53,6 +67,7 @@ public class CarroInteragir : MonoBehaviour
     {
         propertyBlock = new MaterialPropertyBlock();
 
+
         if (renderers == null ||
             renderers.Length == 0 ||
             ContemNulos(renderers))
@@ -60,11 +75,18 @@ public class CarroInteragir : MonoBehaviour
             renderers = GetComponentsInChildren<Renderer>();
         }
 
+
         if (carroController != null)
             carroController.enabled = false;
 
+
         if (cameraCarro != null)
             cameraCarro.gameObject.SetActive(false);
+
+
+        // Indicador começa desligado
+        if (indicadorDestino != null)
+            indicadorDestino.mostrarIndicador = false;
     }
 
 
@@ -80,24 +102,33 @@ public class CarroInteragir : MonoBehaviour
     }
 
 
+    // =========================================================
+    // DESTAQUE
+    // =========================================================
+
     public void Destacar()
     {
         if (destacado)
             return;
 
+
         destacado = true;
+
 
         foreach (var rend in renderers)
         {
             if (rend == null)
                 continue;
 
+
             rend.GetPropertyBlock(propertyBlock);
+
 
             propertyBlock.SetColor(
                 "_EmissionColor",
                 corBrilho * intensidadeBrilho
             );
+
 
             rend.SetPropertyBlock(propertyBlock);
         }
@@ -109,54 +140,76 @@ public class CarroInteragir : MonoBehaviour
         if (!destacado)
             return;
 
+
         destacado = false;
+
 
         foreach (var rend in renderers)
         {
             if (rend == null)
                 continue;
 
+
             rend.GetPropertyBlock(propertyBlock);
+
 
             propertyBlock.SetColor(
                 "_EmissionColor",
                 Color.black
             );
 
+
             rend.SetPropertyBlock(propertyBlock);
         }
     }
 
+
+    // =========================================================
+    // ENTRAR NO CARRO
+    // =========================================================
 
     public void EntrarCarro(GameObject player)
     {
         if (playerDentro)
             return;
 
+
         playerDentro = true;
 
-        // IMPORTANTE:
-        // guarda o frame em que entrou
+
+        // Impede que o mesmo E seja usado para sair
         frameDeEntrada = Time.frameCount;
 
+
         playerAtual = player;
+
 
         playerMovementAtual =
             player.GetComponent<PlayerMovement>();
 
+
         playerInteracaoAtual =
             player.GetComponent<PlayerInteracao>();
 
+
         RemoverDestaque();
 
+
+        // Desliga movimento do player
         if (playerMovementAtual != null)
             playerMovementAtual.enabled = false;
 
+
+        // Desliga interação do player
         if (playerInteracaoAtual != null)
             playerInteracaoAtual.enabled = false;
 
+
+        // Esconde modelo do player
         SetVisibilidadePlayer(false);
 
+
+        // Pega câmera do player
         if (playerInteracaoAtual != null &&
             playerInteracaoAtual.cameraTransform != null)
         {
@@ -165,49 +218,92 @@ public class CarroInteragir : MonoBehaviour
                 .GetComponent<Camera>();
         }
 
+
         if (cameraPlayerAtual != null)
             cameraPlayerAtual.gameObject.SetActive(false);
 
+
+        // Liga câmera do carro
         if (cameraCarro != null)
             cameraCarro.gameObject.SetActive(true);
 
+
+        // Liga controle do carro
         if (carroController != null)
             carroController.enabled = true;
 
+
+        // =====================================================
+        // ATIVA INDICADOR
+        // =====================================================
+
+        if (indicadorDestino != null)
+        {
+            // IMPORTANTE:
+            // Agora o indicador acompanha o CARRO,
+            // não o player.
+            Transform referenciaCarro =
+                carroController != null
+                ? carroController.transform
+                : transform;
+
+
+            indicadorDestino.DefinirJogador(
+                referenciaCarro
+            );
+
+
+            indicadorDestino.mostrarIndicador = true;
+        }
+
+
+        // Esconde mira
         if (mira != null)
             mira.SetActive(false);
 
-        // Começa olhando para frente do carro
+
+        // Câmera começa olhando para frente
         rotacaoHorizontal =
             carroController != null
             ? carroController.transform.eulerAngles.y
             : transform.eulerAngles.y;
 
+
         rotacaoVertical = 20f;
 
+
+        // Guarda estado do cursor
         cursorLockAnterior = Cursor.lockState;
         cursorVisivelAnterior = Cursor.visible;
+
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+
+        // Popup
         if (cenaDoCrimeIntro != null)
             cenaDoCrimeIntro.MostrarPopupCenaDoCrime();
+
 
         Debug.Log("Player entrou no carro.");
     }
 
+
+    // =========================================================
+    // UPDATE
+    // =========================================================
 
     void Update()
     {
         if (!playerDentro)
             return;
 
-        // IMPORTANTE:
-        // não permite que o mesmo E usado para entrar
-        // seja usado para sair imediatamente
+
+        // Impede saída no mesmo frame da entrada
         if (Time.frameCount == frameDeEntrada)
             return;
+
 
         if (Input.GetKeyDown(KeyCode.E))
         {
@@ -216,15 +312,21 @@ public class CarroInteragir : MonoBehaviour
     }
 
 
+    // =========================================================
+    // SAIR DO CARRO
+    // =========================================================
+
     public void SairCarro()
     {
         if (!playerDentro)
             return;
 
+
         playerDentro = false;
 
+
         // =====================================================
-        // PEGA A POSIÇÃO ATUAL DO CARRO
+        // PEGA POSIÇÃO ATUAL DO CARRO
         // =====================================================
 
         Transform carroTransform =
@@ -232,31 +334,39 @@ public class CarroInteragir : MonoBehaviour
             ? carroController.transform
             : transform;
 
-        Vector3 posicaoCarro = carroTransform.position;
 
-        // Sai pela lateral direita do carro
+        Vector3 posicaoCarro =
+            carroTransform.position;
+
+
+        // Sai pela direita do carro
         Vector3 posicaoSaida =
             posicaoCarro +
             carroTransform.right * 2.5f;
 
-        // Mantém a altura do player
+
+        // Mantém altura do player
         if (playerAtual != null)
         {
-            posicaoSaida.y = playerAtual.transform.position.y;
+            posicaoSaida.y =
+                playerAtual.transform.position.y;
 
-            // Move o player para a posição atual do carro
-            playerAtual.transform.position = posicaoSaida;
+
+            playerAtual.transform.position =
+                posicaoSaida;
         }
 
 
         // =====================================================
-        // DEVOLVE O PLAYER
+        // DEVOLVE PLAYER
         // =====================================================
 
         SetVisibilidadePlayer(true);
 
+
         if (playerMovementAtual != null)
             playerMovementAtual.enabled = true;
+
 
         if (playerInteracaoAtual != null)
             playerInteracaoAtual.enabled = true;
@@ -269,16 +379,32 @@ public class CarroInteragir : MonoBehaviour
         if (cameraCarro != null)
             cameraCarro.gameObject.SetActive(false);
 
+
         if (cameraPlayerAtual != null)
             cameraPlayerAtual.gameObject.SetActive(true);
 
 
         // =====================================================
-        // DESLIGA CONTROLE DO CARRO
+        // DESLIGA CARRO
         // =====================================================
 
         if (carroController != null)
             carroController.enabled = false;
+
+
+        // =====================================================
+        // DESLIGA INDICADOR
+        // =====================================================
+
+        if (indicadorDestino != null)
+        {
+            indicadorDestino.mostrarIndicador = false;
+        }
+
+
+        // =====================================================
+        // MIRA
+        // =====================================================
 
         if (mira != null)
             mira.SetActive(true);
@@ -298,23 +424,33 @@ public class CarroInteragir : MonoBehaviour
         );
 
 
-        // Limpa referências
+        // =====================================================
+        // LIMPA REFERÊNCIAS
+        // =====================================================
+
         playerAtual = null;
         playerMovementAtual = null;
         playerInteracaoAtual = null;
         cameraPlayerAtual = null;
 
+
         frameDeEntrada = -1;
     }
 
+
+    // =========================================================
+    // VISIBILIDADE DO PLAYER
+    // =========================================================
 
     void SetVisibilidadePlayer(bool visivel)
     {
         if (playerAtual == null)
             return;
 
+
         Renderer[] rends =
             playerAtual.GetComponentsInChildren<Renderer>();
+
 
         foreach (var rend in rends)
         {
@@ -323,10 +459,15 @@ public class CarroInteragir : MonoBehaviour
     }
 
 
+    // =========================================================
+    // CÂMERA
+    // =========================================================
+
     void LateUpdate()
     {
         if (!playerDentro)
             return;
+
 
         if (cameraCarro != null)
         {
@@ -341,6 +482,7 @@ public class CarroInteragir : MonoBehaviour
             Input.GetAxis("Mouse X") *
             sensibilidadeMouse;
 
+
         float mouseY =
             Input.GetAxis("Mouse Y") *
             sensibilidadeMouse;
@@ -348,7 +490,9 @@ public class CarroInteragir : MonoBehaviour
 
         rotacaoHorizontal += mouseX;
 
+
         rotacaoVertical -= mouseY;
+
 
         rotacaoVertical =
             Mathf.Clamp(
@@ -383,12 +527,16 @@ public class CarroInteragir : MonoBehaviour
 
         Vector3 posicaoDesejada =
             pontoFoco +
-            direcaoParaTras * distanciaCamera;
+            direcaoParaTras *
+            distanciaCamera;
 
 
         cameraCarro.transform.position =
             posicaoDesejada;
 
-        cameraCarro.transform.LookAt(pontoFoco);
+
+        cameraCarro.transform.LookAt(
+            pontoFoco
+        );
     }
 }
