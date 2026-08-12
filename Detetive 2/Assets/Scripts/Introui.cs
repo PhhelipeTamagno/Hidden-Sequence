@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using System.Collections;
 using TMPro;
@@ -23,7 +22,7 @@ public class IntroUI : MonoBehaviour
     public float duracaoAnimacaoJogador = 0.6f;
 
     [Header("Configuração da investigação")]
-    public float tempoParaInvestigar = 10f;
+    public float tempoParaInvestigar = 6f;
 
     private Vector2 posicaoFinalPopup;
     private Vector2 posicaoInicialPopup;
@@ -38,16 +37,15 @@ public class IntroUI : MonoBehaviour
     private bool investigacaoAtivada = false;
     private bool dentroDoEmail = false;
 
-    // ============================================================
-    // START
-    // ============================================================
+    // Permite que o ComputadorInteract saiba
+    // se a mensagem de investigação já apareceu.
+    public bool InvestigacaoAtivada
+    {
+        get { return investigacaoAtivada; }
+    }
 
     void Start()
     {
-        // ============================================================
-        // MENSAGEM PRINCIPAL
-        // ============================================================
-
         if (mensagemPC != null)
         {
             posicaoFinalPopup =
@@ -70,10 +68,6 @@ public class IntroUI : MonoBehaviour
         if (textoMensagem != null)
             textoMensagem.text = "";
 
-        // ============================================================
-        // MENSAGEM DO JOGADOR
-        // ============================================================
-
         if (mensagemJogador != null)
         {
             posicaoFinalJogador =
@@ -92,26 +86,19 @@ public class IntroUI : MonoBehaviour
             if (cgJogador != null)
                 cgJogador.alpha = 0f;
 
-            // Começa desativado
             mensagemJogador.gameObject.SetActive(false);
         }
 
         if (textoMensagemJogador != null)
             textoMensagemJogador.text = "";
 
-        // ============================================================
-        // FADE
-        // ============================================================
-
         if (fadeCanvasGroup != null)
             fadeCanvasGroup.alpha = 1f;
 
-        StartCoroutine(SequenciaIntro());
+        StartCoroutine(
+            SequenciaIntro()
+        );
     }
-
-    // ============================================================
-    // FADE INICIAL
-    // ============================================================
 
     IEnumerator SequenciaIntro()
     {
@@ -121,10 +108,16 @@ public class IntroUI : MonoBehaviour
 
             while (t < 1f)
             {
-                t += Time.deltaTime / duracaoFade;
+                t +=
+                    Time.deltaTime /
+                    duracaoFade;
 
                 fadeCanvasGroup.alpha =
-                    Mathf.Lerp(1f, 0f, t);
+                    Mathf.Lerp(
+                        1f,
+                        0f,
+                        t
+                    );
 
                 yield return null;
             }
@@ -133,80 +126,76 @@ public class IntroUI : MonoBehaviour
         }
     }
 
-    // ============================================================
-    // ENTROU NO EMAIL
-    // ============================================================
+    // =========================================================
+    // EMAIL
+    // =========================================================
 
     public void EntrouNoEmail()
     {
-        Debug.Log("INTRO UI: Entrou no email.");
+        Debug.Log(
+            "INTRO UI: Entrou no email."
+        );
 
         dentroDoEmail = true;
 
-        // Se já aconteceu, não faz novamente
         if (investigacaoAtivada)
         {
             Debug.Log(
-                "INTRO UI: A mensagem já foi trocada."
+                "INTRO UI: A investigação já foi ativada."
             );
 
             return;
         }
 
-        // Cancela contador anterior caso exista
         if (contadorInvestigacao != null)
         {
-            StopCoroutine(contadorInvestigacao);
+            StopCoroutine(
+                contadorInvestigacao
+            );
+
             contadorInvestigacao = null;
         }
 
-        // Começa os 10 segundos
         contadorInvestigacao =
             StartCoroutine(
                 ContarTempoInvestigacao()
             );
 
         Debug.Log(
-            "INTRO UI: Contador de 10 segundos iniciado."
+            "INTRO UI: Contador de 6 segundos iniciado."
         );
     }
 
-    // ============================================================
-    // SAIU DO EMAIL
-    // ============================================================
-
     public void SaiuDoEmail()
     {
-        Debug.Log("INTRO UI: Saiu do email.");
+        Debug.Log(
+            "INTRO UI: Saiu do email."
+        );
 
         dentroDoEmail = false;
 
-        // Se ainda não completou os 10 segundos,
-        // cancela o contador
         if (!investigacaoAtivada)
         {
             CancelarContadorInvestigacao();
         }
     }
 
-    // ============================================================
-    // MOSTRAR MENSAGEM PRINCIPAL
-    // ============================================================
+    // =========================================================
+    // MENSAGEM PRINCIPAL
+    // =========================================================
 
     public void MostrarMensagem(string texto)
     {
         if (sequenciaAtual != null)
-            StopCoroutine(sequenciaAtual);
+            StopCoroutine(
+                sequenciaAtual
+            );
 
         sequenciaAtual =
             StartCoroutine(
                 MostrarPopupComTexto(texto)
             );
     }
-
-    // ============================================================
-    // ANIMAÇÃO DA MENSAGEM PRINCIPAL
-    // ============================================================
 
     IEnumerator MostrarPopupComTexto(string texto)
     {
@@ -227,10 +216,6 @@ public class IntroUI : MonoBehaviour
         if (textoMensagem != null)
             textoMensagem.text = "";
 
-        // ============================================================
-        // SLIDE DO POPUP
-        // ============================================================
-
         if (mensagemPC != null)
         {
             CanvasGroup cgMsg =
@@ -240,8 +225,9 @@ public class IntroUI : MonoBehaviour
 
             while (t < 1f)
             {
-                t += Time.deltaTime /
-                     duracaoAnimacaoPopup;
+                t +=
+                    Time.deltaTime /
+                    duracaoAnimacaoPopup;
 
                 float tSuave =
                     1f -
@@ -277,15 +263,16 @@ public class IntroUI : MonoBehaviour
                 cgMsg.alpha = 1f;
         }
 
-        // ============================================================
-        // MÁQUINA DE ESCREVER
-        // ============================================================
-
         if (textoMensagem != null)
         {
-            for (int i = 0; i < texto.Length; i++)
+            for (
+                int i = 0;
+                i < texto.Length;
+                i++
+            )
             {
-                textoMensagem.text += texto[i];
+                textoMensagem.text +=
+                    texto[i];
 
                 yield return new WaitForSeconds(
                     velocidadeEscrita
@@ -298,18 +285,19 @@ public class IntroUI : MonoBehaviour
         EsconderMensagem();
     }
 
-    // ============================================================
-    // CONTADOR DOS 10 SEGUNDOS
-    // ============================================================
+    // =========================================================
+    // CONTADOR DA INVESTIGAÇÃO
+    // =========================================================
 
     IEnumerator ContarTempoInvestigacao()
     {
         float tempo = 0f;
 
-        while (tempo < tempoParaInvestigar)
+        while (
+            tempo <
+            tempoParaInvestigar
+        )
         {
-            // Se sair do email antes dos 10 segundos,
-            // cancela a contagem
             if (!dentroDoEmail)
             {
                 Debug.Log(
@@ -321,7 +309,8 @@ public class IntroUI : MonoBehaviour
                 yield break;
             }
 
-            tempo += Time.deltaTime;
+            tempo +=
+                Time.deltaTime;
 
             Debug.Log(
                 "Tempo no email: " +
@@ -333,59 +322,46 @@ public class IntroUI : MonoBehaviour
             yield return null;
         }
 
-        // Confirma que ainda está no email
         if (!dentroDoEmail)
         {
             contadorInvestigacao = null;
+
             yield break;
         }
 
-        // ============================================================
-        // ATIVA A INVESTIGAÇÃO
-        // ============================================================
-
         investigacaoAtivada = true;
+
         contadorInvestigacao = null;
 
         Debug.Log(
-            "INTRO UI: 10 SEGUNDOS COMPLETOS!"
+            "INTRO UI: 6 SEGUNDOS COMPLETOS!"
         );
-
-        // ============================================================
-        // TROCA A MENSAGEM DO QUADRO
-        // ============================================================
 
         MostrarMensagem(
             "Vá investigar o suspeito."
         );
 
-        // ============================================================
-        // ATIVA A FALA DO JOGADOR
-        // ============================================================
-
         MostrarMensagemJogador(
-            "Vou lá interrogar esse Remi e ver o que ele tem para dizer."
+            "Vou lá fazer um rápido interrogatório com esse cara, antes de ir procurar e coletar as provas."
         );
     }
 
-    // ============================================================
+    // =========================================================
     // MENSAGEM DO JOGADOR
-    // ============================================================
+    // =========================================================
 
     public void MostrarMensagemJogador(string texto)
     {
         if (mensagemJogadorAtual != null)
-            StopCoroutine(mensagemJogadorAtual);
+            StopCoroutine(
+                mensagemJogadorAtual
+            );
 
         mensagemJogadorAtual =
             StartCoroutine(
                 AnimarMensagemJogador(texto)
             );
     }
-
-    // ============================================================
-    // ANIMAÇÃO DO JOGADOR
-    // ============================================================
 
     IEnumerator AnimarMensagemJogador(string texto)
     {
@@ -401,10 +377,6 @@ public class IntroUI : MonoBehaviour
             yield break;
         }
 
-        // ============================================================
-        // ATIVA O PAINEL
-        // ============================================================
-
         mensagemJogador.gameObject.SetActive(true);
 
         CanvasGroup cg =
@@ -419,10 +391,6 @@ public class IntroUI : MonoBehaviour
             yield break;
         }
 
-        // ============================================================
-        // RESET DA ANIMAÇÃO
-        // ============================================================
-
         cg.alpha = 0f;
 
         mensagemJogador.anchoredPosition =
@@ -430,16 +398,13 @@ public class IntroUI : MonoBehaviour
 
         textoMensagemJogador.text = "";
 
-        // ============================================================
-        // ENTRADA
-        // ============================================================
-
         float t = 0f;
 
         while (t < 1f)
         {
-            t += Time.deltaTime /
-                 duracaoAnimacaoJogador;
+            t +=
+                Time.deltaTime /
+                duracaoAnimacaoJogador;
 
             float tSuave =
                 1f -
@@ -470,35 +435,28 @@ public class IntroUI : MonoBehaviour
 
         cg.alpha = 1f;
 
-        // ============================================================
-        // MÁQUINA DE ESCREVER
-        // ============================================================
-
-        for (int i = 0; i < texto.Length; i++)
+        for (
+            int i = 0;
+            i < texto.Length;
+            i++
+        )
         {
-            textoMensagemJogador.text += texto[i];
+            textoMensagemJogador.text +=
+                texto[i];
 
             yield return new WaitForSeconds(
                 velocidadeEscrita
             );
         }
 
-        // ============================================================
-        // ESPERA
-        // ============================================================
-
         yield return new WaitForSeconds(5f);
-
-        // ============================================================
-        // ESCONDE
-        // ============================================================
 
         EsconderMensagemJogador();
     }
 
-    // ============================================================
-    // ESCONDER MENSAGEM PRINCIPAL
-    // ============================================================
+    // =========================================================
+    // ESCONDER MENSAGEM
+    // =========================================================
 
     public void EsconderMensagem()
     {
@@ -522,7 +480,9 @@ public class IntroUI : MonoBehaviour
 
         while (t < 1f)
         {
-            t += Time.deltaTime / 0.4f;
+            t +=
+                Time.deltaTime /
+                0.4f;
 
             cg.alpha =
                 Mathf.Lerp(
@@ -539,9 +499,9 @@ public class IntroUI : MonoBehaviour
         mensagemPC.gameObject.SetActive(false);
     }
 
-    // ============================================================
+    // =========================================================
     // ESCONDER MENSAGEM DO JOGADOR
-    // ============================================================
+    // =========================================================
 
     public void EsconderMensagemJogador()
     {
@@ -565,7 +525,9 @@ public class IntroUI : MonoBehaviour
 
         while (t < 1f)
         {
-            t += Time.deltaTime / 0.4f;
+            t +=
+                Time.deltaTime /
+                0.4f;
 
             cg.alpha =
                 Mathf.Lerp(
@@ -582,23 +544,25 @@ public class IntroUI : MonoBehaviour
         mensagemJogador.gameObject.SetActive(false);
     }
 
-    // ============================================================
+    // =========================================================
     // CANCELAR CONTADOR
-    // ============================================================
+    // =========================================================
 
     public void CancelarContadorInvestigacao()
     {
         if (contadorInvestigacao != null)
         {
-            StopCoroutine(contadorInvestigacao);
+            StopCoroutine(
+                contadorInvestigacao
+            );
 
             contadorInvestigacao = null;
         }
     }
 
-    // ============================================================
+    // =========================================================
     // RESETAR INVESTIGAÇÃO
-    // ============================================================
+    // =========================================================
 
     public void ResetarInvestigacao()
     {
@@ -616,10 +580,6 @@ public class IntroUI : MonoBehaviour
         investigacaoAtivada = false;
         dentroDoEmail = false;
 
-        // ============================================================
-        // RESET DO JOGADOR
-        // ============================================================
-
         if (mensagemJogador != null)
         {
             CanvasGroup cg =
@@ -636,10 +596,6 @@ public class IntroUI : MonoBehaviour
 
         if (textoMensagemJogador != null)
             textoMensagemJogador.text = "";
-
-        // ============================================================
-        // RESET DA MENSAGEM PRINCIPAL
-        // ============================================================
 
         if (mensagemPC != null)
         {
@@ -659,4 +615,3 @@ public class IntroUI : MonoBehaviour
             textoMensagem.text = "";
     }
 }
-

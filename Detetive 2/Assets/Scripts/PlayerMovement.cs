@@ -5,11 +5,14 @@ using TMPro;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Movimento")]
-    public float velocidade = 5f;
+    public float velocidade = 0f;
+
+    [Tooltip("Velocidade que o jogador terá quando a investigação for liberada.")]
+    public float velocidadeAposInvestigacao = 3f;
 
     [Header("Gravidade")]
     public float gravidade = -9.81f;
-    public float velocidadeQueda = -2f; // valor pequeno pra manter "grudado" no chão
+    public float velocidadeQueda = -2f;
 
     [Header("Pulo")]
     public float forcaPulo = 5f;
@@ -17,17 +20,19 @@ public class PlayerMovement : MonoBehaviour
     [Header("Mouse")]
     public float sensibilidadeMouse = 100f;
     public Transform cameraTransform;
+
     private CharacterController controller;
+
     public Animator animator;
     public TMP_InputField campoTexto;
+
     bool mouseTravado = true;
 
     private PcInteragir ultimoPC;
 
     [Header("UI de interação")]
-    public PromptInteracaoUI promptInteracao; // arraste o painel com o script PromptInteracaoUI
+    public PromptInteracaoUI promptInteracao;
 
-    // --- controle de uso do computador ---
     public bool usandoComputador = false;
     private ComputadorInteract computadorEmUso;
 
@@ -37,55 +42,106 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         controller = GetComponent<CharacterController>();
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void Update()
     {
-        // Enquanto estiver usando o computador, só escuta a tecla de sair
+        // =====================================================
+        // JOGADOR ESTÁ USANDO O COMPUTADOR
+        // =====================================================
+
         if (usandoComputador)
         {
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Escape))
+            if (
+                Input.GetKeyDown(KeyCode.E) ||
+                Input.GetKeyDown(KeyCode.Escape)
+            )
             {
                 if (computadorEmUso != null)
                     computadorEmUso.SairComputador(this);
             }
+
             return;
         }
+
+        // =====================================================
+        // MOUSE DESBLOQUEADO
+        // =====================================================
 
         if (!mouseTravado)
         {
             if (Input.GetKeyDown(KeyCode.V))
             {
                 mouseTravado = true;
-                Cursor.lockState = CursorLockMode.Locked;
+
+                Cursor.lockState =
+                    CursorLockMode.Locked;
+
                 Cursor.visible = false;
             }
+
             return;
         }
 
-        // Mouse
-        float mouseX = Input.GetAxis("Mouse X") * sensibilidadeMouse * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * sensibilidadeMouse * Time.deltaTime;
+        // =====================================================
+        // CÂMERA
+        // =====================================================
+
+        float mouseX =
+            Input.GetAxis("Mouse X") *
+            sensibilidadeMouse *
+            Time.deltaTime;
+
+        float mouseY =
+            Input.GetAxis("Mouse Y") *
+            sensibilidadeMouse *
+            Time.deltaTime;
 
         rotacaoX -= mouseY;
-        rotacaoX = Mathf.Clamp(rotacaoX, -90f, 90f);
 
-        cameraTransform.localRotation = Quaternion.Euler(rotacaoX, 0f, 0f);
-        transform.Rotate(Vector3.up * mouseX);
+        rotacaoX =
+            Mathf.Clamp(
+                rotacaoX,
+                -90f,
+                90f
+            );
 
-        // Movimento
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        cameraTransform.localRotation =
+            Quaternion.Euler(
+                rotacaoX,
+                0f,
+                0f
+            );
+
+        transform.Rotate(
+            Vector3.up * mouseX
+        );
+
+        // =====================================================
+        // MOVIMENTO
+        // =====================================================
+
+        float horizontal =
+            Input.GetAxisRaw("Horizontal");
+
+        float vertical =
+            Input.GetAxisRaw("Vertical");
 
         Vector3 movimento =
             transform.right * horizontal +
             transform.forward * vertical;
 
-        movimento = movimento.normalized * velocidade;
+        movimento =
+            movimento.normalized *
+            velocidade;
 
-        // Gravidade
+        // =====================================================
+        // GRAVIDADE E PULO
+        // =====================================================
+
         if (controller.isGrounded)
         {
             if (velocidadeY < 0)
@@ -98,23 +154,56 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            velocidadeY += gravidade * Time.deltaTime;
+            velocidadeY +=
+                gravidade *
+                Time.deltaTime;
         }
 
         movimento.y = velocidadeY;
 
-        controller.Move(movimento * Time.deltaTime);
+        controller.Move(
+            movimento *
+            Time.deltaTime
+        );
 
-        bool andando = horizontal != 0 || vertical != 0;
-        animator.SetBool("isWalking", andando);
+        // =====================================================
+        // ANIMAÇÃO
+        // =====================================================
 
-        // Interação com o computador (raycast)
-        Ray ray = new Ray(cameraTransform.position, cameraTransform.forward);
+        bool andando =
+            horizontal != 0 ||
+            vertical != 0;
+
+        if (animator != null)
+        {
+            animator.SetBool(
+                "isWalking",
+                andando
+            );
+        }
+
+        // =====================================================
+        // RAYCAST PARA INTERAÇÃO
+        // =====================================================
+
+        Ray ray =
+            new Ray(
+                cameraTransform.position,
+                cameraTransform.forward
+            );
+
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
+        if (
+            Physics.Raycast(
+                ray,
+                out hit,
+                Mathf.Infinity
+            )
+        )
         {
-            PcInteragir pc = hit.collider.GetComponentInParent<PcInteragir>();
+            PcInteragir pc =
+                hit.collider.GetComponentInParent<PcInteragir>();
 
             if (pc != null)
             {
@@ -124,21 +213,36 @@ public class PlayerMovement : MonoBehaviour
                         ultimoPC.RemoverDestaque();
 
                     pc.Destacar();
+
                     ultimoPC = pc;
 
                     if (promptInteracao != null)
                         promptInteracao.Mostrar();
                 }
 
+                // =================================================
+                // ENTRAR NO COMPUTADOR
+                // =================================================
+
                 if (Input.GetKeyDown(KeyCode.E))
                 {
-                    Debug.Log("Tecla E pressionada, objeto acertado: " + hit.collider.gameObject.name);
+                    Debug.Log(
+                        "Tecla E pressionada, objeto acertado: " +
+                        hit.collider.gameObject.name
+                    );
 
-                    ComputadorInteract comp = hit.collider.GetComponentInParent<ComputadorInteract>();
+                    ComputadorInteract comp =
+                        hit.collider.GetComponentInParent<ComputadorInteract>();
+
                     if (comp != null)
                     {
-                        Debug.Log("ComputadorInteract encontrado em: " + comp.gameObject.name);
+                        Debug.Log(
+                            "ComputadorInteract encontrado em: " +
+                            comp.gameObject.name
+                        );
+
                         computadorEmUso = comp;
+
                         comp.UsarComputador(this);
 
                         if (promptInteracao != null)
@@ -146,7 +250,10 @@ public class PlayerMovement : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning("Nenhum ComputadorInteract encontrado no objeto ou nos pais de: " + hit.collider.gameObject.name);
+                        Debug.LogWarning(
+                            "Nenhum ComputadorInteract encontrado no objeto ou nos pais de: " +
+                            hit.collider.gameObject.name
+                        );
                     }
                 }
             }
@@ -155,6 +262,7 @@ public class PlayerMovement : MonoBehaviour
                 if (ultimoPC != null)
                 {
                     ultimoPC.RemoverDestaque();
+
                     ultimoPC = null;
 
                     if (promptInteracao != null)
@@ -167,6 +275,7 @@ public class PlayerMovement : MonoBehaviour
             if (ultimoPC != null)
             {
                 ultimoPC.RemoverDestaque();
+
                 ultimoPC = null;
 
                 if (promptInteracao != null)
@@ -174,22 +283,33 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
+        // =====================================================
+        // DESBLOQUEAR / BLOQUEAR MOUSE
+        // =====================================================
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             mouseTravado = !mouseTravado;
 
             if (mouseTravado)
             {
-                Cursor.lockState = CursorLockMode.Locked;
+                Cursor.lockState =
+                    CursorLockMode.Locked;
+
                 Cursor.visible = false;
             }
             else
             {
-                Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState =
+                    CursorLockMode.None;
+
                 Cursor.visible = true;
 
-                campoTexto.ActivateInputField();
-                campoTexto.Select();
+                if (campoTexto != null)
+                {
+                    campoTexto.ActivateInputField();
+                    campoTexto.Select();
+                }
             }
         }
     }

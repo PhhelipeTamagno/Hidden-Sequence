@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class AbasComputador : MonoBehaviour
 {
@@ -15,6 +15,14 @@ public class AbasComputador : MonoBehaviour
     [Header("Lixeira")]
     public GameObject imagemLixeiraVazia;
 
+    [Header("Post-it de aviso")]
+    public GameObject postIt;
+    public TMP_Text textoPostIt;
+
+    [TextArea(2, 4)]
+    public string mensagemPostIt =
+        "Ei fecha isso daí, você tem que trabalhar agora!";
+
     private RectTransform janelaAtual;
     private Canvas canvas;
     private Vector2 offset;
@@ -27,12 +35,81 @@ public class AbasComputador : MonoBehaviour
         if (canvas == null)
             canvas = FindFirstObjectByType<Canvas>();
 
-        // Garante que a imagem da lixeira vazia comece escondida
         if (imagemLixeiraVazia != null)
             imagemLixeiraVazia.SetActive(false);
+
+        if (textoPostIt == null && postIt != null)
+        {
+            textoPostIt =
+                postIt.GetComponentInChildren<TMP_Text>(true);
+        }
+
+
+        if (textoPostIt != null)
+        {
+            textoPostIt.text = mensagemPostIt;
+        }
+        else if (postIt != null)
+        {
+            Debug.LogError(
+                "Não foi encontrado nenhum TMP_Text dentro do Post-it!"
+            );
+        }
+
+        if (postIt != null)
+            postIt.SetActive(false);
     }
 
-    #region Abrir
+    public void MostrarPostIt()
+    {
+        Debug.Log("MostrarPostIt chamado.");
+
+        if (postIt == null)
+        {
+            Debug.LogError(
+                "POST-IT NÃO FOI ATRIBUÍDO NO INSPECTOR!"
+            );
+
+            return;
+        }
+
+        if (textoPostIt == null)
+        {
+            textoPostIt =
+                postIt.GetComponentInChildren<TMP_Text>(true);
+        }
+
+        if (textoPostIt != null)
+        {
+            textoPostIt.text = mensagemPostIt;
+
+            Debug.Log(
+                "Texto do Post-it: " + mensagemPostIt
+            );
+        }
+        else
+        {
+            Debug.LogError(
+                "O Post-it não possui nenhum TMP_Text!"
+            );
+        }
+
+        postIt.SetActive(true);
+
+        RectTransform rt =
+            postIt.GetComponent<RectTransform>();
+
+        if (rt != null)
+            rt.SetAsLastSibling();
+
+        Debug.Log("POST-IT ABERTO!");
+    }
+
+    public void EsconderPostIt()
+    {
+        if (postIt != null)
+            postIt.SetActive(false);
+    }
 
     public void AbrirEmail()
     {
@@ -42,8 +119,23 @@ public class AbasComputador : MonoBehaviour
 
     public void AbrirNavegador()
     {
-        if (navegador != null)
-            navegador.SetActive(true);
+        if (navegador == null)
+            return;
+
+        navegador.SetActive(true);
+
+        if (postIt != null)
+        {
+            postIt.transform.SetParent(
+                navegador.transform,
+                false
+            );
+
+            postIt.transform.SetAsLastSibling();
+        }
+
+        MostrarPostIt();
+
     }
 
     public void AbrirArquivos()
@@ -57,10 +149,6 @@ public class AbasComputador : MonoBehaviour
         if (lixeira != null)
             lixeira.SetActive(true);
     }
-
-    #endregion
-
-    #region Fechar
 
     public void FecharEmail()
     {
@@ -88,27 +176,31 @@ public class AbasComputador : MonoBehaviour
 
     public void FecharTodas()
     {
-        if (email != null) email.SetActive(false);
-        if (navegador != null) navegador.SetActive(false);
-        if (arquivos != null) arquivos.SetActive(false);
-        if (lixeira != null) lixeira.SetActive(false);
+        if (email != null)
+            email.SetActive(false);
+
+        if (navegador != null)
+            navegador.SetActive(false);
+
+        if (arquivos != null)
+            arquivos.SetActive(false);
+
+        if (lixeira != null)
+            lixeira.SetActive(false);
     }
-
-    #endregion
-
-    //=========================================
-    // ARRASTAR JANELAS
-    //=========================================
-
     public void ComecarArrastar(RectTransform janela)
     {
+        if (janela == null)
+            return;
+
         janelaAtual = janela;
 
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             janela,
             Input.mousePosition,
             null,
-            out offset);
+            out offset
+        );
 
         janela.SetAsLastSibling();
 
@@ -127,7 +219,8 @@ public class AbasComputador : MonoBehaviour
 
         Vector2 pos;
 
-        RectTransform canvasRect = canvas.transform as RectTransform;
+        RectTransform canvasRect =
+            canvas.transform as RectTransform;
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvasRect,
@@ -137,24 +230,31 @@ public class AbasComputador : MonoBehaviour
         {
             Vector2 novaPos = pos - offset;
 
-            // Limita a janela à área do computador
             if (limiteComputador != null)
             {
-                float limiteX = limiteComputador.rect.width / 2;
-                float limiteY = limiteComputador.rect.height / 2;
+                float limiteX =
+                    limiteComputador.rect.width / 2;
 
-                float metadeJanelaX = janelaAtual.rect.width / 2;
-                float metadeJanelaY = janelaAtual.rect.height / 2;
+                float limiteY =
+                    limiteComputador.rect.height / 2;
+
+                float metadeJanelaX =
+                    janelaAtual.rect.width / 2;
+
+                float metadeJanelaY =
+                    janelaAtual.rect.height / 2;
 
                 novaPos.x = Mathf.Clamp(
                     novaPos.x,
                     -limiteX + metadeJanelaX,
-                    limiteX - metadeJanelaX);
+                    limiteX - metadeJanelaX
+                );
 
                 novaPos.y = Mathf.Clamp(
                     novaPos.y,
                     -limiteY + metadeJanelaY,
-                    limiteY - metadeJanelaY);
+                    limiteY - metadeJanelaY
+                );
             }
 
             janelaAtual.localPosition = novaPos;
@@ -164,18 +264,12 @@ public class AbasComputador : MonoBehaviour
             PararArrastar();
     }
 
-    //=========================================
-    // LIXEIRA
-    //=========================================
-
-    // Chame este método no botão "Esvaziar Lixeira"
     public void EsvaziarLixeira()
     {
         if (imagemLixeiraVazia != null)
             imagemLixeiraVazia.SetActive(true);
     }
 
-    // Caso queira esconder novamente
     public void RestaurarLixeira()
     {
         if (imagemLixeiraVazia != null)
