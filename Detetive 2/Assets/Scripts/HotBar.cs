@@ -9,8 +9,8 @@ public class Hotbar : MonoBehaviour
     {
         public string nomeItem = "";
         public Sprite icone;
-        public Image imagemSlot;      // Image que mostra o ícone do item
-        public GameObject destaque;   // Borda/GameObject que aparece quando o slot está selecionado
+        public Image imagemSlot;
+        public GameObject destaque;
 
         public bool EstaVazio => string.IsNullOrEmpty(nomeItem);
     }
@@ -18,20 +18,47 @@ public class Hotbar : MonoBehaviour
     [Header("Slots")]
     public HotbarSlot[] slots = new HotbarSlot[3];
 
+    [Header("Item Inicial")]
+    public string nomeLanterna = "LanternaUV";
+    public Sprite iconeLanterna;
+
     [Header("Configuração")]
     public int slotSelecionado = 0;
 
     [Header("Animação de Entrada")]
-    public RectTransform hotbarRect;   // RectTransform do container da hotbar (painel com os 3 slots)
-    public CanvasGroup hotbarCanvasGroup; // opcional, pra fade junto com o movimento
+    public RectTransform hotbarRect;
+    public CanvasGroup hotbarCanvasGroup;
     public float duracaoAnimacao = 0.5f;
-    public float distanciaSubida = 150f; // quanto abaixo da posição final ela começa
+    public float distanciaSubida = 150f;
     public bool animarNoInicio = true;
 
     private Vector2 posicaoFinalHotbar;
 
     void Start()
     {
+        // ==========================
+        // COLOCA A LANTERNA NO SLOT 1
+        // ==========================
+
+        if (slots.Length > 0)
+        {
+            DefinirItem(0, nomeLanterna, iconeLanterna);
+        }
+
+        // ==========================
+        // DEIXA OS OUTROS SLOTS VAZIOS
+        // ==========================
+
+        if (slots.Length > 1)
+            LimparSlot(1);
+
+        if (slots.Length > 2)
+            LimparSlot(2);
+
+        // ==========================
+        // ANIMAÇÃO DA HOTBAR
+        // ==========================
+
         if (hotbarRect != null)
         {
             posicaoFinalHotbar = hotbarRect.anchoredPosition;
@@ -48,20 +75,48 @@ public class Hotbar : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelecionarSlot(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SelecionarSlot(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SelecionarSlot(2);
+        // ==========================
+        // TECLAS 1, 2 E 3
+        // ==========================
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SelecionarSlot(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SelecionarSlot(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SelecionarSlot(2);
+        }
+
+        // ==========================
+        // SCROLL DO MOUSE
+        // ==========================
 
         float scroll = Input.GetAxis("Mouse ScrollWheel");
+
         if (scroll > 0f)
         {
-            SelecionarSlot((slotSelecionado + 1) % slots.Length);
+            SelecionarSlot(
+                (slotSelecionado + 1) % slots.Length
+            );
         }
         else if (scroll < 0f)
         {
-            SelecionarSlot((slotSelecionado - 1 + slots.Length) % slots.Length);
+            SelecionarSlot(
+                (slotSelecionado - 1 + slots.Length) % slots.Length
+            );
         }
     }
+
+    // ==========================
+    // SELECIONAR SLOT
+    // ==========================
 
     public void SelecionarSlot(int index)
     {
@@ -69,77 +124,132 @@ public class Hotbar : MonoBehaviour
             return;
 
         slotSelecionado = index;
+
         AtualizarVisual();
     }
+
+    // ==========================
+    // ATUALIZAR DESTAQUE
+    // ==========================
 
     void AtualizarVisual()
     {
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].destaque != null)
-                slots[i].destaque.SetActive(i == slotSelecionado);
+            {
+                slots[i].destaque.SetActive(
+                    i == slotSelecionado
+                );
+            }
         }
     }
 
-    // Chame esse método publicamente pra mostrar a hotbar (ex: início de fase, após coletar 1º item, etc)
+    // ==========================
+    // MOSTRAR HOTBAR
+    // ==========================
+
     public void MostrarHotbarExterno()
     {
         StartCoroutine(MostrarHotbar());
     }
 
-    // Chame esse método pra esconder a hotbar (ex: durante cutscenes, menus, etc)
-    public void EsconderHotbarExterno()
-    {
-        StartCoroutine(EsconderHotbar());
-    }
-
     IEnumerator MostrarHotbar()
     {
+        if (hotbarRect == null)
+            yield break;
+
         hotbarRect.gameObject.SetActive(true);
 
-        Vector2 posicaoInicial = posicaoFinalHotbar + Vector2.down * distanciaSubida;
+        Vector2 posicaoInicial =
+            posicaoFinalHotbar +
+            Vector2.down * distanciaSubida;
+
         hotbarRect.anchoredPosition = posicaoInicial;
 
         if (hotbarCanvasGroup != null)
             hotbarCanvasGroup.alpha = 0f;
 
         float tempo = 0f;
+
         while (tempo < duracaoAnimacao)
         {
             tempo += Time.deltaTime;
-            float t = Mathf.Clamp01(tempo / duracaoAnimacao);
-            float tSuave = 1f - Mathf.Pow(1f - t, 3f); // ease out cubic
 
-            hotbarRect.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoFinalHotbar, tSuave);
+            float t = Mathf.Clamp01(
+                tempo / duracaoAnimacao
+            );
+
+            float tSuave =
+                1f - Mathf.Pow(1f - t, 3f);
+
+            hotbarRect.anchoredPosition =
+                Vector2.Lerp(
+                    posicaoInicial,
+                    posicaoFinalHotbar,
+                    tSuave
+                );
 
             if (hotbarCanvasGroup != null)
+            {
                 hotbarCanvasGroup.alpha = tSuave;
+            }
 
             yield return null;
         }
 
-        hotbarRect.anchoredPosition = posicaoFinalHotbar;
+        hotbarRect.anchoredPosition =
+            posicaoFinalHotbar;
 
         if (hotbarCanvasGroup != null)
             hotbarCanvasGroup.alpha = 1f;
     }
 
+    // ==========================
+    // ESCONDER HOTBAR
+    // ==========================
+
+    public void EsconderHotbarExterno()
+    {
+        StartCoroutine(EsconderHotbar());
+    }
+
     IEnumerator EsconderHotbar()
     {
-        Vector2 posicaoInicial = hotbarRect.anchoredPosition;
-        Vector2 posicaoSaida = posicaoFinalHotbar + Vector2.down * distanciaSubida;
+        if (hotbarRect == null)
+            yield break;
+
+        Vector2 posicaoInicial =
+            hotbarRect.anchoredPosition;
+
+        Vector2 posicaoSaida =
+            posicaoFinalHotbar +
+            Vector2.down * distanciaSubida;
 
         float tempo = 0f;
+
         while (tempo < duracaoAnimacao)
         {
             tempo += Time.deltaTime;
-            float t = Mathf.Clamp01(tempo / duracaoAnimacao);
-            float tSuave = t * t; // ease in, desce acelerando
 
-            hotbarRect.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoSaida, tSuave);
+            float t = Mathf.Clamp01(
+                tempo / duracaoAnimacao
+            );
+
+            float tSuave = t * t;
+
+            hotbarRect.anchoredPosition =
+                Vector2.Lerp(
+                    posicaoInicial,
+                    posicaoSaida,
+                    tSuave
+                );
 
             if (hotbarCanvasGroup != null)
-                hotbarCanvasGroup.alpha = 1f - tSuave;
+            {
+                hotbarCanvasGroup.alpha =
+                    1f - tSuave;
+            }
 
             yield return null;
         }
@@ -147,14 +257,24 @@ public class Hotbar : MonoBehaviour
         hotbarRect.gameObject.SetActive(false);
     }
 
-    // Tenta adicionar o item no primeiro slot vazio. Retorna true se conseguiu.
-    public bool AdicionarItem(string nome, Sprite icone)
+    // ==========================
+    // ADICIONAR ITEM
+    // ==========================
+
+    public bool AdicionarItem(
+        string nome,
+        Sprite icone)
     {
         for (int i = 0; i < slots.Length; i++)
         {
             if (slots[i].EstaVazio)
             {
-                DefinirItem(i, nome, icone);
+                DefinirItem(
+                    i,
+                    nome,
+                    icone
+                );
+
                 return true;
             }
         }
@@ -162,30 +282,64 @@ public class Hotbar : MonoBehaviour
         return false;
     }
 
-    void DefinirItem(int index, string nome, Sprite icone)
+    // ==========================
+    // DEFINIR ITEM
+    // ==========================
+
+    void DefinirItem(
+        int index,
+        string nome,
+        Sprite icone)
     {
+        if (index < 0 ||
+            index >= slots.Length)
+            return;
+
         slots[index].nomeItem = nome;
         slots[index].icone = icone;
 
         if (slots[index].imagemSlot != null)
         {
             slots[index].imagemSlot.sprite = icone;
-            slots[index].imagemSlot.enabled = icone != null;
+
+            slots[index].imagemSlot.enabled =
+                icone != null;
         }
     }
 
+    // ==========================
+    // LIMPAR SLOT
+    // ==========================
+
     public void LimparSlot(int index)
     {
-        if (index < 0 || index >= slots.Length)
+        if (index < 0 ||
+            index >= slots.Length)
             return;
 
-        DefinirItem(index, "", null);
+        DefinirItem(
+            index,
+            "",
+            null
+        );
     }
+
+    // ==========================
+    // PEGAR ITEM SELECIONADO
+    // ==========================
 
     public string ObterItemSelecionado()
     {
+        if (slotSelecionado < 0 ||
+            slotSelecionado >= slots.Length)
+            return "";
+
         return slots[slotSelecionado].nomeItem;
     }
+
+    // ==========================
+    // VERIFICAR SE ESTÁ CHEIA
+    // ==========================
 
     public bool HotbarCheia()
     {
@@ -194,6 +348,7 @@ public class Hotbar : MonoBehaviour
             if (slot.EstaVazio)
                 return false;
         }
+
         return true;
     }
 }
