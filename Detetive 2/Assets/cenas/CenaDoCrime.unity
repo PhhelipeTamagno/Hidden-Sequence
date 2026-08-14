@@ -42377,7 +42377,7 @@ GameObject:
   - component: {fileID: 1043370837384252700}
   - component: {fileID: 1043370837384252704}
   m_Layer: 8
-  m_Name: carro oi
+  m_Name: 'carro '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42613,9 +42613,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91a06f92c8e9bf249a66f21a92661f95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CarroController
-  velocidade: 10
+  velocidade: 15
   velocidadeRe: 5
   velocidadeRotacao: 70
+  desaceleracao: 2.5
+  forcaFreio: 1
 --- !u!64 &1043370837384252703
 MeshCollider:
   m_ObjectHideFlags: 0

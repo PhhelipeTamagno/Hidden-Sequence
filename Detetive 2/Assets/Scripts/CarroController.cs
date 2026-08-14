@@ -8,9 +8,15 @@ public class CarroController : MonoBehaviour
     public float velocidadeRe = 5f;
     public float velocidadeRotacao = 50f;
 
+    [Header("Frenagem")]
+    public float desaceleracao = 2.5f;
+    public float forcaFreio = 8f;
+
     private Rigidbody rb;
     private float vertical;
     private float horizontal;
+
+    private float velocidadeAtual = 0f;
 
     void Awake()
     {
@@ -38,29 +44,62 @@ public class CarroController : MonoBehaviour
         if (!enabled)
             return;
 
-        float velAtual =
-            vertical >= 0
-            ? velocidade
-            : velocidadeRe;
+
+        if (vertical > 0)
+        {
+            
+            velocidadeAtual = Mathf.MoveTowards(
+                velocidadeAtual,
+                velocidade,
+                desaceleracao * Time.fixedDeltaTime
+            );
+        }
+        else if (vertical < 0)
+        {
+           
+            if (velocidadeAtual > 0)
+            {
+                velocidadeAtual = Mathf.MoveTowards(
+                    velocidadeAtual,
+                    0f,
+                    forcaFreio * Time.fixedDeltaTime
+                );
+            }
+            else
+            {
+                
+                velocidadeAtual = Mathf.MoveTowards(
+                    velocidadeAtual,
+                    -velocidadeRe,
+                    desaceleracao * Time.fixedDeltaTime
+                );
+            }
+        }
+        else
+        {
+          
+            velocidadeAtual = Mathf.MoveTowards(
+                velocidadeAtual,
+                0f,
+                desaceleracao * Time.fixedDeltaTime
+            );
+        }
 
         Vector3 movimento =
             transform.forward *
-            vertical *
-            velAtual;
+            velocidadeAtual;
 
         rb.MovePosition(
             rb.position +
-            movimento *
-            Time.fixedDeltaTime
+            movimento * Time.fixedDeltaTime
         );
 
-        float fatorGiro =
-            Mathf.Clamp01(
-                Mathf.Abs(vertical)
-            );
+        float fatorGiro = Mathf.Clamp01(
+            Mathf.Abs(velocidadeAtual) / velocidade
+        );
 
         float direcaoGiro =
-            vertical >= 0
+            velocidadeAtual >= 0
             ? 1f
             : -1f;
 
