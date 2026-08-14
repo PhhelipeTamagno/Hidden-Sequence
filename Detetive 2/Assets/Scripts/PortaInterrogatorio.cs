@@ -5,14 +5,14 @@ using System.Collections;
 public class PortaInterrogatorio : MonoBehaviour
 {
     [Header("Cena")]
-    public string nomeCenaInterrogatorio = "Interrogatorio";
+    public string nomeCenaDestino;
 
     [Header("Jogador")]
     public Transform jogador;
 
     [Header("Interação")]
     public float distanciaInteracao = 3f;
-    public GameObject painelPorta;
+    public GameObject painelInteracao;
 
     [Header("Fade")]
     public CanvasGroup fadeCanvas;
@@ -23,14 +23,16 @@ public class PortaInterrogatorio : MonoBehaviour
 
     void Start()
     {
-        if (painelPorta != null)
-            painelPorta.SetActive(false);
+        // Esconde o painel no início
+        if (painelInteracao != null)
+            painelInteracao.SetActive(false);
 
+        // Fade começa transparente
         if (fadeCanvas != null)
         {
-            // Começa invisível
             fadeCanvas.alpha = 0f;
             fadeCanvas.blocksRaycasts = false;
+            fadeCanvas.interactable = false;
         }
     }
 
@@ -44,19 +46,30 @@ public class PortaInterrogatorio : MonoBehaviour
             transform.position
         );
 
+        // Jogador está perto
         if (distancia <= distanciaInteracao)
         {
             if (!podeInteragir)
             {
                 podeInteragir = true;
 
-                if (painelPorta != null)
-                    painelPorta.SetActive(true);
+                if (painelInteracao != null)
+                    painelInteracao.SetActive(true);
             }
 
+            // Pressionou E
             if (Input.GetKeyDown(KeyCode.E))
             {
-                StartCoroutine(TrocarCena());
+                if (!string.IsNullOrEmpty(nomeCenaDestino))
+                {
+                    StartCoroutine(TrocarCena());
+                }
+                else
+                {
+                    Debug.LogWarning(
+                        "TransicaoCena: Nenhuma cena de destino foi definida!"
+                    );
+                }
             }
         }
         else
@@ -65,8 +78,8 @@ public class PortaInterrogatorio : MonoBehaviour
             {
                 podeInteragir = false;
 
-                if (painelPorta != null)
-                    painelPorta.SetActive(false);
+                if (painelInteracao != null)
+                    painelInteracao.SetActive(false);
             }
         }
     }
@@ -75,9 +88,9 @@ public class PortaInterrogatorio : MonoBehaviour
     {
         trocandoCena = true;
 
-        // Esconde o texto da porta
-        if (painelPorta != null)
-            painelPorta.SetActive(false);
+        // Esconde o painel
+        if (painelInteracao != null)
+            painelInteracao.SetActive(false);
 
         // FADE OUT
         if (fadeCanvas != null)
@@ -90,7 +103,9 @@ public class PortaInterrogatorio : MonoBehaviour
             {
                 tempo += Time.deltaTime;
 
-                float progresso = tempo / duracaoFade;
+                float progresso = Mathf.Clamp01(
+                    tempo / duracaoFade
+                );
 
                 fadeCanvas.alpha = Mathf.Lerp(
                     0f,
@@ -101,14 +116,13 @@ public class PortaInterrogatorio : MonoBehaviour
                 yield return null;
             }
 
-            // Garante que ficou completamente preto
             fadeCanvas.alpha = 1f;
         }
 
-        // Espera um pequeno momento com a tela preta
+        // Pequena espera com a tela preta
         yield return new WaitForSeconds(0.2f);
 
-        // Troca a cena
-        SceneManager.LoadScene(nomeCenaInterrogatorio);
+        // Troca de cena
+        SceneManager.LoadScene(nomeCenaDestino);
     }
 }
