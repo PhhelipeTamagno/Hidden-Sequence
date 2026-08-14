@@ -8,36 +8,34 @@ public class ItemColetavel : MonoBehaviour
         GarrafaTermica
     }
 
-    [Header("Item")]
+    [Header("Tipo do item")]
     public TipoItem tipoItem;
 
-    [Header("Ícone da Hotbar")]
-    public Sprite icone;
-
-    [Header("Interação")]
+    [Header("Distância para coletar")]
     public float distancia = 3f;
 
     private Transform jogador;
-    private Hotbar hotbar;
+    private ItensEncontrados itensEncontrados;
 
     void Start()
     {
         GameObject player = GameObject.FindGameObjectWithTag("Player");
 
         if (player != null)
-        {
             jogador = player.transform;
-            hotbar = FindObjectOfType<Hotbar>();
-        }
+
+        itensEncontrados = FindObjectOfType<ItensEncontrados>();
     }
 
     void Update()
     {
-        if (jogador == null || hotbar == null)
+        if (jogador == null || itensEncontrados == null)
             return;
 
-        float distanciaAtual =
-            Vector3.Distance(transform.position, jogador.position);
+        float distanciaAtual = Vector3.Distance(
+            transform.position,
+            jogador.position
+        );
 
         if (distanciaAtual <= distancia &&
             Input.GetKeyDown(KeyCode.E))
@@ -48,20 +46,16 @@ public class ItemColetavel : MonoBehaviour
 
     void Coletar()
     {
-        string nome = "";
+        if (tipoItem == TipoItem.GarrafaTermica)
+        {
+            itensEncontrados.EncontrarGarrafa();
+        }
 
         if (tipoItem == TipoItem.Faca)
-            nome = "Faca";
-
-        if (tipoItem == TipoItem.GarrafaTermica)
-            nome = "GarrafaTermica";
-
-        bool conseguiuAdicionar =
-            hotbar.AdicionarItem(nome, icone);
-
-        if (conseguiuAdicionar)
         {
-            Destroy(gameObject);
+            itensEncontrados.EncontrarFaca();
         }
+
+        Destroy(gameObject);
     }
 }
