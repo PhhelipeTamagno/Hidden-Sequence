@@ -23,33 +23,37 @@ public class ItensEncontrados : MonoBehaviour
 
     [Header("Itens que precisam ser encontrados")]
     public Item garrafa;
-
     public Item faca;
+    public Item digital;
 
     void Start()
     {
-        // Começa tudo preto
         AtualizarItem(garrafa);
         AtualizarItem(faca);
+        AtualizarItem(digital);
     }
 
     public void EncontrarGarrafa()
     {
         garrafa.encontrado = true;
-
         AtualizarItem(garrafa);
     }
 
     public void EncontrarFaca()
     {
         faca.encontrado = true;
-
         AtualizarItem(faca);
+    }
+
+    public void EncontrarDigital()
+    {
+        digital.encontrado = true;
+        AtualizarItem(digital);
     }
 
     void AtualizarItem(Item item)
     {
-        if (item.imagem == null)
+        if (item == null || item.imagem == null)
             return;
 
         if (item.encontrado)
@@ -70,5 +74,10 @@ public class ItensEncontrados : MonoBehaviour
     public bool FacaFoiEncontrada()
     {
         return faca.encontrado;
+    }
+
+    public bool DigitalFoiEncontrada()
+    {
+        return digital.encontrado;
     }
 }
