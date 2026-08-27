@@ -3,19 +3,25 @@ using UnityEngine.InputSystem;
 
 public class PortaTeleporte : MonoBehaviour
 {
-    [Header("Destino")]
-    public Transform destino;
+    [Header("Destinos")]
+    public Transform destinoDentro;
+    public Transform destinoFora;
 
-    [Header("Interação")]
-    public float distancia = 4f;
+    [Header("Configuração")]
+    public float distanciaInteracao = 4f;
     public Camera cameraPlayer;
+
+    private bool estaDentro = false;
+
+    void Start()
+    {
+        if (cameraPlayer == null)
+            cameraPlayer = Camera.main;
+    }
 
     void Update()
     {
         if (cameraPlayer == null)
-            cameraPlayer = Camera.main;
-
-        if (destino == null || cameraPlayer == null)
             return;
 
         Ray ray = new Ray(
@@ -25,9 +31,8 @@ public class PortaTeleporte : MonoBehaviour
 
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, distancia))
+        if (Physics.Raycast(ray, out hit, distanciaInteracao))
         {
-            // Verifica se a mira está na porta
             if (hit.transform == transform ||
                 hit.transform.IsChildOf(transform))
             {
@@ -42,6 +47,19 @@ public class PortaTeleporte : MonoBehaviour
 
     void Teleportar()
     {
+        Transform destino;
+
+        if (estaDentro)
+            destino = destinoFora;
+        else
+            destino = destinoDentro;
+
+        if (destino == null)
+        {
+            Debug.LogError("Destino não foi configurado na porta!");
+            return;
+        }
+
         GameObject player = cameraPlayer.transform.root.gameObject;
 
         CharacterController controller =
@@ -56,6 +74,8 @@ public class PortaTeleporte : MonoBehaviour
         if (controller != null)
             controller.enabled = true;
 
-        Debug.Log("TELEPORTOU PARA: " + destino.position);
+        estaDentro = !estaDentro;
+
+        Debug.Log("Teleportou para: " + destino.name);
     }
 }

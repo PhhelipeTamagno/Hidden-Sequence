@@ -47,7 +47,6 @@ public class ItensEncontrados : MonoBehaviour
             return;
 
         item.imagem.enabled = true;
-
         Color cor = item.imagem.color;
         cor.a = 1f;
         item.imagem.color = cor;
@@ -56,7 +55,6 @@ public class ItensEncontrados : MonoBehaviour
     // =========================
     // GARRAFA
     // =========================
-
     public void EncontrarGarrafa()
     {
         garrafa.encontrado = true;
@@ -66,7 +64,6 @@ public class ItensEncontrados : MonoBehaviour
     // =========================
     // FACA
     // =========================
-
     public void EncontrarFaca()
     {
         faca.encontrado = true;
@@ -76,7 +73,6 @@ public class ItensEncontrados : MonoBehaviour
     // =========================
     // DIGITAL ENCONTRADA
     // =========================
-
     public void EncontrarDigital()
     {
         digital.encontrado = true;
@@ -86,7 +82,6 @@ public class ItensEncontrados : MonoBehaviour
     // =========================
     // UV ESTÁ SOBRE A DIGITAL
     // =========================
-
     public void DigitalMirada()
     {
         if (digital == null || digital.imagem == null)
@@ -94,19 +89,13 @@ public class ItensEncontrados : MonoBehaviour
 
         if (!digital.encontrado)
         {
-            digital.imagem.enabled = true;
-
-            Color cor = digital.corEncontrado;
-            cor.a = 1f;
-
-            digital.imagem.color = cor;
+            EncontrarDigital(); // marca como encontrada permanentemente ao ser mirada
         }
     }
 
     // =========================
     // UV SAIU DA DIGITAL
     // =========================
-
     public void DigitalNaoMirada()
     {
         if (digital == null || digital.imagem == null)
@@ -115,10 +104,8 @@ public class ItensEncontrados : MonoBehaviour
         if (!digital.encontrado)
         {
             digital.imagem.enabled = true;
-
             Color cor = digital.corNaoEncontrado;
             cor.a = 1f;
-
             digital.imagem.color = cor;
         }
     }
@@ -126,7 +113,6 @@ public class ItensEncontrados : MonoBehaviour
     // =========================
     // ATUALIZAR ITEM
     // =========================
-
     void AtualizarItem(Item item)
     {
         if (item == null || item.imagem == null)
@@ -135,14 +121,12 @@ public class ItensEncontrados : MonoBehaviour
         item.imagem.enabled = true;
 
         Color cor;
-
         if (item.encontrado)
             cor = item.corEncontrado;
         else
             cor = item.corNaoEncontrado;
 
         cor.a = 1f;
-
         item.imagem.color = cor;
     }
 
