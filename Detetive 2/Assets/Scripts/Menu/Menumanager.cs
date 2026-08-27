@@ -9,6 +9,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject painelConfiguracoes;
     [SerializeField] private GameObject painelCreditos;
 
+    [Header("Botões do Menu")]
+    [SerializeField] private GameObject botoesMenu;
+
     [Header("Transição")]
     [SerializeField] private Transition transition;
     [SerializeField] private string nomeCenaJogoUm = "JogoUm";
@@ -16,11 +19,16 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
+        // Começa com os painéis fechados
         if (painelConfiguracoes != null)
             painelConfiguracoes.SetActive(false);
 
         if (painelCreditos != null)
             painelCreditos.SetActive(false);
+
+        // Botões principais começam ativos
+        if (botoesMenu != null)
+            botoesMenu.SetActive(true);
     }
 
     // ---------- JOGO ----------
@@ -44,31 +52,50 @@ public class MenuManager : MonoBehaviour
 
     public void AbrirConfiguracoes()
     {
+        // Abre o painel de configurações
         if (painelConfiguracoes != null)
             painelConfiguracoes.SetActive(true);
+
+        // Desativa os botões do menu principal
+        if (botoesMenu != null)
+            botoesMenu.SetActive(false);
     }
 
     public void FecharConfiguracoes()
     {
+        // Fecha o painel de configurações
         if (painelConfiguracoes != null)
             painelConfiguracoes.SetActive(false);
+
+        // Reativa os botões do menu principal
+        if (botoesMenu != null)
+            botoesMenu.SetActive(true);
     }
 
     // ---------- CRÉDITOS ----------
 
     public void AbrirCreditos()
     {
+   
         if (painelCreditos != null)
             painelCreditos.SetActive(true);
+
+
+        if (botoesMenu != null)
+            botoesMenu.SetActive(false);
     }
 
     public void FecharCreditos()
     {
         if (painelCreditos != null)
             painelCreditos.SetActive(false);
+
+       
+        if (botoesMenu != null)
+            botoesMenu.SetActive(true);
     }
 
-    // ---------- SAIR ----------
+    
 
     public void SairDoJogo()
     {
