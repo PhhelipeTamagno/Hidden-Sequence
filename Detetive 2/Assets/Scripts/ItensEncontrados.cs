@@ -8,10 +8,10 @@ public class ItensEncontrados : MonoBehaviour
     {
         public string nome;
 
-        [Header("Imagem")]
+        [Header("Imagem da Hotbar")]
         public Image imagem;
 
-        [Header("Cor do item")]
+        [Header("Cor quando encontrado")]
         public Color corEncontrado = Color.white;
 
         [Header("Cor antes de encontrar")]
@@ -33,11 +33,39 @@ public class ItensEncontrados : MonoBehaviour
         AtualizarItem(digital);
     }
 
+    void Update()
+    {
+        // Garante que as imagens da hotbar nunca desapareçam
+        GarantirImagemVisivel(garrafa);
+        GarantirImagemVisivel(faca);
+        GarantirImagemVisivel(digital);
+    }
+
+    void GarantirImagemVisivel(Item item)
+    {
+        if (item == null || item.imagem == null)
+            return;
+
+        item.imagem.enabled = true;
+
+        Color cor = item.imagem.color;
+        cor.a = 1f;
+        item.imagem.color = cor;
+    }
+
+    // =========================
+    // GARRAFA
+    // =========================
+
     public void EncontrarGarrafa()
     {
         garrafa.encontrado = true;
         AtualizarItem(garrafa);
     }
+
+    // =========================
+    // FACA
+    // =========================
 
     public void EncontrarFaca()
     {
@@ -45,25 +73,77 @@ public class ItensEncontrados : MonoBehaviour
         AtualizarItem(faca);
     }
 
+    // =========================
+    // DIGITAL ENCONTRADA
+    // =========================
+
     public void EncontrarDigital()
     {
         digital.encontrado = true;
         AtualizarItem(digital);
     }
 
+    // =========================
+    // UV ESTÁ SOBRE A DIGITAL
+    // =========================
+
+    public void DigitalMirada()
+    {
+        if (digital == null || digital.imagem == null)
+            return;
+
+        if (!digital.encontrado)
+        {
+            digital.imagem.enabled = true;
+
+            Color cor = digital.corEncontrado;
+            cor.a = 1f;
+
+            digital.imagem.color = cor;
+        }
+    }
+
+    // =========================
+    // UV SAIU DA DIGITAL
+    // =========================
+
+    public void DigitalNaoMirada()
+    {
+        if (digital == null || digital.imagem == null)
+            return;
+
+        if (!digital.encontrado)
+        {
+            digital.imagem.enabled = true;
+
+            Color cor = digital.corNaoEncontrado;
+            cor.a = 1f;
+
+            digital.imagem.color = cor;
+        }
+    }
+
+    // =========================
+    // ATUALIZAR ITEM
+    // =========================
+
     void AtualizarItem(Item item)
     {
         if (item == null || item.imagem == null)
             return;
 
+        item.imagem.enabled = true;
+
+        Color cor;
+
         if (item.encontrado)
-        {
-            item.imagem.color = item.corEncontrado;
-        }
+            cor = item.corEncontrado;
         else
-        {
-            item.imagem.color = item.corNaoEncontrado;
-        }
+            cor = item.corNaoEncontrado;
+
+        cor.a = 1f;
+
+        item.imagem.color = cor;
     }
 
     public bool GarrafaFoiEncontrada()

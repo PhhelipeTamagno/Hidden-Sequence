@@ -6,6 +6,7 @@ public class DigitalUv1 : MonoBehaviour
     [Header("Referências")]
     public Light luzUV;
     public Image imagemDigital;
+    public ItensEncontrados itensEncontrados;
 
     [Header("Configuração")]
     public float velocidadeAparecer = 1.5f;
@@ -14,6 +15,9 @@ public class DigitalUv1 : MonoBehaviour
     [Range(0f, 1f)]
     public float opacidadeMaxima = 1f;
 
+    [Header("Distância para revelar")]
+    public float distanciaMaxima = 250f;
+
     private float opacidadeAtual = 0f;
 
     void Start()
@@ -21,7 +25,7 @@ public class DigitalUv1 : MonoBehaviour
         if (imagemDigital == null)
             imagemDigital = GetComponent<Image>();
 
-        // Começa invisível
+        // Digital de evidência começa invisível
         Color cor = imagemDigital.color;
         cor.a = 0f;
         imagemDigital.color = cor;
@@ -32,23 +36,28 @@ public class DigitalUv1 : MonoBehaviour
         if (luzUV == null || imagemDigital == null)
             return;
 
-        // Posição da digital na tela
+        // Se a lanterna estiver desligada,
+        // a digital NÃO pode ser iluminada.
+        if (!luzUV.enabled)
+        {
+            DesligarDigital();
+            return;
+        }
+
         Vector3 posicaoTela = Camera.main.WorldToScreenPoint(
             transform.position
         );
 
-        // Posição da luz na tela
         Vector3 posicaoLuz = Camera.main.WorldToScreenPoint(
             luzUV.transform.position
         );
 
-        // Distância entre a digital e a luz na tela
         float distancia = Vector2.Distance(
             posicaoTela,
             posicaoLuz
         );
 
-        bool iluminada = distancia < 250f;
+        bool iluminada = distancia < distanciaMaxima;
 
         if (iluminada)
         {
@@ -57,18 +66,38 @@ public class DigitalUv1 : MonoBehaviour
                 opacidadeMaxima,
                 velocidadeAparecer * Time.deltaTime
             );
+
+            // Digital da hotbar fica branca
+            if (itensEncontrados != null)
+                itensEncontrados.DigitalMirada();
         }
         else
         {
-            opacidadeAtual = Mathf.MoveTowards(
-                opacidadeAtual,
-                0f,
-                velocidadeDesaparecer * Time.deltaTime
-            );
+            DesligarDigital();
+
+            // Digital da hotbar volta para preta
+            if (itensEncontrados != null)
+                itensEncontrados.DigitalNaoMirada();
         }
 
         Color cor = imagemDigital.color;
         cor.a = opacidadeAtual;
         imagemDigital.color = cor;
+    }
+
+    void DesligarDigital()
+    {
+        opacidadeAtual = Mathf.MoveTowards(
+            opacidadeAtual,
+            0f,
+            velocidadeDesaparecer * Time.deltaTime
+        );
+
+        Color cor = imagemDigital.color;
+        cor.a = opacidadeAtual;
+        imagemDigital.color = cor;
+
+        if (itensEncontrados != null)
+            itensEncontrados.DigitalNaoMirada();
     }
 }

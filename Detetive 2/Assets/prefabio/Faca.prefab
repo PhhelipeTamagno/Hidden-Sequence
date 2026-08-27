@@ -147,31 +147,8 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6449e3b8680c1034e99d659272ae5d15, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6130555452055450952}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6449e3b8680c1034e99d659272ae5d15, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6600536739317037442}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6449e3b8680c1034e99d659272ae5d15, type: 3}
---- !u!1 &3773219746926958888 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 6449e3b8680c1034e99d659272ae5d15, type: 3}
-  m_PrefabInstance: {fileID: 4079208547510854777}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6600536739317037442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3773219746926958888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b00dfe96299b09c4aa004c7b429c675f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
-  tipoItem: 0
-  icone: {fileID: 0}
-  distancia: 3
 --- !u!4 &4546097894060606354 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 6449e3b8680c1034e99d659272ae5d15, type: 3}
