@@ -42838,7 +42838,10 @@ PrefabInstance:
       value: CanvaPlayer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8232003518402754769, guid: cb08f6e2eaa65fe45b1a1cbcb141b4be, type: 3}
+    - {fileID: 8475134476382254663, guid: cb08f6e2eaa65fe45b1a1cbcb141b4be, type: 3}
+    - {fileID: 8281405621746858701, guid: cb08f6e2eaa65fe45b1a1cbcb141b4be, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 386802760111864914, guid: cb08f6e2eaa65fe45b1a1cbcb141b4be, type: 3}
       insertIndex: -1
