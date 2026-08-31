@@ -217,10 +217,33 @@ public class AbasComputador : MonoBehaviour
         if (!arrastando || janelaAtual == null)
             return;
 
+        // Se o Canvas antigo foi destruído, tenta encontrar o Canvas atual
+        if (canvas == null)
+        {
+            canvas = janelaAtual.GetComponentInParent<Canvas>();
+
+            if (canvas == null)
+            {
+                canvas = FindFirstObjectByType<Canvas>();
+            }
+
+            if (canvas == null)
+            {
+                arrastando = false;
+                return;
+            }
+        }
+
         Vector2 pos;
 
         RectTransform canvasRect =
             canvas.transform as RectTransform;
+
+        if (canvasRect == null)
+        {
+            arrastando = false;
+            return;
+        }
 
         if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvasRect,
