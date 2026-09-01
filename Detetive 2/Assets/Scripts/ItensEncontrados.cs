@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class ItensEncontrados : MonoBehaviour
 {
@@ -26,19 +29,38 @@ public class ItensEncontrados : MonoBehaviour
     public Item faca;
     public Item digital;
 
+    [Header("Fade Final")]
+    public CanvasGroup fade;
+    public TMP_Text textoFinal;
+
+    [Header("Cena para carregar")]
+    public string nomeDaCena;
+
+    [Header("Configuração do Fade")]
+    public float velocidadeFade = 1f;
+
+    private bool todasEncontradas = false;
+
     void Start()
     {
         AtualizarItem(garrafa);
         AtualizarItem(faca);
         AtualizarItem(digital);
+
+        if (fade != null)
+            fade.alpha = 0;
+
+        if (textoFinal != null)
+            textoFinal.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        // Garante que as imagens da hotbar nunca desapareçam
         GarantirImagemVisivel(garrafa);
         GarantirImagemVisivel(faca);
         GarantirImagemVisivel(digital);
+
+        VerificarTodasEncontradas();
     }
 
     void GarantirImagemVisivel(Item item)
@@ -47,6 +69,7 @@ public class ItensEncontrados : MonoBehaviour
             return;
 
         item.imagem.enabled = true;
+
         Color cor = item.imagem.color;
         cor.a = 1f;
         item.imagem.color = cor;
@@ -71,7 +94,7 @@ public class ItensEncontrados : MonoBehaviour
     }
 
     // =========================
-    // DIGITAL ENCONTRADA
+    // DIGITAL
     // =========================
     public void EncontrarDigital()
     {
@@ -80,7 +103,7 @@ public class ItensEncontrados : MonoBehaviour
     }
 
     // =========================
-    // UV ESTÁ SOBRE A DIGITAL
+    // UV SOBRE A DIGITAL
     // =========================
     public void DigitalMirada()
     {
@@ -89,7 +112,7 @@ public class ItensEncontrados : MonoBehaviour
 
         if (!digital.encontrado)
         {
-            EncontrarDigital(); // marca como encontrada permanentemente ao ser mirada
+            EncontrarDigital();
         }
     }
 
@@ -104,9 +127,75 @@ public class ItensEncontrados : MonoBehaviour
         if (!digital.encontrado)
         {
             digital.imagem.enabled = true;
+
             Color cor = digital.corNaoEncontrado;
             cor.a = 1f;
+
             digital.imagem.color = cor;
+        }
+    }
+
+    // =========================
+    // VERIFICAR TODAS
+    // =========================
+    void VerificarTodasEncontradas()
+    {
+        if (todasEncontradas)
+            return;
+
+        if (garrafa.encontrado &&
+            faca.encontrado &&
+            digital.encontrado)
+        {
+            todasEncontradas = true;
+            StartCoroutine(FadeFinal());
+        }
+    }
+
+    // =========================
+    // FADE FINAL + TROCA DE CENA
+    // =========================
+    IEnumerator FadeFinal()
+    {
+        if (fade == null)
+            yield break;
+
+        // Espera 1 segundo depois de pegar a última pista
+        yield return new WaitForSeconds(1f);
+
+        // Ativa o texto
+        if (textoFinal != null)
+        {
+            textoFinal.gameObject.SetActive(true);
+
+            textoFinal.text =
+                "Depois que você encontrou as pistas, você voltou para a delegacia para terminar o caso.";
+        }
+
+        // Fade para preto
+        float tempo = 0;
+
+        while (tempo < 1)
+        {
+            tempo += Time.deltaTime * velocidadeFade;
+            fade.alpha = Mathf.Lerp(0, 1, tempo);
+
+            yield return null;
+        }
+
+        fade.alpha = 1;
+
+        // Espera um pouco com a tela preta
+        yield return new WaitForSeconds(1f);
+
+        // Carrega a próxima cena
+        if (!string.IsNullOrEmpty(nomeDaCena))
+        {
+            SceneManager.LoadScene(nomeDaCena);
+        }
+        else
+        {
+            Debug.LogError("Nome da cena não foi definido no ItensEncontrados!");
         }
     }
 
@@ -121,6 +210,7 @@ public class ItensEncontrados : MonoBehaviour
         item.imagem.enabled = true;
 
         Color cor;
+
         if (item.encontrado)
             cor = item.corEncontrado;
         else
