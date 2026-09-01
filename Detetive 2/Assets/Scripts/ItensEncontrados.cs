@@ -169,7 +169,7 @@ public class ItensEncontrados : MonoBehaviour
             textoFinal.gameObject.SetActive(true);
 
             textoFinal.text =
-                "Depois que você encontrou as pistas, você voltou para a delegacia para terminar o caso.";
+                "Depois que voce encontrou as pistas, voce voltou para a delegacia para terminar o caso.";
         }
 
         // Fade para preto
