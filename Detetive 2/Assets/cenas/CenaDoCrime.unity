@@ -3972,7 +3972,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: Aperte E para ir para entrar na casa
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 1d35a4d69ea7a3448871543af8bb7d35, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_sharedMaterial: {fileID: -7201661361017214313, guid: 1d35a4d69ea7a3448871543af8bb7d35, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -4038,7 +4038,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: -221.61194, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &137128470
@@ -33059,7 +33059,7 @@ MonoBehaviour:
   popupCanvasGroup: {fileID: 1342309628}
   textoPopup: {fileID: 1724546563}
   mensagemPopup: Entre no carro.
-  mensagemCenaDoCrime: "V\xE1 at\xE9 a cena do crime."
+  mensagemCenaDoCrime: Va ate a cena do crime.
   velocidadeEscrita: 0.03
   esperaAntesDoPopup: 0.3
   duracaoAnimacaoPopup: 0.5
@@ -33096,7 +33096,7 @@ MonoBehaviour:
   seta: {fileID: 1699942744}
   waypointBeacon: {fileID: 1698827700}
   cenaDoCrimeIntro: {fileID: 1138901040}
-  mensagemAoChegar: "Entre na casa da v\xEDtima e procure pistas."
+  mensagemAoChegar: Entre na casa da vitima e procure pistas.
   distanciaParaConcluir: 8
   alturaNaTela: -80
   ajusteRotacao: 90
@@ -47648,8 +47648,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
