@@ -5324,7 +5324,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -5390,7 +5390,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: -4.248413, z: 79.05774, w: -64.73303}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
+  m_hasFontAssetChanged: 1
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &243509348
@@ -5854,7 +5854,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -22.5, y: -5.7}
+  m_AnchoredPosition: {x: -22.5, y: -13.3}
   m_SizeDelta: {x: 200, y: 71.42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &558587315
@@ -5879,8 +5879,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6630,8 +6630,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\u200B"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7042,7 +7042,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55.9, y: -7.2}
+  m_AnchoredPosition: {x: 51.8, y: -16.7}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1005571426
@@ -7070,8 +7070,8 @@ MonoBehaviour:
 
 '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -7095,8 +7095,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 31.21
+  m_fontSizeBase: 31.21
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9182,8 +9182,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ' Digite sua pergunta'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -9524,26 +9524,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCResposta
   campoTexto: {fileID: 1155430244}
   textoNPC: {fileID: 558587315}
-  botaoEnviar: {fileID: 0}
+  botaoEnviar: {fileID: 257971135}
   playerMovement: {fileID: 2086589863}
   popupExplicativo: {fileID: 1586153279}
   popupExplicativoCanvasGroup: {fileID: 1586153282}
   textoExplicacao: {fileID: 243509347}
-  mensagemExplicacao: "Voc\xEA ter\xE1 apenas 3 perguntas para interrogar o suspeito.
-    Escolha com cuidado!"
+  mensagemExplicacao: Voce tera apenas 3 perguntas para interrogar o suspeito. Escolha
+    com cuidado!
   duracaoAnimacaoPopup: 0.5
   distanciaQueda: 100
   tempoVisivelPopup: 3
   respostasNegacao:
-  - "N\xE3o sei de nada. Eu n\xE3o estava envolvido."
-  - "J\xE1 disse, n\xE3o tenho nada a ver com isso."
-  - "Voc\xEA est\xE1 perdendo tempo comigo, eu n\xE3o vi nada."
-  - "N\xE3o vou responder isso. N\xE3o fiz nada de errado."
-  - "Isso n\xE3o tem nada a ver comigo, procure outra pessoa."
-  - "eu n\xE3o sei do que voc\xEA est\xE1 falando."
+  - Nao sei de nada. Eu nao estava envolvido.
+  - 'Ja disse, nao tenho nada a ver com isso. '
+  - 'Voce esta perdendo tempo comigo, eu nao vi nada. '
+  - 'Nao vou responder isso. Nao fiz nada de errado. '
+  - 'Isso nao tem nada a ver comigo, procure outra pessoa. '
+  - 'Eu nao sei do que voce esta falando. '
   textoMensagem: {fileID: 2120231417}
-  mensagemFinal: "Ap\xF3s interrogar o suspeito, voc\xEA decide seguir para a cena
-    do crime em busca de pistas."
+  mensagemFinal: Apos interrogar o suspeito, voce decide seguir para a cena do crime
+    em busca de pistas.
   velocidadeEscrita: 0.03
   textoResposta: {fileID: 558587315}
   textoDigitando: {fileID: 1005571426}
@@ -9661,8 +9661,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
