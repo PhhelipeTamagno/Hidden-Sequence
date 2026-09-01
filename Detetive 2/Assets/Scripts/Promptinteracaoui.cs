@@ -5,7 +5,7 @@ using System.Collections;
 public class PromptInteracaoUI : MonoBehaviour
 {
     public float duracaoAnimacao = 0.4f;
-    public float distanciaFora = 300f; // o quanto ele começa deslocado pra fora da tela (direita)
+    public float distanciaFora = 300f; 
 
     private RectTransform rect;
     private CanvasGroup canvasGroup;
@@ -23,7 +23,7 @@ public class PromptInteracaoUI : MonoBehaviour
         posicaoFinal = rect.anchoredPosition;
         posicaoFora = posicaoFinal + new Vector2(distanciaFora, 0f);
 
-        // começa escondido, fora da tela à direita
+      
         rect.anchoredPosition = posicaoFora;
         canvasGroup.alpha = 0f;
         gameObject.SetActive(false);
@@ -55,7 +55,7 @@ public class PromptInteracaoUI : MonoBehaviour
         while (t < 1f)
         {
             t += Time.deltaTime / duracaoAnimacao;
-            float tSuave = 1f - Mathf.Pow(1f - Mathf.Clamp01(t), 3f); // ease-out cúbico
+            float tSuave = 1f - Mathf.Pow(1f - Mathf.Clamp01(t), 3f);
 
             rect.anchoredPosition = Vector2.Lerp(de, para, tSuave);
             canvasGroup.alpha = Mathf.Lerp(alphaDe, alphaPara, tSuave);

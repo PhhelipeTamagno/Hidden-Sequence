@@ -37,8 +37,6 @@ public class IntroUI : MonoBehaviour
     private bool investigacaoAtivada = false;
     private bool dentroDoEmail = false;
 
-    // Permite que o ComputadorInteract saiba
-    // se a mensagem de investigação já apareceu.
     public bool InvestigacaoAtivada
     {
         get { return investigacaoAtivada; }
@@ -126,10 +124,6 @@ public class IntroUI : MonoBehaviour
         }
     }
 
-    // =========================================================
-    // EMAIL
-    // =========================================================
-
     public void EntrouNoEmail()
     {
         Debug.Log(
@@ -179,10 +173,6 @@ public class IntroUI : MonoBehaviour
             CancelarContadorInvestigacao();
         }
     }
-
-    // =========================================================
-    // MENSAGEM PRINCIPAL
-    // =========================================================
 
     public void MostrarMensagem(string texto)
     {
@@ -285,10 +275,6 @@ public class IntroUI : MonoBehaviour
         EsconderMensagem();
     }
 
-    // =========================================================
-    // CONTADOR DA INVESTIGAÇÃO
-    // =========================================================
-
     IEnumerator ContarTempoInvestigacao()
     {
         float tempo = 0f;
@@ -345,10 +331,6 @@ public class IntroUI : MonoBehaviour
             "Vou lá fazer um rápido interrogatório com esse cara, antes de ir procurar e coletar as provas."
         );
     }
-
-    // =========================================================
-    // MENSAGEM DO JOGADOR
-    // =========================================================
 
     public void MostrarMensagemJogador(string texto)
     {
@@ -454,9 +436,7 @@ public class IntroUI : MonoBehaviour
         EsconderMensagemJogador();
     }
 
-    // =========================================================
-    // ESCONDER MENSAGEM
-    // =========================================================
+    
 
     public void EsconderMensagem()
     {
@@ -499,9 +479,7 @@ public class IntroUI : MonoBehaviour
         mensagemPC.gameObject.SetActive(false);
     }
 
-    // =========================================================
-    // ESCONDER MENSAGEM DO JOGADOR
-    // =========================================================
+   
 
     public void EsconderMensagemJogador()
     {
@@ -544,9 +522,8 @@ public class IntroUI : MonoBehaviour
         mensagemJogador.gameObject.SetActive(false);
     }
 
-    // =========================================================
-    // CANCELAR CONTADOR
-    // =========================================================
+    
+    
 
     public void CancelarContadorInvestigacao()
     {
@@ -560,9 +537,7 @@ public class IntroUI : MonoBehaviour
         }
     }
 
-    // =========================================================
-    // RESETAR INVESTIGAÇÃO
-    // =========================================================
+    
 
     public void ResetarInvestigacao()
     {

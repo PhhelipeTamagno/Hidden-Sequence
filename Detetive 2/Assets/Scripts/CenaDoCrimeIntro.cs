@@ -9,8 +9,8 @@ public class CenaDoCrimeIntro : MonoBehaviour
     public float duracaoFade = 1.5f;
 
     [Header("Popup")]
-    public RectTransform popup;          // objeto do popup (canto superior direito)
-    public CanvasGroup popupCanvasGroup; // pra fade do popup junto com a queda
+    public RectTransform popup;          
+    public CanvasGroup popupCanvasGroup; 
     public TMP_Text textoPopup;
 
     [TextArea]
@@ -25,14 +25,14 @@ public class CenaDoCrimeIntro : MonoBehaviour
 
     [Header("Animação do Popup")]
     public float duracaoAnimacaoPopup = 0.5f;
-    public float distanciaQueda = 100f; // quanto acima da posição final ele começa
+    public float distanciaQueda = 100f; 
 
     private Vector2 posicaoFinalPopup;
     private Coroutine popupRoutine;
 
     void Start()
     {
-        // Garante que começa tudo preto e o popup escondido
+        
         fadeCanvasGroup.alpha = 1f;
         fadeCanvasGroup.blocksRaycasts = true;
 
@@ -49,13 +49,13 @@ public class CenaDoCrimeIntro : MonoBehaviour
         MostrarPopup(mensagemPopup);
     }
 
-    // ---- Chamado de fora (ex: CarroInteragir.EntrarCarro) ----
+  
     public void MostrarPopupCenaDoCrime()
     {
         MostrarPopup(mensagemCenaDoCrime);
     }
 
-    // Método genérico: pode ser chamado com qualquer texto, de qualquer script
+    
     public void MostrarPopup(string mensagem)
     {
         if (popupRoutine != null)
@@ -66,7 +66,7 @@ public class CenaDoCrimeIntro : MonoBehaviour
 
     IEnumerator MostrarPopupRotina(string mensagem)
     {
-        // Se já tiver um popup visível (de uma mensagem anterior), esconde ele primeiro
+       
         if (popup.gameObject.activeSelf)
             yield return StartCoroutine(EsconderPopup());
 
@@ -111,7 +111,7 @@ public class CenaDoCrimeIntro : MonoBehaviour
         {
             tempo += Time.deltaTime;
             float t = Mathf.Clamp01(tempo / duracaoAnimacaoPopup);
-            float tSuave = 1f - Mathf.Pow(1f - t, 3f); // ease out cubic
+            float tSuave = 1f - Mathf.Pow(1f - t, 3f);
 
             popup.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoFinalPopup, tSuave);
 
