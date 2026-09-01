@@ -49,9 +49,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // =====================================================
-        // JOGADOR ESTÁ USANDO O COMPUTADOR
-        // =====================================================
 
         if (usandoComputador)
         {
@@ -67,10 +64,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        // =====================================================
-        // MOUSE DESBLOQUEADO
-        // =====================================================
-
         if (!mouseTravado)
         {
             if (Input.GetKeyDown(KeyCode.V))
@@ -85,10 +78,6 @@ public class PlayerMovement : MonoBehaviour
 
             return;
         }
-
-        // =====================================================
-        // CÂMERA
-        // =====================================================
 
         float mouseX =
             Input.GetAxis("Mouse X") *
@@ -120,10 +109,6 @@ public class PlayerMovement : MonoBehaviour
             Vector3.up * mouseX
         );
 
-        // =====================================================
-        // MOVIMENTO
-        // =====================================================
-
         float horizontal =
             Input.GetAxisRaw("Horizontal");
 
@@ -137,10 +122,6 @@ public class PlayerMovement : MonoBehaviour
         movimento =
             movimento.normalized *
             velocidade;
-
-        // =====================================================
-        // GRAVIDADE E PULO
-        // =====================================================
 
         if (controller.isGrounded)
         {
@@ -166,10 +147,6 @@ public class PlayerMovement : MonoBehaviour
             Time.deltaTime
         );
 
-        // =====================================================
-        // ANIMAÇÃO
-        // =====================================================
-
         bool andando =
             horizontal != 0 ||
             vertical != 0;
@@ -181,10 +158,6 @@ public class PlayerMovement : MonoBehaviour
                 andando
             );
         }
-
-        // =====================================================
-        // RAYCAST PARA INTERAÇÃO
-        // =====================================================
 
         Ray ray =
             new Ray(
@@ -219,10 +192,6 @@ public class PlayerMovement : MonoBehaviour
                     if (promptInteracao != null)
                         promptInteracao.Mostrar();
                 }
-
-                // =================================================
-                // ENTRAR NO COMPUTADOR
-                // =================================================
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -282,10 +251,6 @@ public class PlayerMovement : MonoBehaviour
                     promptInteracao.Esconder();
             }
         }
-
-        // =====================================================
-        // DESBLOQUEAR / BLOQUEAR MOUSE
-        // =====================================================
 
         if (Input.GetKeyDown(KeyCode.V))
         {
