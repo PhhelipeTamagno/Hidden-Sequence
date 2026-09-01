@@ -42,10 +42,6 @@ public class ComputadorInteract : MonoBehaviour
     private bool emailAberto;
     private bool emailEstavaAtivo;
 
-    // =========================================================
-    // VERIFICAÇÃO DO EMAIL
-    // =========================================================
-
     void Update()
     {
         if (!dentroDoComputador)
@@ -101,30 +97,18 @@ public class ComputadorInteract : MonoBehaviour
                 introUI.SaiuDoEmail();
         }
     }
-
-    // =========================================================
-    // ENTRAR NO COMPUTADOR
-    // =========================================================
-
     public void UsarComputador(PlayerMovement player)
     {
         if (player == null)
             return;
 
         player.usandoComputador = true;
-
-        // Jogador fica parado enquanto usa o computador.
         player.velocidade = 0f;
 
         StartCoroutine(
             Abrir(player)
         );
     }
-
-    // =========================================================
-    // SAIR DO COMPUTADOR
-    // =========================================================
-
     public void SairComputador(PlayerMovement player)
     {
         if (player == null)
@@ -134,11 +118,6 @@ public class ComputadorInteract : MonoBehaviour
             Fechar(player)
         );
     }
-
-    // =========================================================
-    // ABRIR COMPUTADOR
-    // =========================================================
-
     IEnumerator Abrir(PlayerMovement player)
     {
         if (
@@ -190,11 +169,6 @@ public class ComputadorInteract : MonoBehaviour
 
         yield return Fade(1, 0);
     }
-
-    // =========================================================
-    // ABRIR EMAIL
-    // =========================================================
-
     public void AbrirEmail()
     {
         if (!dentroDoComputador)
@@ -223,11 +197,6 @@ public class ComputadorInteract : MonoBehaviour
             );
         }
     }
-
-    // =========================================================
-    // FECHAR EMAIL
-    // =========================================================
-
     public void FecharEmail()
     {
         if (telaEmail == null)
@@ -247,11 +216,6 @@ public class ComputadorInteract : MonoBehaviour
             introUI.SaiuDoEmail();
         }
     }
-
-    // =========================================================
-    // FECHAR COMPUTADOR
-    // =========================================================
-
     IEnumerator Fechar(PlayerMovement player)
     {
         if (
@@ -290,17 +254,11 @@ public class ComputadorInteract : MonoBehaviour
 
         player.usandoComputador = false;
 
-        // =====================================================
-        // VELOCIDADE APÓS SAIR DO COMPUTADOR
-        // =====================================================
-
         if (
             introUI != null &&
             introUI.InvestigacaoAtivada
         )
         {
-            // Pega o valor configurado no Inspector
-            // do PlayerMovement.
             player.velocidade =
                 player.velocidadeAposInvestigacao;
 
@@ -311,7 +269,6 @@ public class ComputadorInteract : MonoBehaviour
         }
         else
         {
-            // Continua parado.
             player.velocidade = 0f;
 
             Debug.Log(
@@ -321,10 +278,6 @@ public class ComputadorInteract : MonoBehaviour
 
         yield return Fade(1, 0);
     }
-
-    // =========================================================
-    // FADE
-    // =========================================================
 
     IEnumerator Fade(float a, float b)
     {

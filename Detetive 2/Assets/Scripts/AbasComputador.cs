@@ -217,7 +217,7 @@ public class AbasComputador : MonoBehaviour
         if (!arrastando || janelaAtual == null)
             return;
 
-        // Se o Canvas antigo foi destruído, tenta encontrar o Canvas atual
+        
         if (canvas == null)
         {
             canvas = janelaAtual.GetComponentInParent<Canvas>();

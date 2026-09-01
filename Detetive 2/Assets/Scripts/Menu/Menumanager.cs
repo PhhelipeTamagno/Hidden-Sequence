@@ -19,19 +19,16 @@ public class MenuManager : MonoBehaviour
 
     private void Start()
     {
-        // Começa com os painéis fechados
         if (painelConfiguracoes != null)
             painelConfiguracoes.SetActive(false);
 
         if (painelCreditos != null)
             painelCreditos.SetActive(false);
 
-        // Botões principais começam ativos
+     
         if (botoesMenu != null)
             botoesMenu.SetActive(true);
     }
-
-    // ---------- JOGO ----------
 
     public void AbrirJogoUm()
     {
@@ -48,31 +45,25 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(nomeCenaJogoUm);
     }
 
-    // ---------- CONFIGURAÇÕES ----------
-
     public void AbrirConfiguracoes()
     {
-        // Abre o painel de configurações
+       
         if (painelConfiguracoes != null)
             painelConfiguracoes.SetActive(true);
 
-        // Desativa os botões do menu principal
+  
         if (botoesMenu != null)
             botoesMenu.SetActive(false);
     }
 
     public void FecharConfiguracoes()
     {
-        // Fecha o painel de configurações
         if (painelConfiguracoes != null)
             painelConfiguracoes.SetActive(false);
 
-        // Reativa os botões do menu principal
         if (botoesMenu != null)
             botoesMenu.SetActive(true);
     }
-
-    // ---------- CRÉDITOS ----------
 
     public void AbrirCreditos()
     {

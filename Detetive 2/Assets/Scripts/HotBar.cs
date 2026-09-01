@@ -52,36 +52,22 @@ public class Hotbar : MonoBehaviour
 
     void Start()
     {
-        // =========================
-        // LANTERNA NO SLOT 1
-        // =========================
+        
         if (slots.Length > 0)
             DefinirItem(0, nomeLanterna, iconeLanterna);
 
-        // =========================
-        // CADERNO NO SLOT 2
-        // =========================
         if (slots.Length > 1)
             DefinirItem(1, nomeCaderno, iconeCaderno);
 
-        // =========================
-        // OUTROS SLOTS VAZIOS
-        // =========================
         if (slots.Length > 2)
             LimparSlotSemAtualizar(2);
 
         if (slots.Length > 3)
             LimparSlotSemAtualizar(3);
 
-        // =========================
-        // LANTERNA E CADERNO COMEÇAM GUARDADOS
-        // =========================
         AtivarLanterna(false);
         AtivarCaderno(false);
 
-        // =========================
-        // HOTBAR
-        // =========================
         if (hotbarRect != null)
         {
             posicaoFinalHotbar = hotbarRect.anchoredPosition;
@@ -98,41 +84,27 @@ public class Hotbar : MonoBehaviour
 
     void Update()
     {
-        // =========================
-        // TECLA 1 - LANTERNA
-        // =========================
+     
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             AlternarLanterna();
         }
 
-        // =========================
-        // TECLA 2 - CADERNO
-        // =========================
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             AlternarCaderno();
         }
 
-        // =========================
-        // TECLA 3
-        // =========================
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             SelecionarSlot(2);
         }
 
-        // =========================
-        // TECLA 4
-        // =========================
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             SelecionarSlot(3);
         }
 
-        // =========================
-        // SCROLL
-        // =========================
         float scroll = Input.GetAxis("Mouse ScrollWheel");
 
         if (scroll > 0f)
@@ -145,9 +117,6 @@ public class Hotbar : MonoBehaviour
         }
     }
 
-    // ==================================================
-    // LIGAR/DESLIGAR LANTERNA
-    // ==================================================
     void AlternarLanterna()
     {
         if (slots.Length == 0 || slots[0].EstaVazio)
@@ -155,7 +124,6 @@ public class Hotbar : MonoBehaviour
 
         AtivarLanterna(!lanternaNaMaoAtiva);
 
-        // Guarda o caderno, já que só um item fica na mão por vez
         if (lanternaNaMaoAtiva && cadernoNaMaoAtiva)
             AtivarCaderno(false);
 
@@ -163,9 +131,6 @@ public class Hotbar : MonoBehaviour
         AtualizarVisual();
     }
 
-    // ==================================================
-    // LIGAR/DESLIGAR CADERNO
-    // ==================================================
     void AlternarCaderno()
     {
         if (slots.Length <= 1 || slots[1].EstaVazio)
@@ -173,7 +138,7 @@ public class Hotbar : MonoBehaviour
 
         AtivarCaderno(!cadernoNaMaoAtiva);
 
-        // Guarda a lanterna, já que só um item fica na mão por vez
+       
         if (cadernoNaMaoAtiva && lanternaNaMaoAtiva)
             AtivarLanterna(false);
 
@@ -181,9 +146,6 @@ public class Hotbar : MonoBehaviour
         AtualizarVisual();
     }
 
-    // ==================================================
-    // HELPERS DE ESTADO (LANTERNA / CADERNO)
-    // ==================================================
     void AtivarLanterna(bool ativo)
     {
         lanternaNaMaoAtiva = ativo;
@@ -199,7 +161,6 @@ public class Hotbar : MonoBehaviour
         if (cadernoNaMao != null)
             cadernoNaMao.SetActive(ativo);
 
-        // Mostra/esconde a página de missões junto com o caderno
         if (missoesCaderno != null)
         {
             if (ativo)
@@ -209,9 +170,6 @@ public class Hotbar : MonoBehaviour
         }
     }
 
-    // ==================================================
-    // SELECIONAR SLOT
-    // ==================================================
     public void SelecionarSlot(int index)
     {
         if (index < 0 || index >= slots.Length)
@@ -229,10 +187,6 @@ public class Hotbar : MonoBehaviour
         slotSelecionado = index;
         AtualizarVisual();
     }
-
-    // ==================================================
-    // SCROLL
-    // ==================================================
     void SelecionarProximoItem(int direcao)
     {
         if (slots.Length == 0)
@@ -257,10 +211,6 @@ public class Hotbar : MonoBehaviour
             }
         }
     }
-
-    // ==================================================
-    // ATUALIZAR DESTAQUE
-    // ==================================================
     void AtualizarVisual()
     {
         for (int i = 0; i < slots.Length; i++)
@@ -280,10 +230,6 @@ public class Hotbar : MonoBehaviour
             slots[i].destaque.SetActive(mostrar);
         }
     }
-
-    // ==================================================
-    // ADICIONAR ITEM
-    // ==================================================
     public bool AdicionarItem(string nome, Sprite icone)
     {
         for (int i = 0; i < slots.Length; i++)
@@ -299,10 +245,6 @@ public class Hotbar : MonoBehaviour
 
         return false;
     }
-
-    // ==================================================
-    // DEFINIR ITEM
-    // ==================================================
     void DefinirItem(int index, string nome, Sprite icone)
     {
         if (index < 0 || index >= slots.Length)
@@ -318,9 +260,6 @@ public class Hotbar : MonoBehaviour
         }
     }
 
-    // ==================================================
-    // LIMPAR SLOT
-    // ==================================================
     public void LimparSlot(int index)
     {
         if (index < 0 || index >= slots.Length)
@@ -336,10 +275,6 @@ public class Hotbar : MonoBehaviour
 
         AtualizarVisual();
     }
-
-    // ==================================================
-    // LIMPAR SEM ATUALIZAR
-    // ==================================================
     void LimparSlotSemAtualizar(int index)
     {
         if (index < 0 || index >= slots.Length)
@@ -348,9 +283,6 @@ public class Hotbar : MonoBehaviour
         DefinirItem(index, "", null);
     }
 
-    // ==================================================
-    // PEGAR ITEM SELECIONADO
-    // ==================================================
     public string ObterItemSelecionado()
     {
         if (slotSelecionado < 0 || slotSelecionado >= slots.Length)
@@ -358,10 +290,6 @@ public class Hotbar : MonoBehaviour
 
         return slots[slotSelecionado].nomeItem;
     }
-
-    // ==================================================
-    // HOTBAR CHEIA
-    // ==================================================
     public bool HotbarCheia()
     {
         foreach (var slot in slots)
@@ -372,10 +300,6 @@ public class Hotbar : MonoBehaviour
 
         return true;
     }
-
-    // ==================================================
-    // MOSTRAR HOTBAR
-    // ==================================================
     public void MostrarHotbarExterno()
     {
         StartCoroutine(MostrarHotbar());
@@ -416,9 +340,6 @@ public class Hotbar : MonoBehaviour
             hotbarCanvasGroup.alpha = 1f;
     }
 
-    // ==================================================
-    // ESCONDER HOTBAR
-    // ==================================================
     public void EsconderHotbarExterno()
     {
         StartCoroutine(EsconderHotbar());

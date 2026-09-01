@@ -1,13 +1,12 @@
 using UnityEngine;
 
-public class VaiEVolta : MonoBehaviour
+public class MovimentoLoop : MonoBehaviour
 {
     [Header("Configuração")]
     public Transform pontoDestino;
     public float velocidade = 3f;
 
     private Vector3 pontoInicial;
-    private bool indo = true;
 
     void Start()
     {
@@ -19,19 +18,18 @@ public class VaiEVolta : MonoBehaviour
         if (pontoDestino == null)
             return;
 
-        Vector3 destinoAtual = indo ? pontoDestino.position : pontoInicial;
-
-        // Move o objeto em direção ao destino
+        // Move para frente em direção ao destino
         transform.position = Vector3.MoveTowards(
             transform.position,
-            destinoAtual,
+            pontoDestino.position,
             velocidade * Time.deltaTime
         );
 
-        // Chegou ao destino
-        if (Vector3.Distance(transform.position, destinoAtual) < 0.01f)
+        // Chegou no destino
+        if (Vector3.Distance(transform.position, pontoDestino.position) < 0.01f)
         {
-            indo = !indo;
+            // Teleporta de volta para o início
+            transform.position = pontoInicial;
         }
     }
 }

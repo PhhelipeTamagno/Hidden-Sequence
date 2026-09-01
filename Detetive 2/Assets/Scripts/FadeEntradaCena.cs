@@ -12,8 +12,6 @@ public class FadeEntradaCena : MonoBehaviour
     {
         if (fadeCanvas == null)
             return;
-
-        // Começa completamente preto
         fadeCanvas.alpha = 1f;
         fadeCanvas.blocksRaycasts = true;
 
