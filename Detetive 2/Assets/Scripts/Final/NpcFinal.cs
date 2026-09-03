@@ -1,506 +1,385 @@
-using TMPro;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class NpcFinal : MonoBehaviour
 {
-    // =========================================================
-    // UI - PERGUNTAS
-    // =========================================================
-
-    [Header("UI - Perguntas")]
+    [Header("UI - Interrogatorio")]
     public TMP_InputField campoTexto;
     public TMP_Text textoResposta;
     public TMP_Text textoDigitando;
     public Button botaoEnviar;
 
-    // =========================================================
-    // PLAYER
-    // =========================================================
-
     [Header("Player")]
     public PlayerMovement playerMovement;
 
-    // =========================================================
-    // RESPOSTAS DE NEGAÇÃO
-    // =========================================================
-
-    [Header("Respostas de Negação")]
-    [TextArea]
+    [Header("Respostas de Negacao")]
     public string[] respostasNegacao =
     {
-        "Não sei de nada. Eu não estava envolvido.",
-        "Já disse, não tenho nada a ver com isso.",
-        "Você está perdendo tempo comigo.",
-        "Não vou responder isso.",
-        "Eu não fiz nada de errado.",
-        "Não sei do que você está falando.",
-        "Você não tem nenhuma prova contra mim.",
+        "Nao sei de nada. Eu nao estava envolvido.",
+        "Ja disse, nao tenho nada a ver com isso.",
+        "Voce esta perdendo tempo comigo, eu nao vi nada.",
+        "Nao vou responder isso. Nao fiz nada de errado.",
+        "Isso nao tem nada a ver comigo, procure outra pessoa.",
+        "Eu nao sei do que voce esta falando.",
+        "Voce nao tem nenhuma prova contra mim.",
         "Eu estava em outro lugar naquele dia.",
-        "Você está tentando me incriminar.",
-        "Não tenho nada a ver com esse crime."
+        "Voce esta tentando me incriminar.",
+        "Nao tenho nada a ver com esse crime."
     };
 
-    private int ultimaResposta = -1;
-
-    // =========================================================
+    // ============================================================
     // PAINEL DAS PROVAS
-    // =========================================================
+    // ============================================================
 
     [Header("Painel das Provas")]
     public GameObject painelProvas;
 
-    // =========================================================
-    // BOTÕES DAS PISTAS
-    // =========================================================
-
-    [Header("Botões das Pistas")]
+    [Header("Botoes das Provas")]
     public Button botaoGarrafa;
     public Button botaoFaca;
     public Button botaoDigital;
 
-    // =========================================================
-    // IMAGENS DAS PISTAS
-    // =========================================================
-
-    [Header("Imagens das Pistas")]
+    [Header("Imagens das Provas")]
     public Image imagemGarrafa;
     public Image imagemFaca;
     public Image imagemDigital;
 
-    // =========================================================
-    // SPRITES
-    // =========================================================
-
-    [Header("Sprites das Pistas")]
+    [Header("Sprites das Provas")]
     public Sprite spriteGarrafa;
     public Sprite spriteFaca;
     public Sprite spriteDigital;
 
-    [Header("Cor da Pista Depois de Usada")]
+    [Header("Cor da Prova Usada")]
     public Color corPistaUsada = Color.gray;
 
+    // ============================================================
+    // CONTADORES
+    // ============================================================
+
+    [Header("Tempo de carregamento das provas")]
+    public float tempoProva = 10f;
+
+    [Header("TMP Contador - Garrafa")]
+    public TMP_Text contadorGarrafa;
+
+    [Header("TMP Contador - Faca")]
+    public TMP_Text contadorFaca;
+
+    [Header("TMP Contador - Digital")]
+    public TMP_Text contadorDigital;
+
+    // ============================================================
+    // RESPOSTAS DAS PROVAS
+    // ============================================================
+
+    [Header("Respostas das Provas")]
+
+    public string respostaGarrafa =
+        "Essa garrafa nao prova nada! Eu nunca vi isso antes.";
+
+    public string respostaFaca =
+        "Essa faca... eu nao sei de onde voce tirou isso.";
+
+    public string respostaDigital =
+        "Essas digitais... nao... isso nao pode ser possivel.";
+
+    // ============================================================
+    // CONFISSAO
+    // ============================================================
+
+    [Header("Confissao")]
+    public TMP_Text textoConfissao1;
+    public TMP_Text textoConfissao2;
+
+    [TextArea(2, 5)]
+    public string mensagemConfissao1 =
+        "Esta bem... Eu confesso! Fui eu quem cometeu o crime. Eu o matei com uma estaca de gelo.";
+
+    [TextArea(2, 5)]
+    public string mensagemConfissao2 =
+        "Eu esculpi a estaca com uma faca e carregava na minha garrafa termica.";
+
+    public float esperaAntesConfissao = 1f;
+    public float tempoConfissao1 = 4f;
+    public float tempoConfissao2 = 4f;
+
+    // ============================================================
+    // TEMPO DAS RESPOSTAS
+    // ============================================================
+
+    [Header("Tempo das Respostas")]
+    public float tempoPonto = 0.3f;
+    public float tempoAntesResposta = 0.8f;
+
+    // ============================================================
+    // FADE
+    // ============================================================
+
+    [Header("Fade")]
+    public CanvasGroup fadeCanvasGroup;
+    public float duracaoFade = 1.5f;
+
+    [Header("Proxima Cena")]
+    public string nomeProximaCena = "CutscenePrisao";
+
+    // ============================================================
+    // POPUP
+    // ============================================================
+
+    [Header("Popup Explicativo")]
+    public GameObject popupExplicativo;
+    public TMP_Text textoExplicacao;
+    public float tempoPopup = 3f;
+
+    // ============================================================
+    // VARIAVEIS INTERNAS
+    // ============================================================
+
+    private bool respondendo = false;
+
+    // Provas utilizadas
     private bool garrafaApresentada = false;
     private bool facaApresentada = false;
     private bool digitalApresentada = false;
 
-    // =========================================================
-    // RESPOSTAS DAS PISTAS
-    // =========================================================
+    // Provas bloqueadas
+    private bool garrafaBloqueada = false;
+    private bool facaBloqueada = false;
+    private bool digitalBloqueada = false;
 
-    [Header("Resposta da Garrafa")]
-    [TextArea]
-    public string respostaGarrafa =
-        "Essa garrafa não prova nada! Eu nunca vi isso antes.";
+    // Corrotinas dos contadores
+    private Coroutine contadorGarrafaCoroutine;
+    private Coroutine contadorFacaCoroutine;
+    private Coroutine contadorDigitalCoroutine;
 
-    [Header("Resposta da Faca")]
-    [TextArea]
-    public string respostaFaca =
-        "Essa faca... eu não sei de onde você tirou isso.";
-
-    [Header("Resposta das Digitais")]
-    [TextArea]
-    public string respostaDigital =
-        "Essas digitais... não... isso não pode ser possível.";
-
-    // =========================================================
-    // CONFISSÃO - PARTE 1
-    // =========================================================
-
-    [Header("Confissão - Parte 1")]
-    public TMP_Text textoConfissao1;
-
-    [TextArea]
-    public string mensagemConfissao1 =
-        "Está bem... Eu confesso! Fui eu quem cometeu o crime. Eu o matei com uma estaca de gelo.";
-
-    // =========================================================
-    // CONFISSÃO - PARTE 2
-    // =========================================================
-
-    [Header("Confissão - Parte 2")]
-    public TMP_Text textoConfissao2;
-
-    [TextArea]
-    public string mensagemConfissao2 =
-        "Eu esculpi a estaca com uma faca e carregava na minha garrafa térmica.";
-
-    // =========================================================
-    // TEMPO DA CONFISSÃO
-    // =========================================================
-
-    [Header("Tempo da Confissão")]
-    public float esperaAntesConfissao = 1f;
-
-    public float tempoConfissao1 = 4f;
-
-    public float tempoConfissao2 = 4f;
-
-    // =========================================================
-    // TEMPO DAS RESPOSTAS
-    // =========================================================
-
-    [Header("Tempo para Responder")]
-    public float tempoPonto = 0.3f;
-
-    public float tempoAntesResposta = 0.8f;
-
-    // =========================================================
-    // FADE
-    // =========================================================
-
-    [Header("Fade")]
-    public CanvasGroup fadeCanvasGroup;
-
-    public float duracaoFade = 1.5f;
-
-    // =========================================================
-    // CENA
-    // =========================================================
-
-    [Header("Cena da Cutscene")]
-    public string nomeProximaCena = "CutscenePrisao";
-
-    // =========================================================
-    // POPUP
-    // =========================================================
-
-    [Header("Popup Inicial")]
-    public GameObject popupExplicativo;
-
-    public TMP_Text textoExplicacao;
-
-    [TextArea]
-    public string mensagemExplicacao =
-        "Faça quantas perguntas quiser. Apresente as três pistas para fazer o suspeito confessar.";
-
-    public float tempoPopup = 3f;
-
-    // =========================================================
-    // CONTROLE
-    // =========================================================
-
-    private bool interrogatorioFinalizado = false;
-
-    private bool respondendo = false;
-
-    // =========================================================
+    // ============================================================
     // START
-    // =========================================================
+    // ============================================================
 
-    void Start()
+    private void Start()
     {
-        // Bloqueia perguntas inicialmente
-
-        if (campoTexto != null)
-            campoTexto.interactable = false;
-
+        // Botao de enviar pergunta
         if (botaoEnviar != null)
-        {
-            botaoEnviar.interactable = false;
-
-            botaoEnviar.onClick.RemoveAllListeners();
-
             botaoEnviar.onClick.AddListener(EnviarPergunta);
-        }
 
-        // Para o player inicialmente
-
-        if (playerMovement != null)
-            playerMovement.enabled = false;
-
-        // =====================================================
-        // BOTÃO GARRAFA
-        // =====================================================
-
+        // Botoes das provas
         if (botaoGarrafa != null)
-        {
-            botaoGarrafa.onClick.RemoveAllListeners();
-
             botaoGarrafa.onClick.AddListener(ApresentarGarrafa);
-        }
-
-        // =====================================================
-        // BOTÃO FACA
-        // =====================================================
 
         if (botaoFaca != null)
-        {
-            botaoFaca.onClick.RemoveAllListeners();
-
             botaoFaca.onClick.AddListener(ApresentarFaca);
-        }
-
-        // =====================================================
-        // BOTÃO DIGITAL
-        // =====================================================
 
         if (botaoDigital != null)
-        {
-            botaoDigital.onClick.RemoveAllListeners();
-
             botaoDigital.onClick.AddListener(ApresentarDigital);
-        }
 
-        // =====================================================
-        // SPRITES
-        // =====================================================
-
+        // Sprites
         if (imagemGarrafa != null)
-        {
             imagemGarrafa.sprite = spriteGarrafa;
 
-            imagemGarrafa.color = Color.white;
-        }
-
         if (imagemFaca != null)
-        {
             imagemFaca.sprite = spriteFaca;
 
-            imagemFaca.color = Color.white;
-        }
-
         if (imagemDigital != null)
-        {
             imagemDigital.sprite = spriteDigital;
 
-            imagemDigital.color = Color.white;
-        }
-
-        // =====================================================
-        // CONFISSÃO
-        // =====================================================
-
+        // Confissao escondida
         if (textoConfissao1 != null)
         {
             textoConfissao1.gameObject.SetActive(false);
+            textoConfissao1.text = mensagemConfissao1;
         }
 
         if (textoConfissao2 != null)
         {
             textoConfissao2.gameObject.SetActive(false);
+            textoConfissao2.text = mensagemConfissao2;
         }
 
-        // =====================================================
-        // FADE
-        // =====================================================
-
-        if (fadeCanvasGroup != null)
+        // Contadores escondidos
+        if (contadorGarrafa != null)
         {
+            contadorGarrafa.text = "";
+            contadorGarrafa.gameObject.SetActive(false);
+        }
+
+        if (contadorFaca != null)
+        {
+            contadorFaca.text = "";
+            contadorFaca.gameObject.SetActive(false);
+        }
+
+        if (contadorDigital != null)
+        {
+            contadorDigital.text = "";
+            contadorDigital.gameObject.SetActive(false);
+        }
+
+        // Fade
+        if (fadeCanvasGroup != null)
             fadeCanvasGroup.alpha = 0f;
 
-            fadeCanvasGroup.blocksRaycasts = false;
-        }
+        // Popup
+        if (popupExplicativo != null)
+            popupExplicativo.SetActive(false);
 
-        // =====================================================
-        // POPUP
-        // =====================================================
+        StartCoroutine(MostrarPopup());
+    }
 
+    // ============================================================
+    // POPUP
+    // ============================================================
+
+    IEnumerator MostrarPopup()
+    {
         if (popupExplicativo != null)
         {
             popupExplicativo.SetActive(true);
 
             if (textoExplicacao != null)
             {
-                textoExplicacao.text = mensagemExplicacao;
+                textoExplicacao.text =
+                    "Faca perguntas ao suspeito. Quando estiver pronto, apresente as provas.";
             }
-
-            StartCoroutine(FecharPopup());
         }
-        else
-        {
-            LiberarInterrogatorio();
-        }
-    }
 
-    // =========================================================
-    // FECHAR POPUP
-    // =========================================================
-
-    IEnumerator FecharPopup()
-    {
         yield return new WaitForSeconds(tempoPopup);
 
         if (popupExplicativo != null)
             popupExplicativo.SetActive(false);
-
-        LiberarInterrogatorio();
     }
 
-    // =========================================================
-    // LIBERAR INTERROGATÓRIO
-    // =========================================================
-
-    void LiberarInterrogatorio()
-    {
-        if (campoTexto != null)
-        {
-            campoTexto.interactable = true;
-
-            campoTexto.ActivateInputField();
-        }
-
-        if (botaoEnviar != null)
-            botaoEnviar.interactable = true;
-
-        if (playerMovement != null)
-            playerMovement.enabled = true;
-    }
-
-    // =========================================================
-    // ENVIAR PERGUNTA
-    // =========================================================
+    // ============================================================
+    // PERGUNTAS
+    // ============================================================
 
     public void EnviarPergunta()
     {
-        if (interrogatorioFinalizado)
-            return;
-
         if (respondendo)
             return;
 
         if (campoTexto == null)
             return;
 
-        string pergunta = campoTexto.text;
-
-        if (string.IsNullOrWhiteSpace(pergunta))
+        if (string.IsNullOrWhiteSpace(campoTexto.text))
             return;
-
-        campoTexto.text = "";
 
         StartCoroutine(ResponderPergunta());
     }
-
-    // =========================================================
-    // RESPONDER PERGUNTA
-    // =========================================================
 
     IEnumerator ResponderPergunta()
     {
         respondendo = true;
 
-        if (campoTexto != null)
-            campoTexto.interactable = false;
-
         if (botaoEnviar != null)
             botaoEnviar.interactable = false;
 
-        // PONTO 1
+        if (campoTexto != null)
+            campoTexto.interactable = false;
+
+        if (textoResposta != null)
+            textoResposta.text = "";
 
         if (textoDigitando != null)
             textoDigitando.text = ".";
 
         yield return new WaitForSeconds(tempoPonto);
 
-        // PONTO 2
-
         if (textoDigitando != null)
             textoDigitando.text = "..";
 
         yield return new WaitForSeconds(tempoPonto);
-
-        // PONTO 3
 
         if (textoDigitando != null)
             textoDigitando.text = "...";
 
         yield return new WaitForSeconds(tempoAntesResposta);
 
-        // Remove os pontos
-
         if (textoDigitando != null)
             textoDigitando.text = "";
 
-        // Resposta
+        if (textoResposta != null && respostasNegacao.Length > 0)
+        {
+            int indice = Random.Range(0, respostasNegacao.Length);
 
-        if (textoResposta != null)
-            textoResposta.text = ObterRespostaAleatoria();
+            textoResposta.text = respostasNegacao[indice];
+        }
+
+        if (campoTexto != null)
+        {
+            campoTexto.text = "";
+            campoTexto.interactable = true;
+        }
+
+        if (botaoEnviar != null)
+            botaoEnviar.interactable = true;
 
         respondendo = false;
-
-        // Libera novamente
-
-        if (!interrogatorioFinalizado)
-        {
-            if (campoTexto != null)
-            {
-                campoTexto.interactable = true;
-
-                campoTexto.ActivateInputField();
-            }
-
-            if (botaoEnviar != null)
-                botaoEnviar.interactable = true;
-        }
     }
 
-    // =========================================================
-    // RESPOSTA ALEATÓRIA
-    // =========================================================
-
-    string ObterRespostaAleatoria()
-    {
-        if (respostasNegacao == null ||
-            respostasNegacao.Length == 0)
-        {
-            return "Não tenho nada para dizer.";
-        }
-
-        int index;
-
-        do
-        {
-            index = Random.Range(
-                0,
-                respostasNegacao.Length
-            );
-
-        } while (
-            respostasNegacao.Length > 1 &&
-            index == ultimaResposta
-        );
-
-        ultimaResposta = index;
-
-        return respostasNegacao[index];
-    }
-
-    // =========================================================
-    // APRESENTAR GARRAFA
-    // =========================================================
+    // ============================================================
+    // GARRAFA
+    // ============================================================
 
     public void ApresentarGarrafa()
     {
-        if (garrafaApresentada ||
-            interrogatorioFinalizado ||
-            respondendo)
+        // Impede usar se estiver respondendo
+        if (respondendo)
+            return;
+
+        // Impede usar se ja foi usada
+        if (garrafaApresentada)
+            return;
+
+        // IMPede usar se o tempo acabou
+        if (garrafaBloqueada)
             return;
 
         garrafaApresentada = true;
 
+        // Desativa botao
         if (botaoGarrafa != null)
             botaoGarrafa.interactable = false;
 
+        // Muda cor
         if (imagemGarrafa != null)
             imagemGarrafa.color = corPistaUsada;
 
-        StartCoroutine(
-            ResponderPista(respostaGarrafa)
-        );
+        // Para contador da garrafa
+        if (contadorGarrafaCoroutine != null)
+        {
+            StopCoroutine(contadorGarrafaCoroutine);
+            contadorGarrafaCoroutine = null;
+        }
+
+        if (contadorGarrafa != null)
+        {
+            contadorGarrafa.text = "";
+            contadorGarrafa.gameObject.SetActive(false);
+        }
+
+        // Comeca contador das outras
+        IniciarContadoresDasOutrasProvas("garrafa");
+
+        // Resposta
+        StartCoroutine(ResponderPista(respostaGarrafa));
     }
 
-    // =========================================================
-    // APRESENTAR FACA
-    // =========================================================
+    // ============================================================
+    // FACA
+    // ============================================================
 
     public void ApresentarFaca()
     {
-        if (facaApresentada ||
-            interrogatorioFinalizado ||
-            respondendo)
+        if (respondendo)
+            return;
+
+        if (facaApresentada)
+            return;
+
+        if (facaBloqueada)
             return;
 
         facaApresentada = true;
@@ -511,20 +390,39 @@ public class NpcFinal : MonoBehaviour
         if (imagemFaca != null)
             imagemFaca.color = corPistaUsada;
 
-        StartCoroutine(
-            ResponderPista(respostaFaca)
-        );
+        // Para contador da faca
+        if (contadorFacaCoroutine != null)
+        {
+            StopCoroutine(contadorFacaCoroutine);
+            contadorFacaCoroutine = null;
+        }
+
+        if (contadorFaca != null)
+        {
+            contadorFaca.text = "";
+            contadorFaca.gameObject.SetActive(false);
+        }
+
+        // Comeca contador das outras
+        IniciarContadoresDasOutrasProvas("faca");
+
+        // Resposta
+        StartCoroutine(ResponderPista(respostaFaca));
     }
 
-    // =========================================================
-    // APRESENTAR DIGITAL
-    // =========================================================
+    // ============================================================
+    // DIGITAL
+    // ============================================================
 
     public void ApresentarDigital()
     {
-        if (digitalApresentada ||
-            interrogatorioFinalizado ||
-            respondendo)
+        if (respondendo)
+            return;
+
+        if (digitalApresentada)
+            return;
+
+        if (digitalBloqueada)
             return;
 
         digitalApresentada = true;
@@ -535,116 +433,311 @@ public class NpcFinal : MonoBehaviour
         if (imagemDigital != null)
             imagemDigital.color = corPistaUsada;
 
-        StartCoroutine(
-            ResponderPista(respostaDigital)
-        );
+        // Para contador do digital
+        if (contadorDigitalCoroutine != null)
+        {
+            StopCoroutine(contadorDigitalCoroutine);
+            contadorDigitalCoroutine = null;
+        }
+
+        if (contadorDigital != null)
+        {
+            contadorDigital.text = "";
+            contadorDigital.gameObject.SetActive(false);
+        }
+
+        // Comeca contador das outras
+        IniciarContadoresDasOutrasProvas("digital");
+
+        // Resposta
+        StartCoroutine(ResponderPista(respostaDigital));
     }
 
-    // =========================================================
-    // RESPOSTA DA PISTA
-    // =========================================================
+    // ============================================================
+    // INICIAR CONTADORES DAS OUTRAS PROVAS
+    // ============================================================
+
+    void IniciarContadoresDasOutrasProvas(string provaUsada)
+    {
+        // Garrafa
+        if (provaUsada != "garrafa" &&
+            !garrafaApresentada &&
+            !garrafaBloqueada)
+        {
+            if (contadorGarrafaCoroutine != null)
+                StopCoroutine(contadorGarrafaCoroutine);
+
+            contadorGarrafaCoroutine =
+                StartCoroutine(ContadorGarrafa());
+        }
+
+        // Faca
+        if (provaUsada != "faca" &&
+            !facaApresentada &&
+            !facaBloqueada)
+        {
+            if (contadorFacaCoroutine != null)
+                StopCoroutine(contadorFacaCoroutine);
+
+            contadorFacaCoroutine =
+                StartCoroutine(ContadorFaca());
+        }
+
+        // Digital
+        if (provaUsada != "digital" &&
+            !digitalApresentada &&
+            !digitalBloqueada)
+        {
+            if (contadorDigitalCoroutine != null)
+                StopCoroutine(contadorDigitalCoroutine);
+
+            contadorDigitalCoroutine =
+                StartCoroutine(ContadorDigital());
+        }
+    }
+
+    // ============================================================
+    // CONTADOR GARRAFA
+    // ============================================================
+
+    IEnumerator ContadorGarrafa()
+    {
+        if (contadorGarrafa != null)
+        {
+            contadorGarrafa.gameObject.SetActive(true);
+            contadorGarrafa.text =
+                Mathf.CeilToInt(tempoProva).ToString();
+        }
+
+        float tempo = tempoProva;
+
+        while (tempo > 0)
+        {
+            // Se ja foi usada, para
+            if (garrafaApresentada)
+                yield break;
+
+            // Se ja esta bloqueada, para
+            if (garrafaBloqueada)
+                yield break;
+
+            if (contadorGarrafa != null)
+            {
+                contadorGarrafa.text =
+                    Mathf.CeilToInt(tempo).ToString();
+            }
+
+            tempo -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        // Se foi usada no ultimo instante
+        if (garrafaApresentada)
+            yield break;
+
+        // Bloqueia
+        garrafaBloqueada = true;
+
+        if (contadorGarrafa != null)
+            contadorGarrafa.text = "0";
+
+        if (botaoGarrafa != null)
+            botaoGarrafa.interactable = false;
+    }
+
+    // ============================================================
+    // CONTADOR FACA
+    // ============================================================
+
+    IEnumerator ContadorFaca()
+    {
+        if (contadorFaca != null)
+        {
+            contadorFaca.gameObject.SetActive(true);
+            contadorFaca.text =
+                Mathf.CeilToInt(tempoProva).ToString();
+        }
+
+        float tempo = tempoProva;
+
+        while (tempo > 0)
+        {
+            if (facaApresentada)
+                yield break;
+
+            if (facaBloqueada)
+                yield break;
+
+            if (contadorFaca != null)
+            {
+                contadorFaca.text =
+                    Mathf.CeilToInt(tempo).ToString();
+            }
+
+            tempo -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        if (facaApresentada)
+            yield break;
+
+        facaBloqueada = true;
+
+        if (contadorFaca != null)
+            contadorFaca.text = "0";
+
+        if (botaoFaca != null)
+            botaoFaca.interactable = false;
+    }
+
+    // ============================================================
+    // CONTADOR DIGITAL
+    // ============================================================
+
+    IEnumerator ContadorDigital()
+    {
+        if (contadorDigital != null)
+        {
+            contadorDigital.gameObject.SetActive(true);
+            contadorDigital.text =
+                Mathf.CeilToInt(tempoProva).ToString();
+        }
+
+        float tempo = tempoProva;
+
+        while (tempo > 0)
+        {
+            if (digitalApresentada)
+                yield break;
+
+            if (digitalBloqueada)
+                yield break;
+
+            if (contadorDigital != null)
+            {
+                contadorDigital.text =
+                    Mathf.CeilToInt(tempo).ToString();
+            }
+
+            tempo -= Time.deltaTime;
+
+            yield return null;
+        }
+
+        if (digitalApresentada)
+            yield break;
+
+        digitalBloqueada = true;
+
+        if (contadorDigital != null)
+            contadorDigital.text = "0";
+
+        if (botaoDigital != null)
+            botaoDigital.interactable = false;
+    }
+
+    // ============================================================
+    // RESPOSTA DA PROVA
+    // ============================================================
 
     IEnumerator ResponderPista(string resposta)
     {
         respondendo = true;
 
-        if (campoTexto != null)
-            campoTexto.interactable = false;
-
         if (botaoEnviar != null)
             botaoEnviar.interactable = false;
 
-        // PONTO 1
+        if (campoTexto != null)
+            campoTexto.interactable = false;
+
+        if (textoResposta != null)
+            textoResposta.text = "";
 
         if (textoDigitando != null)
             textoDigitando.text = ".";
 
         yield return new WaitForSeconds(tempoPonto);
 
-        // PONTO 2
-
         if (textoDigitando != null)
             textoDigitando.text = "..";
 
         yield return new WaitForSeconds(tempoPonto);
-
-        // PONTO 3
 
         if (textoDigitando != null)
             textoDigitando.text = "...";
 
         yield return new WaitForSeconds(tempoAntesResposta);
 
-        // Remove os pontos
-
         if (textoDigitando != null)
             textoDigitando.text = "";
-
-        // Resposta da pista
 
         if (textoResposta != null)
             textoResposta.text = resposta;
 
-        respondendo = false;
-
-        // Libera perguntas novamente
-
-        if (!interrogatorioFinalizado)
+        if (campoTexto != null)
         {
-            if (campoTexto != null)
-            {
-                campoTexto.interactable = true;
-
-                campoTexto.ActivateInputField();
-            }
-
-            if (botaoEnviar != null)
-                botaoEnviar.interactable = true;
+            campoTexto.text = "";
+            campoTexto.interactable = true;
         }
 
-        // Verifica as pistas
+        if (botaoEnviar != null)
+            botaoEnviar.interactable = true;
+
+        respondendo = false;
 
         VerificarPistas();
     }
 
-    // =========================================================
-    // VERIFICAR AS 3 PISTAS
-    // =========================================================
+    // ============================================================
+    // VERIFICAR PROVAS
+    // ============================================================
 
     void VerificarPistas()
     {
-        if (interrogatorioFinalizado)
-            return;
+        if (garrafaApresentada &&
+            facaApresentada &&
+            digitalApresentada)
+        {
+            // Para os contadores
+            if (contadorGarrafaCoroutine != null)
+                StopCoroutine(contadorGarrafaCoroutine);
 
-        if (!garrafaApresentada)
-            return;
+            if (contadorFacaCoroutine != null)
+                StopCoroutine(contadorFacaCoroutine);
 
-        if (!facaApresentada)
-            return;
+            if (contadorDigitalCoroutine != null)
+                StopCoroutine(contadorDigitalCoroutine);
 
-        if (!digitalApresentada)
-            return;
-
-        interrogatorioFinalizado = true;
-
-        StartCoroutine(IniciarConfissao());
+            StartCoroutine(IniciarConfissao());
+        }
     }
 
-    // =========================================================
-    // CONFISSÃO
-    // =========================================================
+    // ============================================================
+    // CONFISSAO
+    // ============================================================
 
     IEnumerator IniciarConfissao()
     {
-        // Espera depois da última pista
+        respondendo = true;
 
-        yield return new WaitForSeconds(
-            esperaAntesConfissao
-        );
+        // Esconde contadores
+        if (contadorGarrafa != null)
+            contadorGarrafa.gameObject.SetActive(false);
 
-        // =====================================================
-        // ESCONDE INTERROGATÓRIO
-        // =====================================================
+        if (contadorFaca != null)
+            contadorFaca.gameObject.SetActive(false);
+
+        if (contadorDigital != null)
+            contadorDigital.gameObject.SetActive(false);
+
+        // Esconde interrogatorio
+        if (campoTexto != null)
+            campoTexto.gameObject.SetActive(false);
+
+        if (botaoEnviar != null)
+            botaoEnviar.gameObject.SetActive(false);
 
         if (textoResposta != null)
             textoResposta.gameObject.SetActive(false);
@@ -652,94 +745,55 @@ public class NpcFinal : MonoBehaviour
         if (textoDigitando != null)
             textoDigitando.gameObject.SetActive(false);
 
-        if (campoTexto != null)
-            campoTexto.gameObject.SetActive(false);
-
-        if (botaoEnviar != null)
-            botaoEnviar.gameObject.SetActive(false);
-
-        // Para o player
-
+        // Desativa player
         if (playerMovement != null)
             playerMovement.enabled = false;
 
-        // =====================================================
-        // CONFISSÃO - PARTE 1
-        // =====================================================
+        yield return new WaitForSeconds(esperaAntesConfissao);
 
+        // Primeira parte
         if (textoConfissao1 != null)
         {
-            textoConfissao1.text = mensagemConfissao1;
-
             textoConfissao1.gameObject.SetActive(true);
+            textoConfissao1.text = mensagemConfissao1;
         }
 
-        yield return new WaitForSeconds(
-            tempoConfissao1
-        );
-
-        // Esconde parte 1
+        yield return new WaitForSeconds(tempoConfissao1);
 
         if (textoConfissao1 != null)
             textoConfissao1.gameObject.SetActive(false);
 
-        // =====================================================
-        // CONFISSÃO - PARTE 2
-        // =====================================================
-
+        // Segunda parte
         if (textoConfissao2 != null)
         {
-            textoConfissao2.text = mensagemConfissao2;
-
             textoConfissao2.gameObject.SetActive(true);
+            textoConfissao2.text = mensagemConfissao2;
         }
 
-        yield return new WaitForSeconds(
-            tempoConfissao2
-        );
-
-        // Esconde parte 2
+        yield return new WaitForSeconds(tempoConfissao2);
 
         if (textoConfissao2 != null)
             textoConfissao2.gameObject.SetActive(false);
 
-        // =====================================================
-        // FADE
-        // =====================================================
+        // Fade
+        yield return StartCoroutine(FadeParaPreto());
 
-        yield return StartCoroutine(
-            FadeParaPreto()
-        );
-
-        // =====================================================
-        // DESATIVA PAINEL DAS PROVAS
-        // =====================================================
-
+        // Desativa painel das provas
         if (painelProvas != null)
             painelProvas.SetActive(false);
 
-        // =====================================================
-        // TROCA DE CENA
-        // =====================================================
-
-        if (!string.IsNullOrEmpty(nomeProximaCena))
-        {
-            SceneManager.LoadScene(
-                nomeProximaCena
-            );
-        }
+        // Carrega proxima cena
+        SceneManager.LoadScene(nomeProximaCena);
     }
 
-    // =========================================================
-    // FADE PARA PRETO
-    // =========================================================
+    // ============================================================
+    // FADE
+    // ============================================================
 
     IEnumerator FadeParaPreto()
     {
         if (fadeCanvasGroup == null)
             yield break;
-
-        fadeCanvasGroup.blocksRaycasts = true;
 
         float tempo = 0f;
 
@@ -748,9 +802,7 @@ public class NpcFinal : MonoBehaviour
             tempo += Time.deltaTime;
 
             fadeCanvasGroup.alpha =
-                Mathf.Clamp01(
-                    tempo / duracaoFade
-                );
+                Mathf.Clamp01(tempo / duracaoFade);
 
             yield return null;
         }
