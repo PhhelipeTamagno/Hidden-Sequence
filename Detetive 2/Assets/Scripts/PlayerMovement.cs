@@ -49,13 +49,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        // ==============================
+        // ESTÁ USANDO O COMPUTADOR
+        // ==============================
 
         if (usandoComputador)
         {
-            if (
-                Input.GetKeyDown(KeyCode.E) ||
-                Input.GetKeyDown(KeyCode.Escape)
-            )
+            // ESC NÃO SAI MAIS DO COMPUTADOR
+            // Apenas E sai do computador
+
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 if (computadorEmUso != null)
                     computadorEmUso.SairComputador(this);
@@ -64,20 +67,27 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        // ==============================
+        // MOUSE DESBLOQUEADO
+        // ==============================
+
         if (!mouseTravado)
         {
-            if (Input.GetKeyDown(KeyCode.V))
+            // Q trava o mouse novamente
+            if (Input.GetKeyDown(KeyCode.Q))
             {
                 mouseTravado = true;
 
-                Cursor.lockState =
-                    CursorLockMode.Locked;
-
+                Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
 
             return;
         }
+
+        // ==============================
+        // CÂMERA
+        // ==============================
 
         float mouseX =
             Input.GetAxis("Mouse X") *
@@ -109,6 +119,10 @@ public class PlayerMovement : MonoBehaviour
             Vector3.up * mouseX
         );
 
+        // ==============================
+        // MOVIMENTO
+        // ==============================
+
         float horizontal =
             Input.GetAxisRaw("Horizontal");
 
@@ -122,6 +136,10 @@ public class PlayerMovement : MonoBehaviour
         movimento =
             movimento.normalized *
             velocidade;
+
+        // ==============================
+        // GRAVIDADE E PULO
+        // ==============================
 
         if (controller.isGrounded)
         {
@@ -147,6 +165,10 @@ public class PlayerMovement : MonoBehaviour
             Time.deltaTime
         );
 
+        // ==============================
+        // ANIMAÇÃO
+        // ==============================
+
         bool andando =
             horizontal != 0 ||
             vertical != 0;
@@ -158,6 +180,10 @@ public class PlayerMovement : MonoBehaviour
                 andando
             );
         }
+
+        // ==============================
+        // RAYCAST DE INTERAÇÃO
+        // ==============================
 
         Ray ray =
             new Ray(
@@ -192,6 +218,10 @@ public class PlayerMovement : MonoBehaviour
                     if (promptInteracao != null)
                         promptInteracao.Mostrar();
                 }
+
+                // ==============================
+                // INTERAGIR COM COMPUTADOR
+                // ==============================
 
                 if (Input.GetKeyDown(KeyCode.E))
                 {
@@ -252,22 +282,20 @@ public class PlayerMovement : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.V))
+        
+
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             mouseTravado = !mouseTravado;
 
             if (mouseTravado)
             {
-                Cursor.lockState =
-                    CursorLockMode.Locked;
-
+                Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
             else
             {
-                Cursor.lockState =
-                    CursorLockMode.None;
-
+                Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
 
                 if (campoTexto != null)
