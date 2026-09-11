@@ -55,9 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
         if (usandoComputador)
         {
-            // ESC NÃO SAI MAIS DO COMPUTADOR
-            // Apenas E sai do computador
-
+            // E sai do computador
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (computadorEmUso != null)
@@ -73,8 +71,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (!mouseTravado)
         {
-            // Q trava o mouse novamente
-            if (Input.GetKeyDown(KeyCode.Q))
+            // V trava o mouse novamente
+            if (Input.GetKeyDown(KeyCode.V))
             {
                 mouseTravado = true;
 
@@ -284,7 +282,8 @@ public class PlayerMovement : MonoBehaviour
 
         
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        // V libera ou trava o mouse
+        if (Input.GetKeyDown(KeyCode.V))
         {
             mouseTravado = !mouseTravado;
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -145,11 +146,6 @@ public class NpcFinal : MonoBehaviour
     private bool facaApresentada = false;
     private bool digitalApresentada = false;
 
-    // Provas bloqueadas
-    private bool garrafaBloqueada = false;
-    private bool facaBloqueada = false;
-    private bool digitalBloqueada = false;
-
     // Corrotinas dos contadores
     private Coroutine contadorGarrafaCoroutine;
     private Coroutine contadorFacaCoroutine;
@@ -161,11 +157,37 @@ public class NpcFinal : MonoBehaviour
 
     private void Start()
     {
-        // Botao de enviar pergunta
+        // ---------------------------------------------------------
+        // BOTAO ENVIAR
+        // ---------------------------------------------------------
+
         if (botaoEnviar != null)
+        {
             botaoEnviar.onClick.AddListener(EnviarPergunta);
 
-        // Botoes das provas
+            EventTrigger trigger =
+                botaoEnviar.gameObject.GetComponent<EventTrigger>();
+
+            if (trigger == null)
+                trigger = botaoEnviar.gameObject.AddComponent<EventTrigger>();
+
+            EventTrigger.Entry entradaPointerDown =
+                new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerDown
+                };
+
+            entradaPointerDown.callback.AddListener(
+                (data) => { EnviarPergunta(); }
+            );
+
+            trigger.triggers.Add(entradaPointerDown);
+        }
+
+        // ---------------------------------------------------------
+        // BOTOES DAS PROVAS
+        // ---------------------------------------------------------
+
         if (botaoGarrafa != null)
             botaoGarrafa.onClick.AddListener(ApresentarGarrafa);
 
@@ -175,7 +197,10 @@ public class NpcFinal : MonoBehaviour
         if (botaoDigital != null)
             botaoDigital.onClick.AddListener(ApresentarDigital);
 
-        // Sprites
+        // ---------------------------------------------------------
+        // SPRITES
+        // ---------------------------------------------------------
+
         if (imagemGarrafa != null)
             imagemGarrafa.sprite = spriteGarrafa;
 
@@ -185,7 +210,10 @@ public class NpcFinal : MonoBehaviour
         if (imagemDigital != null)
             imagemDigital.sprite = spriteDigital;
 
-        // Confissao escondida
+        // ---------------------------------------------------------
+        // CONFISSAO ESCONDIDA
+        // ---------------------------------------------------------
+
         if (textoConfissao1 != null)
         {
             textoConfissao1.gameObject.SetActive(false);
@@ -198,7 +226,10 @@ public class NpcFinal : MonoBehaviour
             textoConfissao2.text = mensagemConfissao2;
         }
 
-        // Contadores escondidos
+        // ---------------------------------------------------------
+        // CONTADORES ESCONDIDOS
+        // ---------------------------------------------------------
+
         if (contadorGarrafa != null)
         {
             contadorGarrafa.text = "";
@@ -217,15 +248,36 @@ public class NpcFinal : MonoBehaviour
             contadorDigital.gameObject.SetActive(false);
         }
 
-        // Fade
+        // ---------------------------------------------------------
+        // FADE
+        // ---------------------------------------------------------
+
         if (fadeCanvasGroup != null)
             fadeCanvasGroup.alpha = 0f;
 
-        // Popup
+        // ---------------------------------------------------------
+        // POPUP
+        // ---------------------------------------------------------
+
         if (popupExplicativo != null)
             popupExplicativo.SetActive(false);
 
         StartCoroutine(MostrarPopup());
+    }
+
+    // ============================================================
+    // UPDATE - ENTER ENVIA A PERGUNTA
+    // ============================================================
+
+    private void Update()
+    {
+        if (campoTexto != null &&
+            campoTexto.isFocused &&
+            (Input.GetKeyDown(KeyCode.Return) ||
+             Input.GetKeyDown(KeyCode.KeypadEnter)))
+        {
+            EnviarPergunta();
+        }
     }
 
     // ============================================================
@@ -282,6 +334,10 @@ public class NpcFinal : MonoBehaviour
         if (textoResposta != null)
             textoResposta.text = "";
 
+        // ---------------------------------------------------------
+        // PLAYER/NPC DIGITANDO
+        // ---------------------------------------------------------
+
         if (textoDigitando != null)
             textoDigitando.text = ".";
 
@@ -300,17 +356,30 @@ public class NpcFinal : MonoBehaviour
         if (textoDigitando != null)
             textoDigitando.text = "";
 
-        if (textoResposta != null && respostasNegacao.Length > 0)
-        {
-            int indice = Random.Range(0, respostasNegacao.Length);
+        // ---------------------------------------------------------
+        // RESPOSTA
+        // ---------------------------------------------------------
 
-            textoResposta.text = respostasNegacao[indice];
+        if (textoResposta != null &&
+            respostasNegacao.Length > 0)
+        {
+            int indice =
+                Random.Range(0, respostasNegacao.Length);
+
+            textoResposta.text =
+                respostasNegacao[indice];
         }
+
+        // ---------------------------------------------------------
+        // LIBERA CAMPO
+        // ---------------------------------------------------------
 
         if (campoTexto != null)
         {
             campoTexto.text = "";
             campoTexto.interactable = true;
+
+            campoTexto.ActivateInputField();
         }
 
         if (botaoEnviar != null)
@@ -325,29 +394,20 @@ public class NpcFinal : MonoBehaviour
 
     public void ApresentarGarrafa()
     {
-        // Impede usar se estiver respondendo
         if (respondendo)
             return;
 
-        // Impede usar se ja foi usada
         if (garrafaApresentada)
-            return;
-
-        // IMPede usar se o tempo acabou
-        if (garrafaBloqueada)
             return;
 
         garrafaApresentada = true;
 
-        // Desativa botao
         if (botaoGarrafa != null)
             botaoGarrafa.interactable = false;
 
-        // Muda cor
         if (imagemGarrafa != null)
             imagemGarrafa.color = corPistaUsada;
 
-        // Para contador da garrafa
         if (contadorGarrafaCoroutine != null)
         {
             StopCoroutine(contadorGarrafaCoroutine);
@@ -360,10 +420,8 @@ public class NpcFinal : MonoBehaviour
             contadorGarrafa.gameObject.SetActive(false);
         }
 
-        // Comeca contador das outras
         IniciarContadoresDasOutrasProvas("garrafa");
 
-        // Resposta
         StartCoroutine(ResponderPista(respostaGarrafa));
     }
 
@@ -379,9 +437,6 @@ public class NpcFinal : MonoBehaviour
         if (facaApresentada)
             return;
 
-        if (facaBloqueada)
-            return;
-
         facaApresentada = true;
 
         if (botaoFaca != null)
@@ -390,7 +445,6 @@ public class NpcFinal : MonoBehaviour
         if (imagemFaca != null)
             imagemFaca.color = corPistaUsada;
 
-        // Para contador da faca
         if (contadorFacaCoroutine != null)
         {
             StopCoroutine(contadorFacaCoroutine);
@@ -403,10 +457,8 @@ public class NpcFinal : MonoBehaviour
             contadorFaca.gameObject.SetActive(false);
         }
 
-        // Comeca contador das outras
         IniciarContadoresDasOutrasProvas("faca");
 
-        // Resposta
         StartCoroutine(ResponderPista(respostaFaca));
     }
 
@@ -422,9 +474,6 @@ public class NpcFinal : MonoBehaviour
         if (digitalApresentada)
             return;
 
-        if (digitalBloqueada)
-            return;
-
         digitalApresentada = true;
 
         if (botaoDigital != null)
@@ -433,7 +482,6 @@ public class NpcFinal : MonoBehaviour
         if (imagemDigital != null)
             imagemDigital.color = corPistaUsada;
 
-        // Para contador do digital
         if (contadorDigitalCoroutine != null)
         {
             StopCoroutine(contadorDigitalCoroutine);
@@ -446,10 +494,8 @@ public class NpcFinal : MonoBehaviour
             contadorDigital.gameObject.SetActive(false);
         }
 
-        // Comeca contador das outras
         IniciarContadoresDasOutrasProvas("digital");
 
-        // Resposta
         StartCoroutine(ResponderPista(respostaDigital));
     }
 
@@ -459,10 +505,12 @@ public class NpcFinal : MonoBehaviour
 
     void IniciarContadoresDasOutrasProvas(string provaUsada)
     {
-        // Garrafa
+        // ---------------------------------------------------------
+        // GARRAFA
+        // ---------------------------------------------------------
+
         if (provaUsada != "garrafa" &&
-            !garrafaApresentada &&
-            !garrafaBloqueada)
+            !garrafaApresentada)
         {
             if (contadorGarrafaCoroutine != null)
                 StopCoroutine(contadorGarrafaCoroutine);
@@ -471,10 +519,12 @@ public class NpcFinal : MonoBehaviour
                 StartCoroutine(ContadorGarrafa());
         }
 
-        // Faca
+        // ---------------------------------------------------------
+        // FACA
+        // ---------------------------------------------------------
+
         if (provaUsada != "faca" &&
-            !facaApresentada &&
-            !facaBloqueada)
+            !facaApresentada)
         {
             if (contadorFacaCoroutine != null)
                 StopCoroutine(contadorFacaCoroutine);
@@ -483,10 +533,12 @@ public class NpcFinal : MonoBehaviour
                 StartCoroutine(ContadorFaca());
         }
 
-        // Digital
+        // ---------------------------------------------------------
+        // DIGITAL
+        // ---------------------------------------------------------
+
         if (provaUsada != "digital" &&
-            !digitalApresentada &&
-            !digitalBloqueada)
+            !digitalApresentada)
         {
             if (contadorDigitalCoroutine != null)
                 StopCoroutine(contadorDigitalCoroutine);
@@ -509,16 +561,15 @@ public class NpcFinal : MonoBehaviour
                 Mathf.CeilToInt(tempoProva).ToString();
         }
 
+        // Bloqueia enquanto carrega
+        if (botaoGarrafa != null)
+            botaoGarrafa.interactable = false;
+
         float tempo = tempoProva;
 
         while (tempo > 0)
         {
-            // Se ja foi usada, para
             if (garrafaApresentada)
-                yield break;
-
-            // Se ja esta bloqueada, para
-            if (garrafaBloqueada)
                 yield break;
 
             if (contadorGarrafa != null)
@@ -532,18 +583,24 @@ public class NpcFinal : MonoBehaviour
             yield return null;
         }
 
-        // Se foi usada no ultimo instante
         if (garrafaApresentada)
             yield break;
 
-        // Bloqueia
-        garrafaBloqueada = true;
+        // ---------------------------------------------------------
+        // CHEGOU A ZERO
+        // ---------------------------------------------------------
 
         if (contadorGarrafa != null)
+        {
             contadorGarrafa.text = "0";
 
+            // Mantem o 0 visivel
+            contadorGarrafa.gameObject.SetActive(true);
+        }
+
+        // Libera a prova
         if (botaoGarrafa != null)
-            botaoGarrafa.interactable = false;
+            botaoGarrafa.interactable = true;
     }
 
     // ============================================================
@@ -559,14 +616,15 @@ public class NpcFinal : MonoBehaviour
                 Mathf.CeilToInt(tempoProva).ToString();
         }
 
+        // Bloqueia enquanto carrega
+        if (botaoFaca != null)
+            botaoFaca.interactable = false;
+
         float tempo = tempoProva;
 
         while (tempo > 0)
         {
             if (facaApresentada)
-                yield break;
-
-            if (facaBloqueada)
                 yield break;
 
             if (contadorFaca != null)
@@ -583,13 +641,21 @@ public class NpcFinal : MonoBehaviour
         if (facaApresentada)
             yield break;
 
-        facaBloqueada = true;
+        // ---------------------------------------------------------
+        // CHEGOU A ZERO
+        // ---------------------------------------------------------
 
         if (contadorFaca != null)
+        {
             contadorFaca.text = "0";
 
+            // Mantem o 0 visivel
+            contadorFaca.gameObject.SetActive(true);
+        }
+
+        // Libera a prova
         if (botaoFaca != null)
-            botaoFaca.interactable = false;
+            botaoFaca.interactable = true;
     }
 
     // ============================================================
@@ -605,14 +671,15 @@ public class NpcFinal : MonoBehaviour
                 Mathf.CeilToInt(tempoProva).ToString();
         }
 
+        // Bloqueia enquanto carrega
+        if (botaoDigital != null)
+            botaoDigital.interactable = false;
+
         float tempo = tempoProva;
 
         while (tempo > 0)
         {
             if (digitalApresentada)
-                yield break;
-
-            if (digitalBloqueada)
                 yield break;
 
             if (contadorDigital != null)
@@ -629,13 +696,21 @@ public class NpcFinal : MonoBehaviour
         if (digitalApresentada)
             yield break;
 
-        digitalBloqueada = true;
+        // ---------------------------------------------------------
+        // CHEGOU A ZERO
+        // ---------------------------------------------------------
 
         if (contadorDigital != null)
+        {
             contadorDigital.text = "0";
 
+            // Mantem o 0 visivel
+            contadorDigital.gameObject.SetActive(true);
+        }
+
+        // Libera a prova
         if (botaoDigital != null)
-            botaoDigital.interactable = false;
+            botaoDigital.interactable = true;
     }
 
     // ============================================================
@@ -655,6 +730,10 @@ public class NpcFinal : MonoBehaviour
         if (textoResposta != null)
             textoResposta.text = "";
 
+        // ---------------------------------------------------------
+        // DIGITANDO
+        // ---------------------------------------------------------
+
         if (textoDigitando != null)
             textoDigitando.text = ".";
 
@@ -673,13 +752,23 @@ public class NpcFinal : MonoBehaviour
         if (textoDigitando != null)
             textoDigitando.text = "";
 
+        // ---------------------------------------------------------
+        // RESPOSTA DA PROVA
+        // ---------------------------------------------------------
+
         if (textoResposta != null)
             textoResposta.text = resposta;
+
+        // ---------------------------------------------------------
+        // LIBERA CAMPO
+        // ---------------------------------------------------------
 
         if (campoTexto != null)
         {
             campoTexto.text = "";
             campoTexto.interactable = true;
+
+            campoTexto.ActivateInputField();
         }
 
         if (botaoEnviar != null)
@@ -687,6 +776,7 @@ public class NpcFinal : MonoBehaviour
 
         respondendo = false;
 
+        // Verifica se todas as provas foram apresentadas
         VerificarPistas();
     }
 
@@ -700,7 +790,6 @@ public class NpcFinal : MonoBehaviour
             facaApresentada &&
             digitalApresentada)
         {
-            // Para os contadores
             if (contadorGarrafaCoroutine != null)
                 StopCoroutine(contadorGarrafaCoroutine);
 
@@ -722,7 +811,10 @@ public class NpcFinal : MonoBehaviour
     {
         respondendo = true;
 
-        // Esconde contadores
+        // ---------------------------------------------------------
+        // ESCONDE CONTADORES
+        // ---------------------------------------------------------
+
         if (contadorGarrafa != null)
             contadorGarrafa.gameObject.SetActive(false);
 
@@ -732,7 +824,10 @@ public class NpcFinal : MonoBehaviour
         if (contadorDigital != null)
             contadorDigital.gameObject.SetActive(false);
 
-        // Esconde interrogatorio
+        // ---------------------------------------------------------
+        // ESCONDE INTERROGATORIO
+        // ---------------------------------------------------------
+
         if (campoTexto != null)
             campoTexto.gameObject.SetActive(false);
 
@@ -745,13 +840,19 @@ public class NpcFinal : MonoBehaviour
         if (textoDigitando != null)
             textoDigitando.gameObject.SetActive(false);
 
-        // Desativa player
+        // ---------------------------------------------------------
+        // DESATIVA PLAYER
+        // ---------------------------------------------------------
+
         if (playerMovement != null)
             playerMovement.enabled = false;
 
         yield return new WaitForSeconds(esperaAntesConfissao);
 
-        // Primeira parte
+        // ---------------------------------------------------------
+        // PRIMEIRA PARTE DA CONFISSAO
+        // ---------------------------------------------------------
+
         if (textoConfissao1 != null)
         {
             textoConfissao1.gameObject.SetActive(true);
@@ -763,7 +864,10 @@ public class NpcFinal : MonoBehaviour
         if (textoConfissao1 != null)
             textoConfissao1.gameObject.SetActive(false);
 
-        // Segunda parte
+        // ---------------------------------------------------------
+        // SEGUNDA PARTE DA CONFISSAO
+        // ---------------------------------------------------------
+
         if (textoConfissao2 != null)
         {
             textoConfissao2.gameObject.SetActive(true);
@@ -775,19 +879,28 @@ public class NpcFinal : MonoBehaviour
         if (textoConfissao2 != null)
             textoConfissao2.gameObject.SetActive(false);
 
-        // Fade
+        // ---------------------------------------------------------
+        // FADE
+        // ---------------------------------------------------------
+
         yield return StartCoroutine(FadeParaPreto());
 
-        // Desativa painel das provas
+        // ---------------------------------------------------------
+        // ESCONDE PAINEL
+        // ---------------------------------------------------------
+
         if (painelProvas != null)
             painelProvas.SetActive(false);
 
-        // Carrega proxima cena
+        // ---------------------------------------------------------
+        // PROXIMA CENA
+        // ---------------------------------------------------------
+
         SceneManager.LoadScene(nomeProximaCena);
     }
 
     // ============================================================
-    // FADE
+    // FADE PARA PRETO
     // ============================================================
 
     IEnumerator FadeParaPreto()
