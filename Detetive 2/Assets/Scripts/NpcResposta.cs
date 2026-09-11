@@ -13,7 +13,7 @@ public class NPCResposta : MonoBehaviour
     public Button botaoEnviar;
 
     [Header("Player")]
-    public PlayerMovement playerMovement; // referência ao script de movimento/câmera do player
+    public PlayerMovement playerMovement; 
 
     [Header("Popup Explicativo")]
     public RectTransform popupExplicativo;
@@ -103,7 +103,7 @@ public class NPCResposta : MonoBehaviour
         {
             tempo += Time.deltaTime;
             float t = Mathf.Clamp01(tempo / duracaoAnimacaoPopup);
-            float tSuave = 1f - Mathf.Pow(1f - t, 3f); // ease out cubic
+            float tSuave = 1f - Mathf.Pow(1f - t, 3f); 
 
             popupExplicativo.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoFinalPopupExplicativo, tSuave);
 
@@ -129,7 +129,7 @@ public class NPCResposta : MonoBehaviour
         {
             tempo += Time.deltaTime;
             float t = Mathf.Clamp01(tempo / duracaoAnimacaoPopup);
-            float tSuave = t * t; // ease in, sobe acelerando
+            float tSuave = t * t;
 
             popupExplicativo.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoSaida, tSuave);
 

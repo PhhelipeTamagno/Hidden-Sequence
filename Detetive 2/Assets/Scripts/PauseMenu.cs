@@ -21,7 +21,6 @@ public class PauseMenu : MonoBehaviour
         pauseMenu.SetActive(false);
         configPanel.SetActive(false);
 
-        // Carrega o volume salvo
         volumeSlider.value = PlayerPrefs.GetFloat("Volume", 1f);
 
         AudioListener.volume = volumeSlider.value;
@@ -31,8 +30,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        // ESC só abre o pause.
-        // Depois que abrir, ESC não fecha.
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (!isPaused)
@@ -49,7 +47,6 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 0f;
         isPaused = true;
 
-        // Libera o mouse
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
@@ -62,20 +59,17 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
         isPaused = false;
 
-        // Trava o mouse novamente
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     public void OpenConfig()
     {
-        // NÃO fecha o Pause Menu
         configPanel.SetActive(true);
     }
 
     public void CloseConfig()
     {
-        // Apenas fecha as configurações
         configPanel.SetActive(false);
     }
 
