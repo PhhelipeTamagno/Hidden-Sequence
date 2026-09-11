@@ -1,128 +1,146 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using EasyTransition;
 
 public class PortaInterrogatorio : MonoBehaviour
 {
     [Header("Cena")]
-    public string nomeCenaDestino;
+    [SerializeField] private string nomeCenaDestino = "Interrogatorio";
 
     [Header("Jogador")]
-    public Transform jogador;
+    [SerializeField] private Transform jogador;
+    [SerializeField] private float distanciaInteracao = 3f;
 
-    [Header("Interação")]
-    public float distanciaInteracao = 3f;
-    public GameObject painelInteracao;
+    [Header("Fade + Texto")]
+    [SerializeField] private GameObject fadeInteracao;
 
-    [Header("Fade")]
-    public CanvasGroup fadeCanvas;
-    public float duracaoFade = 1.5f;
+    [Header("Easy Transition")]
+    [SerializeField] private Transition transition;
+    [SerializeField] private float delay = 1f;
 
     private bool podeInteragir = false;
     private bool trocandoCena = false;
 
-    void Start()
+    private void Start()
     {
-        
-        if (painelInteracao != null)
-            painelInteracao.SetActive(false);
-
-        
-        if (fadeCanvas != null)
+        if (fadeInteracao != null)
         {
-            fadeCanvas.alpha = 0f;
-            fadeCanvas.blocksRaycasts = false;
-            fadeCanvas.interactable = false;
+            fadeInteracao.SetActive(false);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PortaInterrogatorio: FADE INTERACAO não foi colocado no Inspector!"
+            );
         }
     }
 
-    void Update()
+    private void Update()
     {
-        if (jogador == null || trocandoCena)
-            return;
+        if (jogador == null)
+        {
+            Debug.LogWarning(
+                "PortaInterrogatorio: JOGADOR não foi colocado no Inspector!"
+            );
 
+            return;
+        }
+
+        if (trocandoCena)
+            return;
         float distancia = Vector3.Distance(
             jogador.position,
             transform.position
         );
 
-        
         if (distancia <= distanciaInteracao)
         {
             if (!podeInteragir)
             {
                 podeInteragir = true;
 
-                if (painelInteracao != null)
-                    painelInteracao.SetActive(true);
-            }
+                Debug.Log("JOGADOR ENTROU NA ÁREA DA PORTA");
 
-            
+                AtivarFade();
+            }
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (!string.IsNullOrEmpty(nomeCenaDestino))
-                {
-                    StartCoroutine(TrocarCena());
-                }
-                else
-                {
-                    Debug.LogWarning(
-                        "TransicaoCena: Nenhuma cena de destino foi definida!"
-                    );
-                }
+                Debug.Log("E FOI APERTADO");
+
+                IrParaInterrogatorio();
             }
         }
+
         else
         {
             if (podeInteragir)
             {
                 podeInteragir = false;
 
-                if (painelInteracao != null)
-                    painelInteracao.SetActive(false);
+                Debug.Log("JOGADOR SAIU DA ÁREA DA PORTA");
+
+                DesativarFade();
             }
         }
     }
 
-    IEnumerator TrocarCena()
+    private void AtivarFade()
     {
-        trocandoCena = true;
+        if (fadeInteracao == null)
+            return;
 
-       
-        if (painelInteracao != null)
-            painelInteracao.SetActive(false);
+        fadeInteracao.SetActive(true);
 
-       
-        if (fadeCanvas != null)
+        Debug.Log("FADE + TEXTO ATIVADO");
+    }
+
+    private void DesativarFade()
+    {
+        if (fadeInteracao == null)
+            return;
+
+        fadeInteracao.SetActive(false);
+
+        Debug.Log("FADE + TEXTO DESATIVADO");
+    }
+
+    public void IrParaInterrogatorio()
+    {
+        if (trocandoCena)
+            return;
+
+        if (string.IsNullOrEmpty(nomeCenaDestino))
         {
-            fadeCanvas.blocksRaycasts = true;
+            Debug.LogWarning(
+                "PortaInterrogatorio: Nome da cena não foi definido!"
+            );
 
-            float tempo = 0f;
-
-            while (tempo < duracaoFade)
-            {
-                tempo += Time.deltaTime;
-
-                float progresso = Mathf.Clamp01(
-                    tempo / duracaoFade
-                );
-
-                fadeCanvas.alpha = Mathf.Lerp(
-                    0f,
-                    1f,
-                    progresso
-                );
-
-                yield return null;
-            }
-
-            fadeCanvas.alpha = 1f;
+            return;
         }
 
-       
-        yield return new WaitForSeconds(0.2f);
+        trocandoCena = true;
 
-        
+        DesativarFade();
+
+        StartCoroutine(TransicaoECarregarCena());
+    }
+
+    private IEnumerator TransicaoECarregarCena()
+    {
+        if (transition != null)
+        {
+            transition.gameObject.SetActive(true);
+        }
+        else
+        {
+            Debug.LogWarning(
+                "PortaInterrogatorio: Transition não foi colocado no Inspector!"
+            );
+        }
+
+        yield return new WaitForSeconds(delay);
+
         SceneManager.LoadScene(nomeCenaDestino);
     }
 }
