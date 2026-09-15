@@ -1,9 +1,9 @@
+using System;
 using System.Collections;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class NpcFinal : MonoBehaviour
 {
@@ -65,7 +65,6 @@ public class NpcFinal : MonoBehaviour
     public TMP_Text contadorDigital;
 
     [Header("Respostas das Provas")]
-
     public string respostaGarrafa =
         "Essa garrafa nao prova nada! Eu nunca vi isso antes.";
 
@@ -119,30 +118,19 @@ public class NpcFinal : MonoBehaviour
 
     private void Start()
     {
-
+       
         if (botaoEnviar != null)
         {
             botaoEnviar.onClick.AddListener(EnviarPergunta);
-
-            EventTrigger trigger =
-                botaoEnviar.gameObject.GetComponent<EventTrigger>();
-
-            if (trigger == null)
-                trigger = botaoEnviar.gameObject.AddComponent<EventTrigger>();
-
-            EventTrigger.Entry entradaPointerDown =
-                new EventTrigger.Entry
-                {
-                    eventID = EventTriggerType.PointerDown
-                };
-
-            entradaPointerDown.callback.AddListener(
-                (data) => { EnviarPergunta(); }
-            );
-
-            trigger.triggers.Add(entradaPointerDown);
         }
 
+
+        if (campoTexto != null)
+        {
+            campoTexto.onSubmit.AddListener(EnviarPerguntaPorEnter);
+        }
+
+        
         if (botaoGarrafa != null)
             botaoGarrafa.onClick.AddListener(ApresentarGarrafa);
 
@@ -200,15 +188,9 @@ public class NpcFinal : MonoBehaviour
         StartCoroutine(MostrarPopup());
     }
 
-    private void Update()
+    private void EnviarPerguntaPorEnter(string texto)
     {
-        if (campoTexto != null &&
-            campoTexto.isFocused &&
-            (Input.GetKeyDown(KeyCode.Return) ||
-             Input.GetKeyDown(KeyCode.KeypadEnter)))
-        {
-            EnviarPergunta();
-        }
+        EnviarPergunta();
     }
 
     IEnumerator MostrarPopup()
@@ -276,10 +258,11 @@ public class NpcFinal : MonoBehaviour
             textoDigitando.text = "";
 
         if (textoResposta != null &&
+            respostasNegacao != null &&
             respostasNegacao.Length > 0)
         {
             int indice =
-                Random.Range(0, respostasNegacao.Length);
+     UnityEngine.Random.Range(0, respostasNegacao.Length);
 
             textoResposta.text =
                 respostasNegacao[indice];
@@ -400,7 +383,6 @@ public class NpcFinal : MonoBehaviour
 
     void IniciarContadoresDasOutrasProvas(string provaUsada)
     {
-
         if (provaUsada != "garrafa" &&
             !garrafaApresentada)
         {
@@ -440,6 +422,7 @@ public class NpcFinal : MonoBehaviour
             contadorGarrafa.text =
                 Mathf.CeilToInt(tempoProva).ToString();
         }
+
         if (botaoGarrafa != null)
             botaoGarrafa.interactable = false;
 
@@ -473,7 +456,6 @@ public class NpcFinal : MonoBehaviour
         if (botaoGarrafa != null)
             botaoGarrafa.interactable = true;
     }
-
     IEnumerator ContadorFaca()
     {
         if (contadorFaca != null)
@@ -506,10 +488,10 @@ public class NpcFinal : MonoBehaviour
 
         if (facaApresentada)
             yield break;
+
         if (contadorFaca != null)
         {
             contadorFaca.text = "0";
-
             contadorFaca.gameObject.SetActive(true);
         }
 
@@ -525,6 +507,7 @@ public class NpcFinal : MonoBehaviour
             contadorDigital.text =
                 Mathf.CeilToInt(tempoProva).ToString();
         }
+
         if (botaoDigital != null)
             botaoDigital.interactable = false;
 
@@ -552,9 +535,9 @@ public class NpcFinal : MonoBehaviour
         if (contadorDigital != null)
         {
             contadorDigital.text = "0";
-
             contadorDigital.gameObject.SetActive(true);
         }
+
         if (botaoDigital != null)
             botaoDigital.interactable = true;
     }
@@ -588,6 +571,7 @@ public class NpcFinal : MonoBehaviour
         yield return new WaitForSeconds(tempoAntesResposta);
 
         if (textoDigitando != null)
+            textoDigitando.text = "";
 
         if (textoResposta != null)
             textoResposta.text = resposta;
@@ -605,9 +589,9 @@ public class NpcFinal : MonoBehaviour
 
         respondendo = false;
 
-
         VerificarPistas();
     }
+
     void VerificarPistas()
     {
         if (garrafaApresentada &&
