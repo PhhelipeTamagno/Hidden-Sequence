@@ -1,81 +1,54 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PortaTeleporte : MonoBehaviour
+// Coloque este script em TODAS as portas (entradas e porta da sala).
+// Cada porta precisa de um Collider com "Is Trigger" marcado.
+public class PortaTeleport : MonoBehaviour
 {
-    [Header("Destinos")]
-    public Transform destinoDentro;
-    public Transform destinoFora;
+    [Tooltip("Porta de entrada: arraste aqui a porta da sala. Na porta da sala, deixe vazio (ela volta para a porta de origem).")]
+    public PortaTeleport destino;
 
-    [Header("Configuração")]
-    public float distanciaInteracao = 4f;
-    public Camera cameraPlayer;
+    [Tooltip("Objeto vazio na frente da porta, onde o jogador aparece ao CHEGAR nela. O eixo azul (Z) deve apontar para longe da porta.")]
+    public Transform pontoDeChegada;
 
-    private bool estaDentro = false;
+    public KeyCode tecla = KeyCode.E;
 
-    void Start()
+    static PortaTeleport ultimaOrigem;   // porta pela qual o jogador entrou
+    static float proximoUso;     // pequeno intervalo para evitar uso duplo
+
+    Transform jogador;
+
+    void OnTriggerEnter(Collider other)
     {
-        if (cameraPlayer == null)
-            cameraPlayer = Camera.main;
+        if (other.CompareTag("Player")) jogador = other.transform;
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.transform == jogador) jogador = null;
     }
 
     void Update()
     {
-        if (cameraPlayer == null)
-            return;
+        if (jogador == null || !Input.GetKeyDown(tecla) || Time.time < proximoUso) return;
 
-        Ray ray = new Ray(
-            cameraPlayer.transform.position,
-            cameraPlayer.transform.forward
-        );
+        // Porta de entrada vai para o destino; porta da sala volta para a origem.
+        PortaTeleport alvo = destino != null ? destino : ultimaOrigem;
+        if (alvo == null || alvo.pontoDeChegada == null) return;
 
-        RaycastHit hit;
+        if (destino != null) ultimaOrigem = this;
 
-        if (Physics.Raycast(ray, out hit, distanciaInteracao))
-        {
-            if (hit.transform == transform ||
-                hit.transform.IsChildOf(transform))
-            {
-                if (Keyboard.current != null &&
-                    Keyboard.current.eKey.wasPressedThisFrame)
-                {
-                    Teleportar();
-                }
-            }
-        }
+        proximoUso = Time.time + 0.3f;
+        Teleportar(jogador, alvo.pontoDeChegada);
     }
 
-    void Teleportar()
+    void Teleportar(Transform quem, Transform ponto)
     {
-        Transform destino;
+        // O CharacterController precisa ser desligado, senão ele desfaz o teleporte.
+        var cc = quem.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
 
-        if (estaDentro)
-            destino = destinoFora;
-        else
-            destino = destinoDentro;
+        quem.SetPositionAndRotation(ponto.position, ponto.rotation);
 
-        if (destino == null)
-        {
-            Debug.LogError("Destino não foi configurado na porta!");
-            return;
-        }
-
-        GameObject player = cameraPlayer.transform.root.gameObject;
-
-        CharacterController controller =
-            player.GetComponent<CharacterController>();
-
-        if (controller != null)
-            controller.enabled = false;
-
-        player.transform.position = destino.position;
-        player.transform.rotation = destino.rotation;
-
-        if (controller != null)
-            controller.enabled = true;
-
-        estaDentro = !estaDentro;
-
-        Debug.Log("Teleportou para: " + destino.name);
+        if (cc != null) cc.enabled = true;
     }
 }
