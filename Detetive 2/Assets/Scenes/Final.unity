@@ -12228,7 +12228,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 146eb4e7255b6ee4e9325518cff8676b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.44
+      value: 6.51
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 146eb4e7255b6ee4e9325518cff8676b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12261,6 +12261,10 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 146eb4e7255b6ee4e9325518cff8676b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1255605710908113952, guid: 146eb4e7255b6ee4e9325518cff8676b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.512
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 146eb4e7255b6ee4e9325518cff8676b, type: 3}
       propertyPath: m_Name
@@ -12429,6 +12433,11 @@ MonoBehaviour:
   textoDigitando: {fileID: 1005571426}
   botaoEnviar: {fileID: 257971135}
   playerMovement: {fileID: 2086589863}
+  animatorNpc: {fileID: 1351997175}
+  triggerNegacao: Negar
+  triggerProva: Nervoso
+  triggerConfissao1: Confessar1
+  triggerConfissao2: Confessar2
   respostasNegacao:
   - Nao sei de nada. Eu nao estava envolvido.
   - Ja disse, nao tenho nada a ver com isso.

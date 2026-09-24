@@ -15,6 +15,24 @@ public class NpcFinal : MonoBehaviour
     [Header("Player")]
     public PlayerMovement playerMovement;
 
+    // =========================================================
+    // NOVO - ANIMACAO DO NPC
+    // =========================================================
+    [Header("Animacao do NPC")]
+    public Animator animatorNpc;
+
+    [Tooltip("Trigger disparado quando o NPC responde uma pergunta normal (negacao)")]
+    public string triggerNegacao = "Negar";
+
+    [Tooltip("Trigger disparado quando o NPC responde a uma prova apresentada")]
+    public string triggerProva = "Nervoso";
+
+    [Tooltip("Trigger disparado na primeira mensagem de confissao")]
+    public string triggerConfissao1 = "Confessar1";
+
+    [Tooltip("Trigger disparado na segunda mensagem de confissao")]
+    public string triggerConfissao2 = "Confessar2";
+
     [Header("Respostas de Negacao")]
     public string[] respostasNegacao =
     {
@@ -198,12 +216,34 @@ public class NpcFinal : MonoBehaviour
         if (popupExplicativo != null)
             popupExplicativo.SetActive(false);
 
+        // NOVO - tenta pegar o Animator automaticamente se nao foi arrastado
+        if (animatorNpc == null)
+            animatorNpc = GetComponent<Animator>();
+
         StartCoroutine(MostrarPopup());
     }
 
     private void EnviarPerguntaPorEnter(string texto)
     {
         EnviarPergunta();
+    }
+
+    // =========================================================
+    // NOVO - TOCAR ANIMACAO DO NPC
+    // =========================================================
+
+    void TocarAnimacao(string nomeTrigger)
+    {
+        if (animatorNpc == null)
+            return;
+
+        if (string.IsNullOrEmpty(nomeTrigger))
+            return;
+
+        // Reseta antes para garantir que a animacao reinicie
+        // mesmo se o trigger anterior nao foi consumido
+        animatorNpc.ResetTrigger(nomeTrigger);
+        animatorNpc.SetTrigger(nomeTrigger);
     }
 
     IEnumerator MostrarPopup()
@@ -283,6 +323,9 @@ public class NpcFinal : MonoBehaviour
 
             textoResposta.text =
                 respostasNegacao[indice];
+
+            // NOVO - anima o NPC junto com a mensagem
+            TocarAnimacao(triggerNegacao);
         }
 
         if (campoTexto != null)
@@ -642,6 +685,9 @@ public class NpcFinal : MonoBehaviour
         if (textoResposta != null)
             textoResposta.text = resposta;
 
+        // NOVO - anima o NPC junto com a mensagem da prova
+        TocarAnimacao(triggerProva);
+
         if (campoTexto != null)
         {
             campoTexto.text = "";
@@ -729,6 +775,9 @@ public class NpcFinal : MonoBehaviour
             textoConfissao1.text = mensagemConfissao1;
         }
 
+        // NOVO - animacao da primeira mensagem de confissao
+        TocarAnimacao(triggerConfissao1);
+
         yield return new WaitForSeconds(tempoConfissao1);
 
         if (textoConfissao1 != null)
@@ -739,6 +788,9 @@ public class NpcFinal : MonoBehaviour
             textoConfissao2.gameObject.SetActive(true);
             textoConfissao2.text = mensagemConfissao2;
         }
+
+        // NOVO - animacao da segunda mensagem de confissao
+        TocarAnimacao(triggerConfissao2);
 
         yield return new WaitForSeconds(tempoConfissao2);
 

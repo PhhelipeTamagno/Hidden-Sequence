@@ -25,21 +25,10 @@ public class Hotbar : MonoBehaviour
     [Header("Lanterna (Modelo 3D)")]
     public GameObject lanternaNaMao;
 
-    [Header("Item Inicial - Caderno")]
-    public string nomeCaderno = "Caderno";
-    public Sprite iconeCaderno;
-
-    [Header("Caderno (Modelo 3D)")]
-    public GameObject cadernoNaMao;
-
-    [Header("Missões do Caderno")]
-    public MissoesCaderno missoesCaderno;
-
     [Header("Configuração")]
     public int slotSelecionado = 0;
 
     private bool lanternaNaMaoAtiva = false;
-    private bool cadernoNaMaoAtiva = false;
 
     [Header("Animação de Entrada")]
     public RectTransform hotbarRect;
@@ -52,12 +41,11 @@ public class Hotbar : MonoBehaviour
 
     void Start()
     {
-        
         if (slots.Length > 0)
             DefinirItem(0, nomeLanterna, iconeLanterna);
 
         if (slots.Length > 1)
-            DefinirItem(1, nomeCaderno, iconeCaderno);
+            LimparSlotSemAtualizar(1);
 
         if (slots.Length > 2)
             LimparSlotSemAtualizar(2);
@@ -66,7 +54,6 @@ public class Hotbar : MonoBehaviour
             LimparSlotSemAtualizar(3);
 
         AtivarLanterna(false);
-        AtivarCaderno(false);
 
         if (hotbarRect != null)
         {
@@ -84,17 +71,13 @@ public class Hotbar : MonoBehaviour
 
     void Update()
     {
-     
+        // Tecla 1 - Lanterna
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             AlternarLanterna();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            AlternarCaderno();
-        }
-
+        // Teclas 3 e 4
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             SelecionarSlot(2);
@@ -124,25 +107,8 @@ public class Hotbar : MonoBehaviour
 
         AtivarLanterna(!lanternaNaMaoAtiva);
 
-        if (lanternaNaMaoAtiva && cadernoNaMaoAtiva)
-            AtivarCaderno(false);
-
         slotSelecionado = 0;
-        AtualizarVisual();
-    }
 
-    void AlternarCaderno()
-    {
-        if (slots.Length <= 1 || slots[1].EstaVazio)
-            return;
-
-        AtivarCaderno(!cadernoNaMaoAtiva);
-
-       
-        if (cadernoNaMaoAtiva && lanternaNaMaoAtiva)
-            AtivarLanterna(false);
-
-        slotSelecionado = 1;
         AtualizarVisual();
     }
 
@@ -154,22 +120,6 @@ public class Hotbar : MonoBehaviour
             lanternaNaMao.SetActive(ativo);
     }
 
-    void AtivarCaderno(bool ativo)
-    {
-        cadernoNaMaoAtiva = ativo;
-
-        if (cadernoNaMao != null)
-            cadernoNaMao.SetActive(ativo);
-
-        if (missoesCaderno != null)
-        {
-            if (ativo)
-                missoesCaderno.MostrarCaderno();
-            else
-                missoesCaderno.EsconderCaderno();
-        }
-    }
-
     public void SelecionarSlot(int index)
     {
         if (index < 0 || index >= slots.Length)
@@ -178,15 +128,15 @@ public class Hotbar : MonoBehaviour
         if (slots[index].EstaVazio)
             return;
 
+        // Se selecionar outro slot, desliga a lanterna
         if (index != 0 && lanternaNaMaoAtiva)
             AtivarLanterna(false);
 
-        if (index != 1 && cadernoNaMaoAtiva)
-            AtivarCaderno(false);
-
         slotSelecionado = index;
+
         AtualizarVisual();
     }
+
     void SelecionarProximoItem(int direcao)
     {
         if (slots.Length == 0)
@@ -211,6 +161,7 @@ public class Hotbar : MonoBehaviour
             }
         }
     }
+
     void AtualizarVisual()
     {
         for (int i = 0; i < slots.Length; i++)
@@ -221,15 +172,18 @@ public class Hotbar : MonoBehaviour
             bool mostrar = false;
 
             if (i == 0)
+            {
                 mostrar = lanternaNaMaoAtiva;
-            else if (i == 1)
-                mostrar = cadernoNaMaoAtiva;
+            }
             else
+            {
                 mostrar = i == slotSelecionado && !slots[i].EstaVazio;
+            }
 
             slots[i].destaque.SetActive(mostrar);
         }
     }
+
     public bool AdicionarItem(string nome, Sprite icone)
     {
         for (int i = 0; i < slots.Length; i++)
@@ -237,14 +191,18 @@ public class Hotbar : MonoBehaviour
             if (slots[i].EstaVazio)
             {
                 DefinirItem(i, nome, icone);
+
                 slotSelecionado = i;
+
                 AtualizarVisual();
+
                 return true;
             }
         }
 
         return false;
     }
+
     void DefinirItem(int index, string nome, Sprite icone)
     {
         if (index < 0 || index >= slots.Length)
@@ -270,11 +228,9 @@ public class Hotbar : MonoBehaviour
         if (index == 0)
             AtivarLanterna(false);
 
-        if (index == 1)
-            AtivarCaderno(false);
-
         AtualizarVisual();
     }
+
     void LimparSlotSemAtualizar(int index)
     {
         if (index < 0 || index >= slots.Length)
@@ -290,6 +246,7 @@ public class Hotbar : MonoBehaviour
 
         return slots[slotSelecionado].nomeItem;
     }
+
     public bool HotbarCheia()
     {
         foreach (var slot in slots)
@@ -300,6 +257,7 @@ public class Hotbar : MonoBehaviour
 
         return true;
     }
+
     public void MostrarHotbarExterno()
     {
         StartCoroutine(MostrarHotbar());
@@ -312,7 +270,9 @@ public class Hotbar : MonoBehaviour
 
         hotbarRect.gameObject.SetActive(true);
 
-        Vector2 posicaoInicial = posicaoFinalHotbar + Vector2.down * distanciaSubida;
+        Vector2 posicaoInicial =
+            posicaoFinalHotbar + Vector2.down * distanciaSubida;
+
         hotbarRect.anchoredPosition = posicaoInicial;
 
         if (hotbarCanvasGroup != null)
@@ -323,10 +283,18 @@ public class Hotbar : MonoBehaviour
         while (tempo < duracaoAnimacao)
         {
             tempo += Time.deltaTime;
-            float t = Mathf.Clamp01(tempo / duracaoAnimacao);
-            float tSuave = 1f - Mathf.Pow(1f - t, 3f);
 
-            hotbarRect.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoFinalHotbar, tSuave);
+            float t = Mathf.Clamp01(tempo / duracaoAnimacao);
+
+            float tSuave =
+                1f - Mathf.Pow(1f - t, 3f);
+
+            hotbarRect.anchoredPosition =
+                Vector2.Lerp(
+                    posicaoInicial,
+                    posicaoFinalHotbar,
+                    tSuave
+                );
 
             if (hotbarCanvasGroup != null)
                 hotbarCanvasGroup.alpha = tSuave;
@@ -350,21 +318,34 @@ public class Hotbar : MonoBehaviour
         if (hotbarRect == null)
             yield break;
 
-        Vector2 posicaoInicial = hotbarRect.anchoredPosition;
-        Vector2 posicaoSaida = posicaoFinalHotbar + Vector2.down * distanciaSubida;
+        Vector2 posicaoInicial =
+            hotbarRect.anchoredPosition;
+
+        Vector2 posicaoSaida =
+            posicaoFinalHotbar +
+            Vector2.down * distanciaSubida;
 
         float tempo = 0f;
 
         while (tempo < duracaoAnimacao)
         {
             tempo += Time.deltaTime;
-            float t = Mathf.Clamp01(tempo / duracaoAnimacao);
+
+            float t =
+                Mathf.Clamp01(tempo / duracaoAnimacao);
+
             float tSuave = t * t;
 
-            hotbarRect.anchoredPosition = Vector2.Lerp(posicaoInicial, posicaoSaida, tSuave);
+            hotbarRect.anchoredPosition =
+                Vector2.Lerp(
+                    posicaoInicial,
+                    posicaoSaida,
+                    tSuave
+                );
 
             if (hotbarCanvasGroup != null)
-                hotbarCanvasGroup.alpha = 1f - tSuave;
+                hotbarCanvasGroup.alpha =
+                    1f - tSuave;
 
             yield return null;
         }
