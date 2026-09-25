@@ -71,13 +71,10 @@ public class Hotbar : MonoBehaviour
 
     void Update()
     {
-        // Tecla 1 - Lanterna
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             AlternarLanterna();
         }
-
-        // Teclas 3 e 4
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             SelecionarSlot(2);

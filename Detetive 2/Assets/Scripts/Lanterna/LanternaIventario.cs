@@ -13,7 +13,7 @@ public class LanternaInventario : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             lanternaAtiva = !lanternaAtiva;
             lanternaNaMao.SetActive(lanternaAtiva);
