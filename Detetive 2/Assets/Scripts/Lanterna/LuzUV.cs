@@ -11,7 +11,7 @@ public class LuzUV : MonoBehaviour
 
     [Header("Alpha")]
     public float velocidadeAparecer = 3f;
-    public float velocidadeDesaparecer = 2f;
+    public float velocidadeDesaparecer = 5f;
 
     [Header("Luz Normal")]
     public float alcanceNormal = 10f;
@@ -24,13 +24,8 @@ public class LuzUV : MonoBehaviour
 
     private void Start()
     {
-        foreach (Image imagem in imagens)
-        {
-            if (imagem == null)
-                continue;
-
-            DefinirAlpha(imagem, 0f);
-        }
+        // Começa com todas as pegadas invisíveis
+        ApagarPegadas();
 
         if (spotLight != null)
         {
@@ -41,8 +36,26 @@ public class LuzUV : MonoBehaviour
 
     private void Update()
     {
+        // Se não existe luz, apaga as pegadas
         if (spotLight == null)
+        {
+            ApagarPegadas();
             return;
+        }
+
+        // ==========================================
+        // LANTERNA DESLIGADA
+        // ==========================================
+
+        if (!spotLight.gameObject.activeInHierarchy || !spotLight.enabled)
+        {
+            ApagarPegadas();
+            return;
+        }
+
+        // ==========================================
+        // LANTERNA LIGADA
+        // ==========================================
 
         float distanciaMaisProxima =
             EncontrarImagemMaisProxima();
@@ -82,9 +95,9 @@ public class LuzUV : MonoBehaviour
         }
     }
 
-    // =================================
-    // DETECTAR DIGITAL MAIS PRÓXIMA
-    // =================================
+    // ==========================================
+    // ENCONTRAR DIGITAL MAIS PRÓXIMA
+    // ==========================================
 
     float EncontrarImagemMaisProxima()
     {
@@ -102,15 +115,17 @@ public class LuzUV : MonoBehaviour
                 );
 
             if (distancia < menorDistancia)
+            {
                 menorDistancia = distancia;
+            }
         }
 
         return menorDistancia;
     }
 
-    // =================================
+    // ==========================================
     // ALTERAR LUZ
-    // =================================
+    // ==========================================
 
     void AtualizarLuz(float distancia)
     {
@@ -132,9 +147,9 @@ public class LuzUV : MonoBehaviour
         }
     }
 
-    // =================================
-    // VERIFICAR FEIXE
-    // =================================
+    // ==========================================
+    // VERIFICAR SE ESTÁ NO FEIXE
+    // ==========================================
 
     bool EstaNoFeixeUV(Image imagem)
     {
@@ -165,9 +180,9 @@ public class LuzUV : MonoBehaviour
         return angulo <= metadeDoAngulo;
     }
 
-    // =================================
-    // ALPHA
-    // =================================
+    // ==========================================
+    // ALTERAR ALPHA
+    // ==========================================
 
     void DefinirAlpha(
         Image imagem,
@@ -180,5 +195,20 @@ public class LuzUV : MonoBehaviour
         cor.a = alpha;
 
         imagem.color = cor;
+    }
+
+    // ==========================================
+    // APAGAR PEGADAS
+    // ==========================================
+
+    public void ApagarPegadas()
+    {
+        foreach (Image imagem in imagens)
+        {
+            if (imagem == null)
+                continue;
+
+            DefinirAlpha(imagem, 0f);
+        }
     }
 }
