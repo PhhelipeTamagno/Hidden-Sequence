@@ -4387,91 +4387,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &1167136693
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1167136695}
-  - component: {fileID: 1167136694}
-  - component: {fileID: 1167136696}
-  - component: {fileID: 1167136697}
-  m_Layer: 0
-  m_Name: MenuManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1167136694
+--- !u!114 &1167136694 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 2890388695409303708, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+  m_PrefabInstance: {fileID: 1447196637083937991}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167136693}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61be2b1823ee9c84e9acbc30899b92b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MenuManager
-  painelConfiguracoes: {fileID: 1604362552}
-  painelCreditos: {fileID: 250699652}
-  botoesMenu: {fileID: 1571957804}
-  transition: {fileID: 1034537000}
-  nomeCenaJogoUm: Inicio
-  delay: 1
---- !u!4 &1167136695
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167136693}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1044.3682, y: 523.961, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1167136696
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167136693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fea5975d2c91cb443aa2416b9cce94ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonEffect
-  escalaHover: 1.05
-  escalaClique: 0.97
-  velocidade: 10
-  audioSource: {fileID: 0}
-  somHover: {fileID: 0}
-  somClique: {fileID: 0}
---- !u!114 &1167136697
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1167136693}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2ba0760b7c78a74dafce7d779ed6610, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  audioMixer: {fileID: 24100000, guid: 0477fd51fcb3e7b4d8daf4cbb8908d29, type: 2}
-  sliderMaster: {fileID: 800463588}
-  sliderEfeitos: {fileID: 1138343318}
 --- !u!1 &1206929425 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 43ce12a93efe07449bd0b1935598ba13, type: 3}
@@ -6870,7 +6796,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55, y: -241}
+  m_AnchoredPosition: {x: -3, y: -241}
   m_SizeDelta: {x: 160, y: 50.4941}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1913967469
@@ -8339,6 +8265,87 @@ MonoBehaviour:
   audioSource: {fileID: 532737863}
   somHover: {fileID: 0}
   somClique: {fileID: 8300000, guid: 0ef42014eb5aeeb4eb2e28cb4cc11cd4, type: 3}
+--- !u!1001 &1447196637083937991
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 942398805700958562, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_Name
+      value: MenuManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 2890388695409303708, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: botoesMenu
+      value: 
+      objectReference: {fileID: 1571957804}
+    - target: {fileID: 2890388695409303708, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: transition
+      value: 
+      objectReference: {fileID: 1034537000}
+    - target: {fileID: 2890388695409303708, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: painelCreditos
+      value: 
+      objectReference: {fileID: 250699652}
+    - target: {fileID: 2890388695409303708, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: painelConfiguracoes
+      value: 
+      objectReference: {fileID: 1604362552}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1044.3682
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 523.961
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4461106279748795112, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7388348171565713929, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: sliderMaster
+      value: 
+      objectReference: {fileID: 800463588}
+    - target: {fileID: 7388348171565713929, guid: 2af439595a275c743bce10338010c7a8, type: 3}
+      propertyPath: sliderEfeitos
+      value: 
+      objectReference: {fileID: 1138343318}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 2af439595a275c743bce10338010c7a8, type: 3}
 --- !u!1001 &4216505354146939791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8636,7 +8643,7 @@ SceneRoots:
   - {fileID: 675885342}
   - {fileID: 1074056221}
   - {fileID: 517824442}
-  - {fileID: 1167136695}
+  - {fileID: 1447196637083937991}
   - {fileID: 1697032816}
   - {fileID: 1417394446}
   - {fileID: 938406599}
