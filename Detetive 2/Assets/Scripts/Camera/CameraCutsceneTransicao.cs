@@ -1,37 +1,54 @@
+
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraCutsceneTransicao : MonoBehaviour
 {
     [Header("Transicao")]
-    [Tooltip("Arraste o TransitionTemplate que esta na Hierarchy")]
     public GameObject transitionTemplate;
-
-    [Tooltip("Tempo em segundos ate ativar a transicao")]
     public float tempoAteTransicao = 8.65f;
-
-    [Tooltip("Desativa o TransitionTemplate ao iniciar a cena")]
     public bool desativarNoInicio = true;
+
+    [Header("Troca de cena")]
+    public string nomeDaCena;
+    public float tempoDaTransicao = 1f;
+
+    private bool iniciado;
 
     private void Start()
     {
         if (transitionTemplate == null)
         {
-            Debug.LogWarning("CameraCutsceneTransicao: arraste o TransitionTemplate no Inspector.");
+            Debug.LogWarning("Arraste o TransitionTemplate no Inspector.");
             return;
         }
 
-        // Garante que o TransitionTemplate comece desativado
         if (desativarNoInicio)
             transitionTemplate.SetActive(false);
 
-        StartCoroutine(AtivarTransicaoAposTempo());
+        StartCoroutine(ExecutarSequencia());
     }
 
-    IEnumerator AtivarTransicaoAposTempo()
+    private IEnumerator ExecutarSequencia()
     {
         yield return new WaitForSeconds(tempoAteTransicao);
 
+        if (iniciado)
+            yield break;
+
+        iniciado = true;
+
         transitionTemplate.SetActive(true);
+
+        yield return new WaitForSeconds(tempoDaTransicao);
+
+        if (string.IsNullOrEmpty(nomeDaCena))
+        {
+            Debug.LogError("Defina o nome da cena no Inspector.");
+            yield break;
+        }
+
+        SceneManager.LoadScene(nomeDaCena);
     }
 }

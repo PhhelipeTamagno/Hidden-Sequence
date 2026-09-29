@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: "Assets/Scenes/Pris\xE3o.unity"
     guid: 2b90ac45039686246a5d1936ead71a78
+  - enabled: 1
+    path: Assets/Scenes/creditos.unity
+    guid: 6705b974302f7144eb5a544e83767e7a
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
