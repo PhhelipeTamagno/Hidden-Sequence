@@ -1,40 +1,39 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro;
 
 public class GerenciadorDigitais : MonoBehaviour
 {
-    [Header("Hotbar")]
-    public Hotbar hotbar;
+    [Header("As 3 Digitais")]
+    public DigitalUV[] digitais;
 
-    [Header("Item das Digitais")]
-    public string nomeItem = "Digitais";
-    public Sprite iconeDigitais;
+    [Header("Texto do Contador")]
+    public TMP_Text textoContador;
 
-    [Header("Texto das Digitais")]
-    public Text textoContador;
+    [Header("Sistema de Itens")]
+    public ItensEncontrados itensEncontrados;
 
     [Header("Configuração")]
     public int totalDigitais = 3;
 
     private int digitaisEncontradas = 0;
-    private bool itemAdicionado = false;
+
+    private bool digitalLiberada = false;
 
     private void Start()
     {
+        digitaisEncontradas = 0;
+
         AtualizarTexto();
     }
 
     public void RegistrarDigital()
     {
-        
         digitaisEncontradas++;
 
-     
-        digitaisEncontradas = Mathf.Clamp(
-            digitaisEncontradas,
-            0,
-            totalDigitais
-        );
+        if (digitaisEncontradas > totalDigitais)
+        {
+            digitaisEncontradas = totalDigitais;
+        }
 
         AtualizarTexto();
 
@@ -45,29 +44,9 @@ public class GerenciadorDigitais : MonoBehaviour
             totalDigitais
         );
 
-       
-        if (digitaisEncontradas >= totalDigitais && !itemAdicionado)
+        if (digitaisEncontradas >= totalDigitais)
         {
-            itemAdicionado = true;
-
-            if (hotbar != null)
-            {
-                bool adicionou = hotbar.AdicionarItem(
-                    nomeItem,
-                    iconeDigitais
-                );
-
-                if (adicionou)
-                {
-                    Debug.Log("Digitais liberadas na Hotbar!");
-                }
-                else
-                {
-                    Debug.LogWarning(
-                        "Não foi possível adicionar as digitais. A Hotbar está cheia."
-                    );
-                }
-            }
+            LiberarDigital();
         }
     }
 
@@ -79,6 +58,27 @@ public class GerenciadorDigitais : MonoBehaviour
                 digitaisEncontradas +
                 "/" +
                 totalDigitais;
+        }
+    }
+
+    void LiberarDigital()
+    {
+        if (digitalLiberada)
+            return;
+
+        digitalLiberada = true;
+
+        Debug.Log("Todas as 3 digitais foram encontradas!");
+
+        if (itensEncontrados != null)
+        {
+            itensEncontrados.EncontrarDigital();
+        }
+        else
+        {
+            Debug.LogWarning(
+                "O campo 'Itens Encontrados' não foi preenchido!"
+            );
         }
     }
 }

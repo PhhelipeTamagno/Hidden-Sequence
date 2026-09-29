@@ -41,7 +41,7 @@ public class ItensEncontrados : MonoBehaviour
 
     private bool todasEncontradas = false;
 
-    void Start()
+    private void Start()
     {
         AtualizarItem(garrafa);
         AtualizarItem(faca);
@@ -54,7 +54,7 @@ public class ItensEncontrados : MonoBehaviour
             textoFinal.gameObject.SetActive(false);
     }
 
-    void Update()
+    private void Update()
     {
         GarantirImagemVisivel(garrafa);
         GarantirImagemVisivel(faca);
@@ -71,24 +71,47 @@ public class ItensEncontrados : MonoBehaviour
         item.imagem.enabled = true;
 
         Color cor = item.imagem.color;
+
         cor.a = 1f;
+
         item.imagem.color = cor;
     }
+
     public void EncontrarGarrafa()
     {
+        if (garrafa == null)
+            return;
+
         garrafa.encontrado = true;
+
         AtualizarItem(garrafa);
     }
+
     public void EncontrarFaca()
     {
+        if (faca == null)
+            return;
+
         faca.encontrado = true;
+
         AtualizarItem(faca);
     }
+
     public void EncontrarDigital()
     {
+        if (digital == null)
+            return;
+
+        if (digital.encontrado)
+            return;
+
         digital.encontrado = true;
+
         AtualizarItem(digital);
+
+        Debug.Log("DIGITAL LIBERADA NA HOTBAR!");
     }
+
     public void DigitalMirada()
     {
         if (digital == null || digital.imagem == null)
@@ -99,6 +122,7 @@ public class ItensEncontrados : MonoBehaviour
             EncontrarDigital();
         }
     }
+
     public void DigitalNaoMirada()
     {
         if (digital == null || digital.imagem == null)
@@ -109,24 +133,31 @@ public class ItensEncontrados : MonoBehaviour
             digital.imagem.enabled = true;
 
             Color cor = digital.corNaoEncontrado;
+
             cor.a = 1f;
 
             digital.imagem.color = cor;
         }
     }
+
     void VerificarTodasEncontradas()
     {
         if (todasEncontradas)
             return;
 
-        if (garrafa.encontrado &&
+        if (garrafa != null &&
+            faca != null &&
+            digital != null &&
+            garrafa.encontrado &&
             faca.encontrado &&
             digital.encontrado)
         {
             todasEncontradas = true;
+
             StartCoroutine(FadeFinal());
         }
     }
+
     IEnumerator FadeFinal()
     {
         if (fade == null)
@@ -142,32 +173,34 @@ public class ItensEncontrados : MonoBehaviour
                 "Depois que voce encontrou as pistas, voce voltou para a delegacia para terminar o caso.";
         }
 
-   
-        float tempo = 0;
+        float tempo = 0f;
 
-        while (tempo < 1)
+        while (tempo < 1f)
         {
             tempo += Time.deltaTime * velocidadeFade;
-            fade.alpha = Mathf.Lerp(0, 1, tempo);
+
+            fade.alpha =
+                Mathf.Lerp(0f, 1f, tempo);
 
             yield return null;
         }
 
-        fade.alpha = 1;
+        fade.alpha = 1f;
 
-        
         yield return new WaitForSeconds(1f);
 
-        
         if (!string.IsNullOrEmpty(nomeDaCena))
         {
             SceneManager.LoadScene(nomeDaCena);
         }
         else
         {
-            Debug.LogError("Nome da cena não foi definido no ItensEncontrados!");
+            Debug.LogError(
+                "Nome da cena não foi definido no ItensEncontrados!"
+            );
         }
     }
+
     void AtualizarItem(Item item)
     {
         if (item == null || item.imagem == null)
@@ -183,21 +216,31 @@ public class ItensEncontrados : MonoBehaviour
             cor = item.corNaoEncontrado;
 
         cor.a = 1f;
+
         item.imagem.color = cor;
     }
 
     public bool GarrafaFoiEncontrada()
     {
+        if (garrafa == null)
+            return false;
+
         return garrafa.encontrado;
     }
 
     public bool FacaFoiEncontrada()
     {
+        if (faca == null)
+            return false;
+
         return faca.encontrado;
     }
 
     public bool DigitalFoiEncontrada()
     {
+        if (digital == null)
+            return false;
+
         return digital.encontrado;
     }
 }
