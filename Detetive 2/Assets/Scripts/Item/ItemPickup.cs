@@ -4,25 +4,33 @@ using UnityEngine;
 public class ItemPickup : MonoBehaviour
 {
     [Header("Item")]
-    public string nomeItem = "Item";
+    public string nomeItem = "Digital";
     public Sprite icone;
 
     [Header("Configuração")]
-    public bool coletaAutomatica = true; // true = encosta e pega / false = precisa apertar tecla
     public KeyCode teclaColeta = KeyCode.E;
+
+    [Header("Item especial")]
+    public bool eDigital = false;
+
+    [Header("Visual que será destruído")]
+    public GameObject visualParaDestruir;
 
     private bool jogadorPerto = false;
     private Hotbar hotbar;
+    private ItensEncontrados itensEncontrados;
 
     void Start()
     {
-        // Garante que o collider é trigger
         GetComponent<Collider>().isTrigger = true;
+
+        itensEncontrados = FindFirstObjectByType<ItensEncontrados>();
     }
 
     void Update()
     {
-        if (!coletaAutomatica && jogadorPerto && Input.GetKeyDown(teclaColeta))
+        
+        if (jogadorPerto && Input.GetKeyDown(teclaColeta))
         {
             TentarColetar();
         }
@@ -33,39 +41,49 @@ public class ItemPickup : MonoBehaviour
         if (!other.CompareTag("Player"))
             return;
 
+        
         hotbar = other.GetComponentInChildren<Hotbar>();
+
+        
         if (hotbar == null)
-            hotbar = FindObjectOfType<Hotbar>(); // fallback, caso a Hotbar não esteja no player
+            hotbar = FindFirstObjectByType<Hotbar>();
 
         jogadorPerto = true;
-
-        if (coletaAutomatica)
-        {
-            TentarColetar();
-        }
     }
 
     void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             jogadorPerto = false;
+        }
     }
 
     void TentarColetar()
     {
         if (hotbar == null)
-            return;
-
-        bool coletou = hotbar.AdicionarItem(nomeItem, icone);
-
-        if (coletou)
         {
-            Destroy(gameObject);
+            Debug.LogWarning("Hotbar não encontrada!");
+            return;
         }
-        else
+        bool coletou = hotbar.AdicionarItem(
+            nomeItem,
+            icone
+        );
+      
+        if (!coletou)
         {
             Debug.Log("Hotbar cheia! Não foi possível pegar: " + nomeItem);
-            // Aqui você pode adicionar um popup tipo "Inventário cheio" se quiser
+            return;
         }
+        if (eDigital && itensEncontrados != null)
+        {
+            itensEncontrados.EncontrarDigital();
+        }
+        if (visualParaDestruir != null)
+        {
+            Destroy(visualParaDestruir);
+        }
+        Destroy(gameObject);
     }
 }

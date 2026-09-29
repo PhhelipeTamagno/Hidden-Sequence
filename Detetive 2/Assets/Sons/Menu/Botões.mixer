@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!241 &24100000
+AudioMixerController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: "Bot\xF5es"
+  m_OutputGroup: {fileID: 0}
+  m_MasterGroup: {fileID: 24300002}
+  m_Snapshots:
+  - {fileID: 24500006}
+  m_StartSnapshot: {fileID: 24500006}
+  m_SuspendThreshold: -80
+  m_EnableSuspend: 1
+  m_UpdateMode: 0
+  m_ExposedParameters:
+  - guid: b0d40c48e433720498e347d95e7dac84
+    name: MyExposedParam
+  - guid: 834832d30ffda4444b18da8afd2a87c3
+    name: MyExposedParam 1
+  m_AudioMixerGroupViews:
+  - guids:
+    - ceb0a9b84790ac644b8920adda3175c8
+    - de1111c876ca40c40ad507cdda9ed2ca
+    name: View
+  m_CurrentViewIndex: 0
+  m_TargetSnapshot: {fileID: 24500006}
+--- !u!243 &24300002
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Master
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: ceb0a9b84790ac644b8920adda3175c8
+  m_Children:
+  - {fileID: 8293071614516187416}
+  m_Volume: 6ec9026b24f3a7743ae6cae0ea5b5be1
+  m_Pitch: 5294e81024bf7544d8ed8ac6d7401355
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 24400004}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!244 &24400004
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: e55527e38339fec41a4166cba68623e8
+  m_EffectName: Attenuation
+  m_MixLevel: 35995d564a7ffc14a828cba5f3cbfcb3
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!245 &24500006
+AudioMixerSnapshotController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Snapshot
+  m_AudioMixer: {fileID: 24100000}
+  m_SnapshotID: 7f8700659cde1a646944f382314ded2b
+  m_FloatValues: {}
+  m_TransitionOverrides: {}
+--- !u!244 &7266344577513645912
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 56b93ecb4d9ee874bbd5a71e7c23250f
+  m_EffectName: Attenuation
+  m_MixLevel: beb3714a84129a0419a504dda4f8a3d4
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &8293071614516187416
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: "Bot\xF5es"
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: de1111c876ca40c40ad507cdda9ed2ca
+  m_Children: []
+  m_Volume: b0d40c48e433720498e347d95e7dac84
+  m_Pitch: 834832d30ffda4444b18da8afd2a87c3
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 7266344577513645912}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
