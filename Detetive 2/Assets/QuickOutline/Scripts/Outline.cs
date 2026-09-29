@@ -61,7 +61,7 @@ public class Outline : MonoBehaviour
     private Color outlineColor = Color.white;
 
     [SerializeField, Range(0f, 10f)]
-    private float outlineWidth = 2f;
+    private float outlineWidth = 7f;
 
     [Header("Mira do Player")]
 
@@ -122,8 +122,7 @@ public class Outline : MonoBehaviour
 
     void OnEnable()
     {
-        // NÃO adiciona o outline ao iniciar.
-        // Ele só será adicionado quando o player mirar.
+     
         outlineAtivo = false;
     }
 
