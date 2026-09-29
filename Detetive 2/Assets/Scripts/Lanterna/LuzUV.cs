@@ -24,7 +24,7 @@ public class LuzUV : MonoBehaviour
 
     private void Start()
     {
-        // Começa com todas as pegadas invisíveis
+        // Começa com todas as digitais invisíveis
         ApagarPegadas();
 
         if (spotLight != null)
@@ -36,29 +36,21 @@ public class LuzUV : MonoBehaviour
 
     private void Update()
     {
-        // Se não existe luz, apaga as pegadas
+        // Se não existe luz, apaga as digitais
         if (spotLight == null)
         {
             ApagarPegadas();
             return;
         }
 
-        // ==========================================
-        // LANTERNA DESLIGADA
-        // ==========================================
-
+        // Lanterna desligada
         if (!spotLight.gameObject.activeInHierarchy || !spotLight.enabled)
         {
             ApagarPegadas();
             return;
         }
 
-        // ==========================================
-        // LANTERNA LIGADA
-        // ==========================================
-
-        float distanciaMaisProxima =
-            EncontrarImagemMaisProxima();
+        float distanciaMaisProxima = EncontrarImagemMaisProxima();
 
         AtualizarLuz(distanciaMaisProxima);
 
@@ -67,37 +59,33 @@ public class LuzUV : MonoBehaviour
             if (imagem == null)
                 continue;
 
-            bool estaNoFeixe =
-                EstaNoFeixeUV(imagem);
+            bool estaNoFeixe = EstaNoFeixeUV(imagem);
 
-            float alphaAtual =
-                imagem.color.a;
+            float alphaAtual = imagem.color.a;
+            float alphaAlvo = estaNoFeixe ? 1f : 0f;
 
-            float alphaAlvo =
-                estaNoFeixe ? 1f : 0f;
-
-            float velocidade =
-                estaNoFeixe
+            float velocidade = estaNoFeixe
                 ? velocidadeAparecer
                 : velocidadeDesaparecer;
 
-            float novoAlpha =
-                Mathf.MoveTowards(
-                    alphaAtual,
-                    alphaAlvo,
-                    velocidade * Time.deltaTime
-                );
-
-            DefinirAlpha(
-                imagem,
-                novoAlpha
+            float novoAlpha = Mathf.MoveTowards(
+                alphaAtual,
+                alphaAlvo,
+                velocidade * Time.deltaTime
             );
+
+            DefinirAlpha(imagem, novoAlpha);
+
+            // Conta a digital apenas uma vez quando ela fica praticamente visível
+            if (estaNoFeixe && novoAlpha >= 0.95f)
+            {
+                DigitalUV digital = imagem.GetComponent<DigitalUV>();
+
+                if (digital != null)
+                    digital.MarcarEncontrada();
+            }
         }
     }
-
-    // ==========================================
-    // ENCONTRAR DIGITAL MAIS PRÓXIMA
-    // ==========================================
 
     float EncontrarImagemMaisProxima()
     {
@@ -108,98 +96,59 @@ public class LuzUV : MonoBehaviour
             if (imagem == null)
                 continue;
 
-            float distancia =
-                Vector3.Distance(
-                    transform.position,
-                    imagem.transform.position
-                );
+            float distancia = Vector3.Distance(
+                transform.position,
+                imagem.transform.position
+            );
 
             if (distancia < menorDistancia)
-            {
                 menorDistancia = distancia;
-            }
         }
 
         return menorDistancia;
     }
 
-    // ==========================================
-    // ALTERAR LUZ
-    // ==========================================
-
     void AtualizarLuz(float distancia)
     {
         if (distancia <= distanciaParaAmpliar)
         {
-            spotLight.range =
-                alcancePerto;
-
-            spotLight.intensity =
-                intensidadePerto;
+            spotLight.range = alcancePerto;
+            spotLight.intensity = intensidadePerto;
         }
         else
         {
-            spotLight.range =
-                alcanceNormal;
-
-            spotLight.intensity =
-                intensidadeNormal;
+            spotLight.range = alcanceNormal;
+            spotLight.intensity = intensidadeNormal;
         }
     }
-
-    // ==========================================
-    // VERIFICAR SE ESTÁ NO FEIXE
-    // ==========================================
 
     bool EstaNoFeixeUV(Image imagem)
     {
         if (!spotLight.enabled)
             return false;
 
-        Vector3 direcao =
-            imagem.transform.position -
-            spotLight.transform.position;
-
-        float distancia =
-            direcao.magnitude;
+        Vector3 direcao = imagem.transform.position - spotLight.transform.position;
+        float distancia = direcao.magnitude;
 
         if (distancia > spotLight.range)
             return false;
 
         direcao.Normalize();
 
-        float angulo =
-            Vector3.Angle(
-                spotLight.transform.forward,
-                direcao
-            );
+        float angulo = Vector3.Angle(
+            spotLight.transform.forward,
+            direcao
+        );
 
-        float metadeDoAngulo =
-            spotLight.spotAngle / 2f;
-
-        return angulo <= metadeDoAngulo;
+        return angulo <= spotLight.spotAngle / 2f;
     }
 
-    // ==========================================
-    // ALTERAR ALPHA
-    // ==========================================
-
-    void DefinirAlpha(
-        Image imagem,
-        float alpha
-    )
+    void DefinirAlpha(Image imagem, float alpha)
     {
-        Color cor =
-            imagem.color;
-
+        Color cor = imagem.color;
         cor.a = alpha;
-
         imagem.color = cor;
     }
-
-    // ==========================================
-    // APAGAR PEGADAS
-    // ==========================================
 
     public void ApagarPegadas()
     {

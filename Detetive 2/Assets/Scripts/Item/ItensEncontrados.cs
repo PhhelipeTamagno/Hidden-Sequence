@@ -74,37 +74,21 @@ public class ItensEncontrados : MonoBehaviour
         cor.a = 1f;
         item.imagem.color = cor;
     }
-
-    // =========================
-    // GARRAFA
-    // =========================
     public void EncontrarGarrafa()
     {
         garrafa.encontrado = true;
         AtualizarItem(garrafa);
     }
-
-    // =========================
-    // FACA
-    // =========================
     public void EncontrarFaca()
     {
         faca.encontrado = true;
         AtualizarItem(faca);
     }
-
-    // =========================
-    // DIGITAL
-    // =========================
     public void EncontrarDigital()
     {
         digital.encontrado = true;
         AtualizarItem(digital);
     }
-
-    // =========================
-    // UV SOBRE A DIGITAL
-    // =========================
     public void DigitalMirada()
     {
         if (digital == null || digital.imagem == null)
@@ -115,10 +99,6 @@ public class ItensEncontrados : MonoBehaviour
             EncontrarDigital();
         }
     }
-
-    // =========================
-    // UV SAIU DA DIGITAL
-    // =========================
     public void DigitalNaoMirada()
     {
         if (digital == null || digital.imagem == null)
@@ -134,10 +114,6 @@ public class ItensEncontrados : MonoBehaviour
             digital.imagem.color = cor;
         }
     }
-
-    // =========================
-    // VERIFICAR TODAS
-    // =========================
     void VerificarTodasEncontradas()
     {
         if (todasEncontradas)
@@ -151,19 +127,13 @@ public class ItensEncontrados : MonoBehaviour
             StartCoroutine(FadeFinal());
         }
     }
-
-    // =========================
-    // FADE FINAL + TROCA DE CENA
-    // =========================
     IEnumerator FadeFinal()
     {
         if (fade == null)
             yield break;
 
-        // Espera 1 segundo depois de pegar a última pista
         yield return new WaitForSeconds(1f);
 
-        // Ativa o texto
         if (textoFinal != null)
         {
             textoFinal.gameObject.SetActive(true);
@@ -172,7 +142,7 @@ public class ItensEncontrados : MonoBehaviour
                 "Depois que voce encontrou as pistas, voce voltou para a delegacia para terminar o caso.";
         }
 
-        // Fade para preto
+   
         float tempo = 0;
 
         while (tempo < 1)
@@ -185,10 +155,10 @@ public class ItensEncontrados : MonoBehaviour
 
         fade.alpha = 1;
 
-        // Espera um pouco com a tela preta
+        
         yield return new WaitForSeconds(1f);
 
-        // Carrega a próxima cena
+        
         if (!string.IsNullOrEmpty(nomeDaCena))
         {
             SceneManager.LoadScene(nomeDaCena);
@@ -198,10 +168,6 @@ public class ItensEncontrados : MonoBehaviour
             Debug.LogError("Nome da cena não foi definido no ItensEncontrados!");
         }
     }
-
-    // =========================
-    // ATUALIZAR ITEM
-    // =========================
     void AtualizarItem(Item item)
     {
         if (item == null || item.imagem == null)
