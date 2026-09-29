@@ -20,7 +20,7 @@ RenderSettings:
   m_FogDensity: 0.016
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
+  m_AmbientSkyColor: {r: 1, g: 1, b: 1, a: 1}
   m_AmbientEquatorColor: {r: 0.16037738, g: 0.16037738, b: 0.16037738, a: 1}
   m_AmbientGroundColor: {r: 0.1981132, g: 0.1981132, b: 0.1981132, a: 1}
   m_AmbientIntensity: 1.58
@@ -7616,6 +7616,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemColetavel
   tipoItem: 0
   distancia: 6
+--- !u!114 &840304180
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840304164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67d38ba8665e424418449929a216634a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteracaoMira
+  cameraPlayer: {fileID: 1291685108}
+  distanciaMaxima: 5
+  larguraNormal: 0
+  larguraAoMirar: 8
+--- !u!114 &840304181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840304164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Outline
+  outlineMode: 0
+  outlineColor: {r: 1, g: 0.9864793, b: 0, a: 1}
+  outlineWidth: 7
+  ativarAoMirar: 1
+  cameraPlayer: {fileID: 1291685108}
+  distanciaMaxima: 5
+  precomputeOutline: 0
+  bakeKeys: []
+  bakeValues: []
 --- !u!1 &842257470
 GameObject:
   m_ObjectHideFlags: 0
@@ -12133,6 +12170,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2093812524}
   m_SourcePrefab: {fileID: 100100000, guid: c429cb8c037bc3b40ab1fe6825ff164f, type: 3}
+--- !u!20 &1291685108 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5847112576682231495, guid: c429cb8c037bc3b40ab1fe6825ff164f, type: 3}
+  m_PrefabInstance: {fileID: 1291685107}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1306798022
 GameObject:
   m_ObjectHideFlags: 0
@@ -18445,6 +18487,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3773219746926958888, guid: d3d4fa47f6eb9ee48b19af3280f08d6f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 840304179}
+    - targetCorrespondingSourceObject: {fileID: 3773219746926958888, guid: d3d4fa47f6eb9ee48b19af3280f08d6f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 840304181}
+    - targetCorrespondingSourceObject: {fileID: 3773219746926958888, guid: d3d4fa47f6eb9ee48b19af3280f08d6f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 840304180}
   m_SourcePrefab: {fileID: 100100000, guid: d3d4fa47f6eb9ee48b19af3280f08d6f, type: 3}
 --- !u!1 &1852215716
 GameObject:
