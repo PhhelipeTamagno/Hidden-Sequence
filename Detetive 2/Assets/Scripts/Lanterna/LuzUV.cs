@@ -6,7 +6,7 @@ public class LuzUV : MonoBehaviour
     [Header("Referências")]
     public Light spotLight;
 
-    [Header("Imagens")]
+    [Header("Imagens das Digitais")]
     public Image[] imagens;
 
     [Header("Alpha")]
@@ -24,7 +24,6 @@ public class LuzUV : MonoBehaviour
 
     private void Start()
     {
-        // Começa com todas as digitais invisíveis
         ApagarPegadas();
 
         if (spotLight != null)
@@ -36,7 +35,6 @@ public class LuzUV : MonoBehaviour
 
     private void Update()
     {
-        // Se não existe luz, apaga as digitais
         if (spotLight == null)
         {
             ApagarPegadas();
@@ -62,6 +60,7 @@ public class LuzUV : MonoBehaviour
             bool estaNoFeixe = EstaNoFeixeUV(imagem);
 
             float alphaAtual = imagem.color.a;
+
             float alphaAlvo = estaNoFeixe ? 1f : 0f;
 
             float velocidade = estaNoFeixe
@@ -76,13 +75,15 @@ public class LuzUV : MonoBehaviour
 
             DefinirAlpha(imagem, novoAlpha);
 
-            // Conta a digital apenas uma vez quando ela fica praticamente visível
+            // Quando a digital estiver realmente visível
             if (estaNoFeixe && novoAlpha >= 0.95f)
             {
                 DigitalUV digital = imagem.GetComponent<DigitalUV>();
 
                 if (digital != null)
+                {
                     digital.MarcarEncontrada();
+                }
             }
         }
     }
@@ -102,7 +103,9 @@ public class LuzUV : MonoBehaviour
             );
 
             if (distancia < menorDistancia)
+            {
                 menorDistancia = distancia;
+            }
         }
 
         return menorDistancia;
@@ -127,7 +130,10 @@ public class LuzUV : MonoBehaviour
         if (!spotLight.enabled)
             return false;
 
-        Vector3 direcao = imagem.transform.position - spotLight.transform.position;
+        Vector3 direcao =
+            imagem.transform.position -
+            spotLight.transform.position;
+
         float distancia = direcao.magnitude;
 
         if (distancia > spotLight.range)
@@ -140,13 +146,18 @@ public class LuzUV : MonoBehaviour
             direcao
         );
 
-        return angulo <= spotLight.spotAngle / 2f;
+        float metadeDoAngulo =
+            spotLight.spotAngle / 2f;
+
+        return angulo <= metadeDoAngulo;
     }
 
     void DefinirAlpha(Image imagem, float alpha)
     {
         Color cor = imagem.color;
+
         cor.a = alpha;
+
         imagem.color = cor;
     }
 
