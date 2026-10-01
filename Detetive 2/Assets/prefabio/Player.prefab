@@ -464,6 +464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   velocidade: 4
+  velocidadeAposInvestigacao: 3
   gravidade: -9.81
   velocidadeQueda: -2
   forcaPulo: 5
@@ -473,6 +474,9 @@ MonoBehaviour:
   campoTexto: {fileID: 0}
   promptInteracao: {fileID: 0}
   usandoComputador: 0
+  audioPassos: {fileID: 0}
+  somPassos: {fileID: 8300000, guid: cee427311987f3840a39bd192224d3ab, type: 3}
+  volumePassos: 1
 --- !u!4 &8750964975271576506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: cbf7abc57de82e644a65fc235245499c, type: 3}
