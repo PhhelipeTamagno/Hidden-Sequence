@@ -1,5 +1,7 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
+using static Unity.Burst.Intrinsics.X86;
 
 [RequireComponent(typeof(CharacterController))]
 public class PlayerMovement : MonoBehaviour
@@ -39,19 +41,44 @@ public class PlayerMovement : MonoBehaviour
     float rotacaoX = 0f;
     float velocidadeY = 0f;
 
+    // =========================================================
+    // SOM DE PASSOS
+    // =========================================================
+
+    [Header("Som de Passos")]
+    public AudioSource audioPassos;
+
+    [Tooltip("Som de passos. Pode ser um áudio em loop.")]
+    public AudioClip somPassos;
+
+    [Range(0f, 1f)]
+    public float volumePassos = 1f;
+
+    // =========================================================
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        // Configura o áudio de passos
+        if (audioPassos != null)
+        {
+            audioPassos.clip = somPassos;
+            audioPassos.volume = volumePassos;
+            audioPassos.loop = true;
+            audioPassos.playOnAwake = false;
+        }
     }
 
     void Update()
     {
-
         if (usandoComputador)
         {
+            PararPassos();
+
             if (Input.GetKeyDown(KeyCode.E))
             {
                 if (computadorEmUso != null)
@@ -63,6 +90,8 @@ public class PlayerMovement : MonoBehaviour
 
         if (!mouseTravado)
         {
+            PararPassos();
+
             if (Input.GetKeyDown(KeyCode.V))
             {
                 mouseTravado = true;
@@ -141,6 +170,11 @@ public class PlayerMovement : MonoBehaviour
             movimento *
             Time.deltaTime
         );
+
+        // =====================================================
+        // ANDANDO / SOM DE PASSOS
+        // =====================================================
+
         bool andando =
             horizontal != 0 ||
             vertical != 0;
@@ -152,6 +186,18 @@ public class PlayerMovement : MonoBehaviour
                 andando
             );
         }
+
+        // Só toca passos quando estiver andando NO CHÃO
+        if (andando && controller.isGrounded && velocidade > 0)
+        {
+            TocarPassos();
+        }
+        else
+        {
+            PararPassos();
+        }
+
+        // =====================================================
 
         Ray ray =
             new Ray(
@@ -245,6 +291,7 @@ public class PlayerMovement : MonoBehaviour
                     promptInteracao.Esconder();
             }
         }
+
         if (Input.GetKeyDown(KeyCode.V))
         {
             mouseTravado = !mouseTravado;
@@ -267,4 +314,29 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+
+    // =========================================================
+    // FUNÇÕES DO SOM DE PASSOS
+    // =========================================================
+
+    void TocarPassos()
+    {
+        if (audioPassos == null || somPassos == null)
+            return;
+
+        if (!audioPassos.isPlaying)
+        {
+            audioPassos.Play();
+        }
+    }
+
+    void PararPassos()
+    {
+        if (audioPassos != null && audioPassos.isPlaying)
+        {
+            audioPassos.Stop();
+        }
+    }
+
+    // =========================================================
 }
