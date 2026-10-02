@@ -350,6 +350,135 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &457383442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 457383444}
+  - component: {fileID: 457383443}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &457383443
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457383442}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -4421815386667773603, guid: b5efd340a1f05e54b92a078ab8bae540, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 08a099a2fe9220c4e80d7e65bc088c4d, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &457383444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 457383442}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 942.2721, y: -0.00001, z: 887.2938}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &568688342
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,6 +490,7 @@ GameObject:
   - component: {fileID: 568688345}
   - component: {fileID: 568688344}
   - component: {fileID: 568688343}
+  - component: {fileID: 568688346}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -429,6 +559,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &568688346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 568688342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10def9ee3faaa0548b6139f0c0218b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicaAnimacaoCreditos
+  audioSource: {fileID: 457383443}
+  cenaAnimacao: "Pris\xE3o"
+  cenaCreditos: creditos
 --- !u!1 &1131006609
 GameObject:
   m_ObjectHideFlags: 0
@@ -538,7 +683,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -40.1, y: 0}
+  m_AnchoredPosition: {x: -40.1, y: -48}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1440745267
@@ -561,7 +706,23 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Hidden Sequece \xE9 um baseado em uma carta do Jogo Black Stories"
+  m_text: " HIDDEN SEQUENCE\r\n\r\nCR\xC9DITOS FINAIS\r\n\r\n DESENVOLVIDO POR\r\n\r\n
+    GABRIEL LANGA GUTJHAR\r\n\r\nGAME DESIGN\r\n\r\nRespons\xE1vel pela concep\xE7\xE3o
+    das ideias, cria\xE7\xE3o das mec\xE2nicas e desenvolvimento da experi\xEAncia
+    de jogo, definindo os elementos que d\xE3o identidade a Hidden Sequence.\r\n\r\nENZO
+    SCHLAGEL\r\n\r\n3D ARTIST | MODELADOR 3D\r\n\r\nRespons\xE1vel pela cria\xE7\xE3o
+    dos modelos tridimensionais e dos elementos visuais que comp\xF5em o universo
+    de Hidden Sequence, contribuindo para a identidade visual do projeto.\r\n\r\n
+    PHELIPE TAMAGNO\r\n\r\nPROGRAMADOR | GAMEPLAY PROGRAMMING\r\n\r\nRespons\xE1vel
+    pelo desenvolvimento dos sistemas, implementa\xE7\xE3o das mec\xE2nicas e programa\xE7\xE3o
+    dos recursos que tornam a experi\xEAncia de jogo poss\xEDvel.\r\n\r\n AGRADECIMENTOS
+    ESPECIAIS\r\n\r\nToda jornada chega ao fim, mas algumas experi\xEAncias permanecem.\r\n\r\nHidden
+    Sequence \xE9 o resultado de in\xFAmeras ideias, horas de trabalho, desafios
+    e dedica\xE7\xE3o. Cada detalhe deste projeto representa uma parte do esfor\xE7o
+    de todos os envolvidos em sua cria\xE7\xE3o.\r\n\r\nA voc\xEA, que chegou at\xE9
+    aqui, nosso mais sincero agradecimento. Esperamos que sua jornada por este universo
+    tenha sido t\xE3o marcante quanto foi a nossa durante seu desenvolvimento.\r\n\r\nOBRIGADO
+    POR FAZER PARTE DESTA EXPERI\xCANCIA.\r\n\r\nHIDDEN SEQUENCE\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 85519acdc518cfe4a8d884c064e8e771, type: 2}
   m_sharedMaterial: {fileID: -2025313383525767675, guid: 85519acdc518cfe4a8d884c064e8e771, type: 2}
@@ -595,7 +756,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -627,7 +788,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: -155.25586, w: 0}
+  m_margin: {x: -299.54175, y: -255.182, z: -357.75867, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -794,7 +955,7 @@ MonoBehaviour:
   textoCreditos: {fileID: 1440745267}
   velocidadeTexto: 50
   posicaoInicialY: -600
-  posicaoFinalY: 1000
+  posicaoFinalY: 9999
   imagem1: {fileID: 0}
   imagem2: {fileID: 0}
   tempoImagem1: 4
@@ -884,3 +1045,4 @@ SceneRoots:
   - {fileID: 379753732}
   - {fileID: 188450457}
   - {fileID: 568688345}
+  - {fileID: 457383444}
