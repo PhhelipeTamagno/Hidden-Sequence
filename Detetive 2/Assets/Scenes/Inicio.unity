@@ -12926,7 +12926,7 @@ PrefabInstance:
     - target: {fileID: 5276914992623515723, guid: 616d511151a6c554caddf1c754e4f91d, type: 3}
       propertyPath: transitionSettings
       value: 
-      objectReference: {fileID: 11400000, guid: 06fa0ad2bc756f44ab258bc74947381d, type: 2}
+      objectReference: {fileID: 11400000, guid: b0126e1e0c6c2a04895d564bd230dfb9, type: 2}
     - target: {fileID: 5276914992623515724, guid: 616d511151a6c554caddf1c754e4f91d, type: 3}
       propertyPath: m_Name
       value: TransitionTemplate

@@ -58,6 +58,7 @@ AudioMixerController:
     - 81cdfaf09d41ea04a8323649fd41c8ae
     - d283932b0a7397045838331486a0442a
     - eca06d5207c901b428181e3d7a892ea5
+    - 97a6d166e58f7f64e92245cd5c20d082
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -73,6 +74,7 @@ AudioMixerGroupController:
   m_Children:
   - {fileID: -7301339343049642887}
   - {fileID: 3998494041694023876}
+  - {fileID: 7595928614483370169}
   m_Volume: 1835c020d0f30864d9df763e30f1386a
   m_Pitch: 70d706ef3b11efc408bc39eae4f67e8b
   m_Send: 00000000000000000000000000000000
@@ -109,6 +111,20 @@ AudioMixerSnapshotController:
     1835c020d0f30864d9df763e30f1386a: -9.5
     6056d6194432911489607a8d26dece00: 0.94
   m_TransitionOverrides: {}
+--- !u!244 &318038756917933455
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 014c22b9262bc814b91a6995bd00ef1e
+  m_EffectName: Attenuation
+  m_MixLevel: 1db396db6768fbf4e96a383c89c2af08
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
 --- !u!244 &881168647047279823
 AudioMixerEffectController:
   m_ObjectHideFlags: 3
@@ -138,6 +154,25 @@ AudioMixerGroupController:
   m_Send: 00000000000000000000000000000000
   m_Effects:
   - {fileID: 881168647047279823}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
+--- !u!243 &7595928614483370169
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Carro
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 97a6d166e58f7f64e92245cd5c20d082
+  m_Children: []
+  m_Volume: 69536a5c2b39a724088440c98ecc5b29
+  m_Pitch: 894acd7cb718f504ab92b8089cab1631
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: 318038756917933455}
   m_UserColorIndex: 0
   m_Mute: 0
   m_Solo: 0
