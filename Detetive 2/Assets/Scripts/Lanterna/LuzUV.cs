@@ -41,7 +41,6 @@ public class LuzUV : MonoBehaviour
             return;
         }
 
-        // Lanterna desligada
         if (!spotLight.gameObject.activeInHierarchy || !spotLight.enabled)
         {
             ApagarPegadas();
@@ -75,7 +74,6 @@ public class LuzUV : MonoBehaviour
 
             DefinirAlpha(imagem, novoAlpha);
 
-            // Quando a digital estiver realmente visível
             if (estaNoFeixe && novoAlpha >= 0.95f)
             {
                 DigitalUV digital = imagem.GetComponent<DigitalUV>();
@@ -170,5 +168,11 @@ public class LuzUV : MonoBehaviour
 
             DefinirAlpha(imagem, 0f);
         }
+    }
+
+    
+    private void OnDisable()
+    {
+        ApagarPegadas();
     }
 }
