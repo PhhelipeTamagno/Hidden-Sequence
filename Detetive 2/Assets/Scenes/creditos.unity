@@ -717,12 +717,13 @@ MonoBehaviour:
     pelo desenvolvimento dos sistemas, implementa\xE7\xE3o das mec\xE2nicas e programa\xE7\xE3o
     dos recursos que tornam a experi\xEAncia de jogo poss\xEDvel.\r\n\r\n AGRADECIMENTOS
     ESPECIAIS\r\n\r\nToda jornada chega ao fim, mas algumas experi\xEAncias permanecem.\r\n\r\nHidden
-    Sequence \xE9 o resultado de in\xFAmeras ideias, horas de trabalho, desafios
-    e dedica\xE7\xE3o. Cada detalhe deste projeto representa uma parte do esfor\xE7o
-    de todos os envolvidos em sua cria\xE7\xE3o.\r\n\r\nA voc\xEA, que chegou at\xE9
-    aqui, nosso mais sincero agradecimento. Esperamos que sua jornada por este universo
-    tenha sido t\xE3o marcante quanto foi a nossa durante seu desenvolvimento.\r\n\r\nOBRIGADO
-    POR FAZER PARTE DESTA EXPERI\xCANCIA.\r\n\r\nHIDDEN SEQUENCE\r\n"
+    Sequence \xE9 um jogo inspirado no jogo de cartas:Black Stories e tambem o resultado
+    de in\xFAmeras ideias, horas de trabalho, desafios e dedica\xE7\xE3o. Cada detalhe
+    deste projeto representa uma parte do esfor\xE7o de todos os envolvidos em sua
+    cria\xE7\xE3o.\r\n\r\nA voc\xEA, que chegou at\xE9 aqui, nosso mais sincero agradecimento.
+    Esperamos que sua jornada por este universo tenha sido t\xE3o marcante quanto
+    foi a nossa durante seu desenvolvimento.\r\n\r\nOBRIGADO POR FAZER PARTE DESTA
+    EXPERI\xCANCIA.\r\n\r\nHIDDEN SEQUENCE\r\n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 85519acdc518cfe4a8d884c064e8e771, type: 2}
   m_sharedMaterial: {fileID: -2025313383525767675, guid: 85519acdc518cfe4a8d884c064e8e771, type: 2}
