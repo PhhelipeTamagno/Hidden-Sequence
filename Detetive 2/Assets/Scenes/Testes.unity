@@ -543,12 +543,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarroSistema
   velocidadeMaxima: 6
   velocidadeRe: 5
-  forcaMotor: 1000
+  forcaMotor: 500
+  forcaFreio: 500
   desaceleracao: 2.5
-  forcaFreio: 1000
-  anguloMaximo: 32
-  velocidadeDirecao: 4
-  aderencia: 4
+  anguloMaximo: 40
+  velocidadeDirecao: 6
+  aderencia: 0
   player: {fileID: 2102366978}
   pontoEntrada: {fileID: 813760781}
   pontoSaida: {fileID: 801638689}
@@ -557,8 +557,8 @@ MonoBehaviour:
   alvoCamera: {fileID: 1658440370}
   distanciaCamera: 7
   alturaCamera: 2.5
-  sensibilidadeMouseX: 3
-  sensibilidadeMouseY: 2
+  sensibilidadeMouseX: 5
+  sensibilidadeMouseY: 4
   suavidadeCamera: 8
   suavidadeRotacaoCamera: 10
   distanciaMinima: 3
@@ -608,7 +608,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1133508892}
   serializedVersion: 5
-  m_Mass: 1.2
+  m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}

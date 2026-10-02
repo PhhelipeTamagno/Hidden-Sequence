@@ -10,25 +10,35 @@ public class CarroSistema : MonoBehaviour
 
     [Header("========== MOVIMENTO ==========")]
 
-    public float velocidadeMaxima = 15f;
-    public float forcaAceleracao = 1200f;
-    public float forcaFreio = 1800f;
-    public float velocidadeRe = 7f;
-
-    public float resistenciaAr = 0.5f;
-
-    private Rigidbody rb;
-
-    private float acelerador;
-    private float direcao;
+    public float velocidadeMaxima = 25f;
+    public float velocidadeRe = 8f;
+    public float forcaMotor = 9000f;
 
     // =========================================================
-    // DIREÇÃO
+    // FRENAGEM
+    // =========================================================
+
+    [Header("========== FRENAGEM ==========")]
+
+    public float forcaFreio = 15000f;
+    public float desaceleracao = 2.5f;
+
+    // =========================================================
+    // DIREÇÃO DO CARRO
     // =========================================================
 
     [Header("========== DIREÇÃO ==========")]
 
-    public float velocidadeRotacao = 70f;
+    public float anguloMaximo = 32f;
+    public float velocidadeDirecao = 4f;
+
+    // =========================================================
+    // ADERÊNCIA
+    // =========================================================
+
+    [Header("========== ADERÊNCIA ==========")]
+
+    public float aderencia = 4f;
 
     // =========================================================
     // PLAYER
@@ -38,15 +48,14 @@ public class CarroSistema : MonoBehaviour
 
     public GameObject player;
 
+    [Tooltip("Local onde o jogador entra no carro.")]
     public Transform pontoEntrada;
 
+    [Tooltip("Local onde o jogador aparece ao sair.")]
     public Transform pontoSaida;
 
+    [Tooltip("Distância para poder entrar no carro.")]
     public float distanciaEntrada = 3f;
-
-    private CharacterController playerController;
-
-    private bool jogadorDentro = false;
 
     // =========================================================
     // CÂMERA
@@ -54,53 +63,63 @@ public class CarroSistema : MonoBehaviour
 
     [Header("========== CÂMERA GTA ==========")]
 
+    [Tooltip("Câmera usada quando o jogador está dentro do carro.")]
     public Camera cameraCarro;
 
+    [Tooltip("Alvo que a câmera acompanha.")]
     public Transform alvoCamera;
 
+    [Tooltip("Distância da câmera até o carro.")]
     public float distanciaCamera = 7f;
 
+    [Tooltip("Altura da câmera.")]
     public float alturaCamera = 2.5f;
 
+    [Tooltip("Sensibilidade horizontal do mouse.")]
     public float sensibilidadeMouseX = 3f;
 
+    [Tooltip("Sensibilidade vertical do mouse.")]
     public float sensibilidadeMouseY = 2f;
 
+    [Tooltip("Suavidade da posição da câmera.")]
     public float suavidadeCamera = 8f;
 
+    [Tooltip("Suavidade da rotação da câmera.")]
     public float suavidadeRotacaoCamera = 10f;
 
+    [Tooltip("Distância mínima da câmera.")]
     public float distanciaMinima = 3f;
 
+    [Tooltip("Distância máxima da câmera.")]
     public float distanciaMaxima = 12f;
+
+    [Tooltip("Altura mínima da câmera.")]
+    public float alturaMinima = 0.5f;
+
+    [Tooltip("Altura máxima da câmera.")]
+    public float alturaMaxima = 6f;
 
     public bool inverterMouseY = false;
 
     public bool esconderCursor = true;
 
-    private float rotacaoCameraX;
-
-    private float rotacaoCameraY = 15f;
-
-    private float distanciaAtual;
-
     // =========================================================
-    // RODAS
+    // RODAS DIANTEIRAS
     // =========================================================
 
     [Header("========== RODAS DIANTEIRAS ==========")]
 
+    [Tooltip("Roda dianteira esquerda.")]
     public Transform rodaFrenteEsquerda;
 
+    [Tooltip("Roda dianteira direita.")]
     public Transform rodaFrenteDireita;
 
-    public float anguloMaximoRodas = 30f;
+    [Tooltip("Ângulo máximo das rodas dianteiras.")]
+    public float anguloMaximoRodas = 32f;
 
+    [Tooltip("Velocidade com que as rodas viram.")]
     public float velocidadeRodas = 8f;
-
-    private Quaternion rotacaoOriginalEsquerda;
-
-    private Quaternion rotacaoOriginalDireita;
 
     // =========================================================
     // ÁUDIO
@@ -135,8 +154,34 @@ public class CarroSistema : MonoBehaviour
 
     [Header("========== ORIENTAÇÃO ==========")]
 
-    [Tooltip("Ative se a frente do carro estiver no eixo X.")]
+    [Tooltip("Ative se a frente do carro estiver apontando para o eixo X.")]
     public bool frenteNoEixoX = true;
+
+    // =========================================================
+    // VARIÁVEIS INTERNAS
+    // =========================================================
+
+    private Rigidbody rb;
+
+    private CharacterController playerController;
+
+    private bool jogadorDentro = false;
+
+    private float aceleracao = 0f;
+
+    private float direcao = 0f;
+
+    // =========================================================
+    // VARIÁVEIS DA CÂMERA
+    // =========================================================
+
+    private float rotacaoCameraX = 0f;
+
+    private float rotacaoCameraY = 15f;
+
+    private float distanciaAtual;
+
+    private float alturaAtual;
 
     // =========================================================
     // START
@@ -146,30 +191,7 @@ public class CarroSistema : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        // =====================================================
-        // RIGIDBODY
-        // =====================================================
-
-        rb.mass = 1200f;
-
-        rb.useGravity = true;
-
-        rb.isKinematic = false;
-
-        rb.interpolation =
-            RigidbodyInterpolation.Interpolate;
-
-        rb.collisionDetectionMode =
-            CollisionDetectionMode.ContinuousDynamic;
-
-        rb.constraints =
-            RigidbodyConstraints.FreezeRotationX |
-            RigidbodyConstraints.FreezeRotationZ;
-
-        // =====================================================
-        // PLAYER
-        // =====================================================
-
+        // Pega o CharacterController do Player
         if (player != null)
         {
             playerController =
@@ -177,35 +199,38 @@ public class CarroSistema : MonoBehaviour
         }
 
         // =====================================================
+        // CONFIGURAÇÃO DO RIGIDBODY
+        // =====================================================
+
+        rb.interpolation =
+            RigidbodyInterpolation.Interpolate;
+
+        rb.collisionDetectionMode =
+            CollisionDetectionMode.ContinuousDynamic;
+
+        // O carro pode se movimentar em:
+        // X
+        // Y
+        // Z
+        //
+        // Mas só pode girar no eixo Y.
+
+        rb.constraints =
+            RigidbodyConstraints.FreezeRotationX |
+            RigidbodyConstraints.FreezeRotationZ;
+
+        // =====================================================
         // CÂMERA
         // =====================================================
 
         distanciaAtual = distanciaCamera;
 
+        alturaAtual = alturaCamera;
+
+        // A câmera começa DESLIGADA
         if (cameraCarro != null)
         {
             cameraCarro.gameObject.SetActive(false);
-        }
-
-        if (alvoCamera == null)
-        {
-            alvoCamera = transform;
-        }
-
-        // =====================================================
-        // RODAS
-        // =====================================================
-
-        if (rodaFrenteEsquerda != null)
-        {
-            rotacaoOriginalEsquerda =
-                rodaFrenteEsquerda.localRotation;
-        }
-
-        if (rodaFrenteDireita != null)
-        {
-            rotacaoOriginalDireita =
-                rodaFrenteDireita.localRotation;
         }
 
         // =====================================================
@@ -215,18 +240,23 @@ public class CarroSistema : MonoBehaviour
         if (somMotor != null)
         {
             somMotor.loop = true;
+
             somMotor.playOnAwake = false;
-            somMotor.volume = 0f;
+
+            somMotor.volume = volumeMotor;
         }
 
         // =====================================================
         // CURSOR
         // =====================================================
 
-        Cursor.lockState =
-            CursorLockMode.None;
+        if (esconderCursor)
+        {
+            Cursor.lockState =
+                CursorLockMode.None;
 
-        Cursor.visible = true;
+            Cursor.visible = true;
+        }
     }
 
     // =========================================================
@@ -239,7 +269,7 @@ public class CarroSistema : MonoBehaviour
             return;
 
         // =====================================================
-        // FORA DO CARRO
+        // PLAYER FORA DO CARRO
         // =====================================================
 
         if (!jogadorDentro)
@@ -248,7 +278,7 @@ public class CarroSistema : MonoBehaviour
         }
 
         // =====================================================
-        // DENTRO DO CARRO
+        // PLAYER DENTRO DO CARRO
         // =====================================================
 
         else
@@ -257,12 +287,14 @@ public class CarroSistema : MonoBehaviour
 
             AtualizarCamera();
 
+            // E = sair
             if (Keyboard.current.eKey.wasPressedThisFrame)
             {
                 SairDoCarro();
             }
         }
 
+        // Atualiza o som
         AtualizarSomMotor();
     }
 
@@ -275,18 +307,20 @@ public class CarroSistema : MonoBehaviour
         if (!jogadorDentro)
             return;
 
-        MovimentarCarro();
+        AplicarMotor();
 
-        GirarCarro();
+        AplicarDirecao();
 
-        AtualizarRodas();
+        AplicarAderencia();
+
+        AtualizarRodasDianteiras();
     }
 
     // =========================================================
-    // DIREÇÃO DA FRENTE
+    // DIREÇÃO DA FRENTE DO CARRO
     // =========================================================
 
-    Vector3 DirecaoFrente()
+    Vector3 GetDirecaoFrente()
     {
         if (frenteNoEixoX)
         {
@@ -329,36 +363,90 @@ public class CarroSistema : MonoBehaviour
 
     void EntrarNoCarro()
     {
+        if (jogadorDentro)
+            return;
+
         jogadorDentro = true;
 
-        // PLAYER
+        // =====================================================
+        // DESATIVA O CONTROLE DO PLAYER
+        // =====================================================
+
         if (playerController != null)
         {
             playerController.enabled = false;
         }
+
+        // =====================================================
+        // COLOCA PLAYER NO CARRO
+        // =====================================================
+
+        if (player != null && pontoEntrada != null)
+        {
+            player.transform.position =
+                pontoEntrada.position;
+
+            player.transform.rotation =
+                pontoEntrada.rotation;
+        }
+
+        // =====================================================
+        // ESCONDE PLAYER
+        // =====================================================
 
         if (player != null)
         {
             player.SetActive(false);
         }
 
-        // CÂMERA
+        // =====================================================
+        // ATIVA CÂMERA
+        // =====================================================
+
         if (cameraCarro != null)
         {
             cameraCarro.gameObject.SetActive(true);
         }
+
+        // =====================================================
+        // DEFINE ALVO DA CÂMERA
+        // =====================================================
 
         if (alvoCamera == null)
         {
             alvoCamera = transform;
         }
 
+        // =====================================================
+        // POSIÇÃO INICIAL DA CÂMERA
+        // =====================================================
+
+        Vector3 direcaoInicial =
+            -GetDirecaoFrente();
+
+        Vector3 posicaoInicial =
+            alvoCamera.position +
+            direcaoInicial *
+            distanciaAtual +
+            Vector3.up *
+            alturaAtual;
+
+        cameraCarro.transform.position =
+            posicaoInicial;
+
+        // =====================================================
+        // ROTAÇÃO INICIAL
+        // =====================================================
+
         rotacaoCameraX =
             transform.eulerAngles.y;
 
         rotacaoCameraY = 15f;
 
+        // =====================================================
         // CURSOR
+        // =====================================================
+
         if (esconderCursor)
         {
             Cursor.lockState =
@@ -367,7 +455,10 @@ public class CarroSistema : MonoBehaviour
             Cursor.visible = false;
         }
 
+        // =====================================================
         // SOM DA PORTA
+        // =====================================================
+
         if (somPorta != null &&
             somPortaFechando != null)
         {
@@ -376,9 +467,11 @@ public class CarroSistema : MonoBehaviour
             );
         }
 
+        // =====================================================
         // SOM DO MOTOR
-        if (somMotor != null &&
-            !somMotor.isPlaying)
+        // =====================================================
+
+        if (somMotor != null)
         {
             somMotor.Play();
         }
@@ -390,25 +483,32 @@ public class CarroSistema : MonoBehaviour
 
     void SairDoCarro()
     {
+        if (!jogadorDentro)
+            return;
+
         jogadorDentro = false;
 
-        // CÂMERA
+        // =====================================================
+        // DESLIGA CÂMERA
+        // =====================================================
+
         if (cameraCarro != null)
         {
             cameraCarro.gameObject.SetActive(false);
         }
 
+        // =====================================================
         // PLAYER
-        if (player != null)
-        {
-            if (pontoSaida != null)
-            {
-                player.transform.position =
-                    pontoSaida.position;
+        // =====================================================
 
-                player.transform.rotation =
-                    pontoSaida.rotation;
-            }
+        if (player != null &&
+            pontoSaida != null)
+        {
+            player.transform.position =
+                pontoSaida.position;
+
+            player.transform.rotation =
+                pontoSaida.rotation;
 
             player.SetActive(true);
 
@@ -418,7 +518,10 @@ public class CarroSistema : MonoBehaviour
             }
         }
 
+        // =====================================================
         // CURSOR
+        // =====================================================
+
         if (esconderCursor)
         {
             Cursor.lockState =
@@ -427,7 +530,10 @@ public class CarroSistema : MonoBehaviour
             Cursor.visible = true;
         }
 
+        // =====================================================
         // SOM DA PORTA
+        // =====================================================
+
         if (somPorta != null &&
             somPortaAbrindo != null)
         {
@@ -436,13 +542,17 @@ public class CarroSistema : MonoBehaviour
             );
         }
 
-        // MOTOR
+        // =====================================================
+        // DESLIGA MOTOR
+        // =====================================================
+
         if (somMotor != null)
         {
             somMotor.Stop();
         }
 
-        acelerador = 0f;
+        aceleracao = 0f;
+
         direcao = 0f;
     }
 
@@ -452,28 +562,41 @@ public class CarroSistema : MonoBehaviour
 
     void LerControles()
     {
-        acelerador = 0f;
+        aceleracao = 0f;
+
         direcao = 0f;
 
+        // =====================================================
         // W = FRENTE
+        // =====================================================
+
         if (Keyboard.current.wKey.isPressed)
         {
-            acelerador = 1f;
+            aceleracao = 1f;
         }
 
-        // S = RÉ
+        // =====================================================
+        // S = FREIO / RÉ
+        // =====================================================
+
         if (Keyboard.current.sKey.isPressed)
         {
-            acelerador = -1f;
+            aceleracao = -1f;
         }
 
+        // =====================================================
         // A = ESQUERDA
+        // =====================================================
+
         if (Keyboard.current.aKey.isPressed)
         {
             direcao = -1f;
         }
 
+        // =====================================================
         // D = DIREITA
+        // =====================================================
+
         if (Keyboard.current.dKey.isPressed)
         {
             direcao = 1f;
@@ -481,13 +604,13 @@ public class CarroSistema : MonoBehaviour
     }
 
     // =========================================================
-    // MOVIMENTO FÍSICO
+    // MOTOR
     // =========================================================
 
-    void MovimentarCarro()
+    void AplicarMotor()
     {
         Vector3 frente =
-            DirecaoFrente();
+            GetDirecaoFrente();
 
         float velocidadeFrente =
             Vector3.Dot(
@@ -496,27 +619,32 @@ public class CarroSistema : MonoBehaviour
             );
 
         // =====================================================
-        // ACELERAR
+        // W = FRENTE
         // =====================================================
 
-        if (acelerador > 0f)
+        if (aceleracao > 0f)
         {
-            if (velocidadeFrente < velocidadeMaxima)
+            if (velocidadeFrente <
+                velocidadeMaxima)
             {
                 rb.AddForce(
                     frente *
-                    forcaAceleracao,
+                    forcaMotor,
                     ForceMode.Force
                 );
             }
+
+            return;
         }
 
         // =====================================================
-        // RÉ / FREIO
+        // S = FREIO / RÉ
         // =====================================================
 
-        else if (acelerador < 0f)
+        if (aceleracao < 0f)
         {
+            // Se está andando para frente,
+            // primeiro freia.
             if (velocidadeFrente > 0.5f)
             {
                 rb.AddForce(
@@ -527,85 +655,62 @@ public class CarroSistema : MonoBehaviour
             }
             else
             {
-                if (velocidadeFrente > -velocidadeRe)
+                // Depois começa a dar ré.
+                float velocidadeReAtual =
+                    Vector3.Dot(
+                        rb.linearVelocity,
+                        -frente
+                    );
+
+                if (velocidadeReAtual <
+                    velocidadeRe)
                 {
                     rb.AddForce(
                         -frente *
-                        forcaAceleracao *
-                        0.6f,
+                        (forcaMotor * 0.5f),
                         ForceMode.Force
                     );
                 }
             }
+
+            return;
         }
 
         // =====================================================
-        // DESACELERAÇÃO
-        // =====================================================
-
-        else
-        {
-            Vector3 velocidadeHorizontal =
-                new Vector3(
-                    rb.linearVelocity.x,
-                    0f,
-                    rb.linearVelocity.z
-                );
-
-            velocidadeHorizontal =
-                Vector3.MoveTowards(
-                    velocidadeHorizontal,
-                    Vector3.zero,
-                    resistenciaAr *
-                    Time.fixedDeltaTime
-                );
-
-            rb.linearVelocity =
-                new Vector3(
-                    velocidadeHorizontal.x,
-                    rb.linearVelocity.y,
-                    velocidadeHorizontal.z
-                );
-        }
-
-        // =====================================================
-        // LIMITAR VELOCIDADE
+        // SOLTOU W E S
         // =====================================================
 
         Vector3 velocidade =
             rb.linearVelocity;
 
-        Vector3 velocidadeHorizontalAtual =
+        Vector3 velocidadeHorizontal =
             new Vector3(
                 velocidade.x,
                 0f,
                 velocidade.z
             );
 
-        if (velocidadeHorizontalAtual.magnitude >
-            velocidadeMaxima)
-        {
-            velocidadeHorizontalAtual =
-                velocidadeHorizontalAtual.normalized *
-                velocidadeMaxima;
-
-            rb.linearVelocity =
-                new Vector3(
-                    velocidadeHorizontalAtual.x,
-                    rb.linearVelocity.y,
-                    velocidadeHorizontalAtual.z
-                );
-        }
+        rb.AddForce(
+            -velocidadeHorizontal *
+            desaceleracao,
+            ForceMode.Force
+        );
     }
 
     // =========================================================
-    // GIRAR CARRO
+    // DIREÇÃO DO CARRO
     // =========================================================
 
-    void GirarCarro()
+    void AplicarDirecao()
     {
+        float velocidade =
+            rb.linearVelocity.magnitude;
+
+        if (velocidade < 0.5f)
+            return;
+
         Vector3 frente =
-            DirecaoFrente();
+            GetDirecaoFrente();
 
         float velocidadeFrente =
             Vector3.Dot(
@@ -613,34 +718,57 @@ public class CarroSistema : MonoBehaviour
                 frente
             );
 
-        if (Mathf.Abs(velocidadeFrente) < 0.5f)
-            return;
+        // =====================================================
+        // REDUZ DIREÇÃO EM ALTA VELOCIDADE
+        // =====================================================
 
-        float fatorVelocidade =
+        float percentual =
             Mathf.Clamp01(
-                Mathf.Abs(velocidadeFrente) /
+                velocidade /
                 velocidadeMaxima
             );
 
-        float sentido =
-            velocidadeFrente >= 0f
-            ? 1f
-            : -1f;
+        float fatorDirecao =
+            Mathf.Lerp(
+                1f,
+                0.45f,
+                percentual
+            );
 
         float angulo =
             direcao *
-            velocidadeRotacao *
-            fatorVelocidade *
-            sentido *
+            anguloMaximo *
+            fatorDirecao;
+
+        // =====================================================
+        // RÉ
+        // =====================================================
+
+        if (velocidadeFrente < -0.5f)
+        {
+            angulo *= -1f;
+        }
+
+        // =====================================================
+        // ROTAÇÃO
+        // =====================================================
+
+        float rotacao =
+            angulo *
+            velocidadeDirecao *
             Time.fixedDeltaTime;
+
+        // Só rotaciona no eixo Y
+        Quaternion novaRotacao =
+            Quaternion.Euler(
+                0f,
+                rotacao,
+                0f
+            );
 
         rb.MoveRotation(
             rb.rotation *
-            Quaternion.Euler(
-                0f,
-                angulo,
-                0f
-            )
+            novaRotacao
         );
     }
 
@@ -648,56 +776,127 @@ public class CarroSistema : MonoBehaviour
     // RODAS DIANTEIRAS
     // =========================================================
 
-    void AtualizarRodas()
+    void AtualizarRodasDianteiras()
     {
-        if (rodaFrenteEsquerda == null ||
-            rodaFrenteDireita == null)
+        if (rodaFrenteEsquerda == null)
             return;
+
+        if (rodaFrenteDireita == null)
+            return;
+
+        // =====================================================
+        // VELOCIDADE
+        // =====================================================
+
+        float velocidade =
+            rb.linearVelocity.magnitude;
+
+        // =====================================================
+        // REDUZ ANGULO EM ALTA VELOCIDADE
+        // =====================================================
+
+        float percentual =
+            Mathf.Clamp01(
+                velocidade /
+                velocidadeMaxima
+            );
+
+        float fatorVelocidade =
+            Mathf.Lerp(
+                1f,
+                0.45f,
+                percentual
+            );
+
+        // =====================================================
+        // ANGULO DAS RODAS
+        // =====================================================
 
         float angulo =
             direcao *
-            anguloMaximoRodas;
+            anguloMaximoRodas *
+            fatorVelocidade;
 
-        Quaternion alvoEsquerda =
-            rotacaoOriginalEsquerda *
+        // =====================================================
+        // RÉ
+        // =====================================================
+
+        Vector3 frente =
+            GetDirecaoFrente();
+
+        float velocidadeFrente =
+            Vector3.Dot(
+                rb.linearVelocity,
+                frente
+            );
+
+        if (velocidadeFrente < -0.5f)
+        {
+            angulo *= -1f;
+        }
+
+        // =====================================================
+        // RODA ESQUERDA
+        // =====================================================
+
+        Quaternion rotacaoEsquerda =
             Quaternion.Euler(
                 0f,
                 angulo,
                 0f
-            );
-
-        Quaternion alvoDireita =
-            rotacaoOriginalDireita *
-            Quaternion.Euler(
-                0f,
-                angulo,
-                0f
-            );
-
-        float suavidade =
-            1f -
-            Mathf.Exp(
-                -velocidadeRodas *
-                Time.fixedDeltaTime
             );
 
         rodaFrenteEsquerda.localRotation =
             Quaternion.Slerp(
                 rodaFrenteEsquerda.localRotation,
-                alvoEsquerda,
-                suavidade
+                rotacaoEsquerda,
+                velocidadeRodas *
+                Time.fixedDeltaTime
+            );
+
+        // =====================================================
+        // RODA DIREITA
+        // =====================================================
+
+        Quaternion rotacaoDireita =
+            Quaternion.Euler(
+                0f,
+                angulo,
+                0f
             );
 
         rodaFrenteDireita.localRotation =
             Quaternion.Slerp(
                 rodaFrenteDireita.localRotation,
-                alvoDireita,
-                suavidade
+                rotacaoDireita,
+                velocidadeRodas *
+                Time.fixedDeltaTime
             );
     }
 
     // =========================================================
-    // CÂMERA GTA
+    // ADERÊNCIA
+    // =========================================================
+
+    void AplicarAderencia()
+    {
+        Vector3 velocidadeLocal =
+            transform.InverseTransformDirection(
+                rb.linearVelocity
+            );
+
+        // Diminui o deslizamento lateral
+        velocidadeLocal.x *=
+            1f / aderencia;
+
+        rb.linearVelocity =
+            transform.TransformDirection(
+                velocidadeLocal
+            );
+    }
+
+    // =========================================================
+    // CÂMERA ESTILO GTA
     // =========================================================
 
     void AtualizarCamera()
@@ -713,29 +912,43 @@ public class CarroSistema : MonoBehaviour
         if (Mouse.current == null)
             return;
 
+        // =====================================================
+        // MOUSE
+        // =====================================================
+
         Vector2 mouse =
             Mouse.current.delta.ReadValue();
 
-        rotacaoCameraX +=
+        float mouseX =
             mouse.x *
             sensibilidadeMouseX *
             Time.deltaTime;
 
+        float mouseY =
+            mouse.y *
+            sensibilidadeMouseY *
+            Time.deltaTime;
+
+        // =====================================================
+        // ROTAÇÃO HORIZONTAL
+        // =====================================================
+
+        rotacaoCameraX += mouseX;
+
+        // =====================================================
+        // ROTAÇÃO VERTICAL
+        // =====================================================
+
         if (inverterMouseY)
         {
-            rotacaoCameraY +=
-                mouse.y *
-                sensibilidadeMouseY *
-                Time.deltaTime;
+            rotacaoCameraY += mouseY;
         }
         else
         {
-            rotacaoCameraY -=
-                mouse.y *
-                sensibilidadeMouseY *
-                Time.deltaTime;
+            rotacaoCameraY -= mouseY;
         }
 
+        // Limita câmera para não virar demais
         rotacaoCameraY =
             Mathf.Clamp(
                 rotacaoCameraY,
@@ -750,8 +963,10 @@ public class CarroSistema : MonoBehaviour
         Vector2 scroll =
             Mouse.current.scroll.ReadValue();
 
-        distanciaAtual -=
+        float scrollY =
             scroll.y * 0.01f;
+
+        distanciaAtual -= scrollY;
 
         distanciaAtual =
             Mathf.Clamp(
@@ -761,7 +976,7 @@ public class CarroSistema : MonoBehaviour
             );
 
         // =====================================================
-        // POSIÇÃO
+        // ROTAÇÃO DA CÂMERA
         // =====================================================
 
         Quaternion rotacao =
@@ -771,31 +986,37 @@ public class CarroSistema : MonoBehaviour
                 0f
             );
 
+        // =====================================================
+        // POSIÇÃO
+        // =====================================================
+
         Vector3 posicaoDesejada =
             alvoCamera.position +
             rotacao *
             new Vector3(
                 0f,
-                alturaCamera,
+                0f,
                 -distanciaAtual
             );
 
-        float suavidade =
-            1f -
-            Mathf.Exp(
-                -suavidadeCamera *
-                Time.deltaTime
-            );
+        posicaoDesejada +=
+            Vector3.up *
+            alturaAtual;
+
+        // =====================================================
+        // SEGUE O CARRO
+        // =====================================================
 
         cameraCarro.transform.position =
             Vector3.Lerp(
                 cameraCarro.transform.position,
                 posicaoDesejada,
-                suavidade
+                suavidadeCamera *
+                Time.deltaTime
             );
 
         // =====================================================
-        // OLHAR PARA O CARRO
+        // OLHA PARA O CARRO
         // =====================================================
 
         Vector3 pontoOlhar =
@@ -813,18 +1034,12 @@ public class CarroSistema : MonoBehaviour
                     direcaoOlhar
                 );
 
-            float suavidadeRotacao =
-                1f -
-                Mathf.Exp(
-                    -suavidadeRotacaoCamera *
-                    Time.deltaTime
-                );
-
             cameraCarro.transform.rotation =
                 Quaternion.Slerp(
                     cameraCarro.transform.rotation,
                     rotacaoDesejada,
-                    suavidadeRotacao
+                    suavidadeRotacaoCamera *
+                    Time.deltaTime
                 );
         }
     }
@@ -844,7 +1059,7 @@ public class CarroSistema : MonoBehaviour
         float velocidade =
             rb.linearVelocity.magnitude;
 
-        float percentual =
+        float velocidadeNormalizada =
             Mathf.Clamp01(
                 velocidade /
                 velocidadeMaxima
@@ -854,15 +1069,11 @@ public class CarroSistema : MonoBehaviour
             Mathf.Lerp(
                 pitchMinimo,
                 pitchMaximo,
-                percentual
+                velocidadeNormalizada
             );
 
         somMotor.volume =
-            Mathf.Lerp(
-                0.15f,
-                volumeMotor,
-                percentual
-            );
+            volumeMotor;
     }
 
     // =========================================================
@@ -871,6 +1082,10 @@ public class CarroSistema : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
+        // =====================================================
+        // ENTRADA
+        // =====================================================
+
         if (pontoEntrada != null)
         {
             Gizmos.color = Color.green;
@@ -886,6 +1101,10 @@ public class CarroSistema : MonoBehaviour
             );
         }
 
+        // =====================================================
+        // SAÍDA
+        // =====================================================
+
         if (pontoSaida != null)
         {
             Gizmos.color = Color.red;
@@ -896,12 +1115,22 @@ public class CarroSistema : MonoBehaviour
             );
         }
 
-        Gizmos.color = Color.blue;
+        // =====================================================
+        // FRENTE DO CARRO
+        // =====================================================
 
-        Vector3 frente =
-            frenteNoEixoX
-            ? transform.right
-            : transform.forward;
+        Vector3 frente;
+
+        if (frenteNoEixoX)
+        {
+            frente = transform.right;
+        }
+        else
+        {
+            frente = transform.forward;
+        }
+
+        Gizmos.color = Color.blue;
 
         Gizmos.DrawLine(
             transform.position,
