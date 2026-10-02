@@ -12,6 +12,11 @@ public class CarroController : MonoBehaviour
     public float desaceleracao = 2.5f;
     public float forcaFreio = 8f;
 
+    [Header("Sons do Carro")]
+    public AudioSource audioSource;
+    public AudioClip somEntrar;
+    public AudioClip somSair;
+
     private Rigidbody rb;
     private float vertical;
     private float horizontal;
@@ -44,10 +49,8 @@ public class CarroController : MonoBehaviour
         if (!enabled)
             return;
 
-
         if (vertical > 0)
         {
-            
             velocidadeAtual = Mathf.MoveTowards(
                 velocidadeAtual,
                 velocidade,
@@ -56,7 +59,6 @@ public class CarroController : MonoBehaviour
         }
         else if (vertical < 0)
         {
-           
             if (velocidadeAtual > 0)
             {
                 velocidadeAtual = Mathf.MoveTowards(
@@ -67,7 +69,6 @@ public class CarroController : MonoBehaviour
             }
             else
             {
-                
                 velocidadeAtual = Mathf.MoveTowards(
                     velocidadeAtual,
                     -velocidadeRe,
@@ -77,7 +78,6 @@ public class CarroController : MonoBehaviour
         }
         else
         {
-          
             velocidadeAtual = Mathf.MoveTowards(
                 velocidadeAtual,
                 0f,
@@ -118,5 +118,23 @@ public class CarroController : MonoBehaviour
                 0f
             )
         );
+    }
+
+    // Chamar quando o jogador entrar no carro
+    public void TocarSomEntrar()
+    {
+        if (audioSource != null && somEntrar != null)
+        {
+            audioSource.PlayOneShot(somEntrar);
+        }
+    }
+
+    // Chamar quando o jogador sair do carro
+    public void TocarSomSair()
+    {
+        if (audioSource != null && somSair != null)
+        {
+            audioSource.PlayOneShot(somSair);
+        }
     }
 }
