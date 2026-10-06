@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,12 @@ public class LuzUV : MonoBehaviour
     public float alcancePerto = 15f;
     public float intensidadePerto = 2f;
 
+    [Header("Cores da Luz")]
+    public Color corUV = new Color(0.5f, 0f, 1f); 
+    public Color corBranca = Color.white;
+
+    private bool luzUV = true;
+
     private void Start()
     {
         ApagarPegadas();
@@ -30,12 +37,23 @@ public class LuzUV : MonoBehaviour
         {
             spotLight.range = alcanceNormal;
             spotLight.intensity = intensidadeNormal;
+            spotLight.color = corUV;
         }
     }
 
     private void Update()
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            AlternarLuz();
+        }
+
         if (spotLight == null)
+        {
+            ApagarPegadas();
+            return;
+        }
+        if (!luzUV)
         {
             ApagarPegadas();
             return;
@@ -83,6 +101,21 @@ public class LuzUV : MonoBehaviour
                     digital.MarcarEncontrada();
                 }
             }
+        }
+    }
+
+    void AlternarLuz()
+    {
+        luzUV = !luzUV;
+
+        if (luzUV)
+        {
+            spotLight.color = corUV;
+        }
+        else
+        {
+            spotLight.color = corBranca;
+            ApagarPegadas();
         }
     }
 
@@ -170,9 +203,9 @@ public class LuzUV : MonoBehaviour
         }
     }
 
-    
     private void OnDisable()
     {
         ApagarPegadas();
     }
 }
+
