@@ -10,7 +10,12 @@ public class MusicaAnimacaoCreditos : MonoBehaviour
     public string cenaAnimacao = "Animacao";
     public string cenaCreditos = "Creditos";
 
+    [Header("Carro")]
+    public Rigidbody carroRigidbody;
+
     private static MusicaAnimacaoCreditos instancia;
+
+    private bool encostouNaParede = false;
 
     private void Awake()
     {
@@ -31,6 +36,56 @@ public class MusicaAnimacaoCreditos : MonoBehaviour
         if (audioSource != null && !audioSource.isPlaying)
         {
             audioSource.Play();
+        }
+
+        if (carroRigidbody == null)
+        {
+            carroRigidbody = GetComponent<Rigidbody>();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (carroRigidbody == null || !encostouNaParede)
+            return;
+
+        Vector3 velocidade = carroRigidbody.linearVelocity;
+
+        float velocidadeParaFrente = Vector3.Dot(velocidade, transform.forward);
+
+        if (velocidadeParaFrente > 0f)
+        {
+            velocidade -= transform.forward * velocidadeParaFrente;
+            carroRigidbody.linearVelocity = velocidade;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name.ToLower() == "parede")
+        {
+            encostouNaParede = true;
+
+            if (carroRigidbody != null)
+            {
+                Vector3 velocidade = carroRigidbody.linearVelocity;
+
+                float velocidadeParaFrente = Vector3.Dot(velocidade, transform.forward);
+
+                if (velocidadeParaFrente > 0f)
+                {
+                    velocidade -= transform.forward * velocidadeParaFrente;
+                    carroRigidbody.linearVelocity = velocidade;
+                }
+            }
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.name.ToLower() == "parede")
+        {
+            encostouNaParede = false;
         }
     }
 
