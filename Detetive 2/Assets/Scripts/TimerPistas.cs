@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -24,6 +23,11 @@ public class TimerPistas : MonoBehaviour
 
     private bool reiniciando = false;
 
+    private void Start()
+    {
+        mensagem.text = "";
+    }
+
     void Update()
     {
         if (reiniciando)
@@ -44,6 +48,9 @@ public class TimerPistas : MonoBehaviour
         {
             tempo = 0;
 
+            textoTimer.text = "Tempo: 0";
+
+            // Mostra somente a frase
             mensagem.text = "Você não conseguiu encontrar todas as pistas!";
 
             reiniciando = true;
@@ -59,7 +66,6 @@ public class TimerPistas : MonoBehaviour
 
     private IEnumerator ReiniciarComFade()
     {
-       
         if (transition != null)
         {
             transition.gameObject.SetActive(true);
@@ -71,10 +77,8 @@ public class TimerPistas : MonoBehaviour
             );
         }
 
-       
         yield return new WaitForSeconds(delay);
 
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
-

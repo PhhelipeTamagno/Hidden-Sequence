@@ -1,8 +1,10 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using EasyTransition;
 
 public class ItensEncontrados : MonoBehaviour
 {
@@ -29,17 +31,18 @@ public class ItensEncontrados : MonoBehaviour
     public Item faca;
     public Item digital;
 
-    [Header("Fade Final")]
-    public CanvasGroup fade;
+    [Header("Texto Final")]
     public TMP_Text textoFinal;
 
     [Header("Cena para carregar")]
     public string nomeDaCena;
 
-    [Header("Configuração do Fade")]
-    public float velocidadeFade = 1f;
+    [Header("Easy Transition")]
+    [SerializeField] private Transition transition;
+    [SerializeField] private float delay = 1f;
 
     private bool todasEncontradas = false;
+    private bool transicaoIniciada = false;
 
     private void Start()
     {
@@ -47,11 +50,10 @@ public class ItensEncontrados : MonoBehaviour
         AtualizarItem(faca);
         AtualizarItem(digital);
 
-        if (fade != null)
-            fade.alpha = 0;
-
         if (textoFinal != null)
+        {
             textoFinal.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -63,7 +65,7 @@ public class ItensEncontrados : MonoBehaviour
         VerificarTodasEncontradas();
     }
 
-    void GarantirImagemVisivel(Item item)
+    private void GarantirImagemVisivel(Item item)
     {
         if (item == null || item.imagem == null)
             return;
@@ -71,7 +73,6 @@ public class ItensEncontrados : MonoBehaviour
         item.imagem.enabled = true;
 
         Color cor = item.imagem.color;
-
         cor.a = 1f;
 
         item.imagem.color = cor;
@@ -79,34 +80,28 @@ public class ItensEncontrados : MonoBehaviour
 
     public void EncontrarGarrafa()
     {
-        if (garrafa == null)
+        if (garrafa == null || garrafa.encontrado)
             return;
 
         garrafa.encontrado = true;
-
         AtualizarItem(garrafa);
     }
 
     public void EncontrarFaca()
     {
-        if (faca == null)
+        if (faca == null || faca.encontrado)
             return;
 
         faca.encontrado = true;
-
         AtualizarItem(faca);
     }
 
     public void EncontrarDigital()
     {
-        if (digital == null)
-            return;
-
-        if (digital.encontrado)
+        if (digital == null || digital.encontrado)
             return;
 
         digital.encontrado = true;
-
         AtualizarItem(digital);
 
         Debug.Log("DIGITAL LIBERADA NA HOTBAR!");
@@ -133,14 +128,13 @@ public class ItensEncontrados : MonoBehaviour
             digital.imagem.enabled = true;
 
             Color cor = digital.corNaoEncontrado;
-
             cor.a = 1f;
 
             digital.imagem.color = cor;
         }
     }
 
-    void VerificarTodasEncontradas()
+    private void VerificarTodasEncontradas()
     {
         if (todasEncontradas)
             return;
@@ -154,17 +148,18 @@ public class ItensEncontrados : MonoBehaviour
         {
             todasEncontradas = true;
 
-            StartCoroutine(FadeFinal());
+            StartCoroutine(TransicaoECarregarCena());
         }
     }
 
-    IEnumerator FadeFinal()
+    private IEnumerator TransicaoECarregarCena()
     {
-        if (fade == null)
+        if (transicaoIniciada)
             yield break;
 
-        yield return new WaitForSeconds(1f);
+        transicaoIniciada = true;
 
+        // Mostra a mensagem final
         if (textoFinal != null)
         {
             textoFinal.gameObject.SetActive(true);
@@ -173,74 +168,63 @@ public class ItensEncontrados : MonoBehaviour
                 "Depois que voce encontrou as pistas, voce voltou para a delegacia para terminar o caso.";
         }
 
-        float tempo = 0f;
-
-        while (tempo < 1f)
-        {
-            tempo += Time.deltaTime * velocidadeFade;
-
-            fade.alpha =
-                Mathf.Lerp(0f, 1f, tempo);
-
-            yield return null;
-        }
-
-        fade.alpha = 1f;
-
+        // Aguarda antes de iniciar a transicao
         yield return new WaitForSeconds(1f);
 
-        if (!string.IsNullOrEmpty(nomeDaCena))
+        if (string.IsNullOrEmpty(nomeDaCena))
         {
-            SceneManager.LoadScene(nomeDaCena);
+            Debug.LogError(
+                "ItensEncontrados: Nome da cena nao foi definido!"
+            );
+
+            yield break;
+        }
+
+        if (transition != null)
+        {
+            // Ativa a mesma transicao usada nas portas
+            transition.gameObject.SetActive(true);
         }
         else
         {
-            Debug.LogError(
-                "Nome da cena não foi definido no ItensEncontrados!"
+            Debug.LogWarning(
+                "ItensEncontrados: Transition nao foi colocado no Inspector!"
             );
         }
+
+        // Aguarda a transicao, como no script da porta
+        yield return new WaitForSeconds(delay);
+
+        SceneManager.LoadScene(nomeDaCena);
     }
 
-    void AtualizarItem(Item item)
+    private void AtualizarItem(Item item)
     {
         if (item == null || item.imagem == null)
             return;
 
         item.imagem.enabled = true;
 
-        Color cor;
-
-        if (item.encontrado)
-            cor = item.corEncontrado;
-        else
-            cor = item.corNaoEncontrado;
+        Color cor = item.encontrado
+            ? item.corEncontrado
+            : item.corNaoEncontrado;
 
         cor.a = 1f;
-
         item.imagem.color = cor;
     }
 
     public bool GarrafaFoiEncontrada()
     {
-        if (garrafa == null)
-            return false;
-
-        return garrafa.encontrado;
+        return garrafa != null && garrafa.encontrado;
     }
 
     public bool FacaFoiEncontrada()
     {
-        if (faca == null)
-            return false;
-
-        return faca.encontrado;
+        return faca != null && faca.encontrado;
     }
 
     public bool DigitalFoiEncontrada()
     {
-        if (digital == null)
-            return false;
-
-        return digital.encontrado;
+        return digital != null && digital.encontrado;
     }
 }

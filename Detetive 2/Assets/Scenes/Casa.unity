@@ -2840,10 +2840,10 @@ MonoBehaviour:
     corEncontrado: {r: 0.07035947, g: 1, b: 0, a: 1}
     corNaoEncontrado: {r: 0, g: 0, b: 0, a: 1}
     encontrado: 0
-  fade: {fileID: 1066217047}
   textoFinal: {fileID: 87480754}
   nomeDaCena: Final
-  velocidadeFade: 1
+  transition: {fileID: 512295924}
+  delay: 1
 --- !u!4 &278750986
 Transform:
   m_ObjectHideFlags: 0

@@ -6,6 +6,13 @@ using UnityEngine.UI;
 
 public class NpcFinal : MonoBehaviour
 {
+    [Header("Caderno e confronto")]
+    public TMP_Dropdown dropdownAnotacoes;
+    public Button botaoRebater;
+    public TMP_Text textoFalaJogador;
+
+    private bool confissaoIniciada = false;
+
     [Header("UI - Interrogatorio")]
     public TMP_InputField campoTexto;
     public TMP_Text textoResposta;
@@ -135,6 +142,17 @@ public class NpcFinal : MonoBehaviour
 
     private void Start()
     {
+        if (dropdownAnotacoes != null)
+        {
+            dropdownAnotacoes.ClearOptions();
+            dropdownAnotacoes.AddOptions(DadosInterrogatorio.anotacoes);
+        }
+
+        if (botaoRebater != null)
+        {
+            botaoRebater.onClick.AddListener(RebaterComAnotacao);
+        }
+
         // Botao enviar
         if (botaoEnviar != null)
         {
@@ -707,33 +725,21 @@ public class NpcFinal : MonoBehaviour
     // VERIFICAR TODAS AS PROVAS
     // =========================================================
 
+
     void VerificarPistas()
     {
         if (garrafaApresentada &&
             facaApresentada &&
             digitalApresentada)
         {
-            if (contadorGarrafaCoroutine != null)
+            if (textoResposta != null)
             {
-                StopCoroutine(contadorGarrafaCoroutine);
-                contadorGarrafaCoroutine = null;
+                textoResposta.text =
+                    "Todas as provas foram apresentadas. Agora confronte o suspeito com as contradições do caderno.";
             }
-
-            if (contadorFacaCoroutine != null)
-            {
-                StopCoroutine(contadorFacaCoroutine);
-                contadorFacaCoroutine = null;
-            }
-
-            if (contadorDigitalCoroutine != null)
-            {
-                StopCoroutine(contadorDigitalCoroutine);
-                contadorDigitalCoroutine = null;
-            }
-
-            StartCoroutine(IniciarConfissao());
         }
     }
+
 
     // =========================================================
     // CONFISSAO
@@ -828,4 +834,65 @@ public class NpcFinal : MonoBehaviour
 
         fadeCanvasGroup.alpha = 1f;
     }
+
+    public void RebaterComAnotacao()
+    {
+        if (dropdownAnotacoes == null ||
+            dropdownAnotacoes.options.Count == 0)
+        {
+            return;
+        }
+
+        string anotacao = dropdownAnotacoes.options[
+            dropdownAnotacoes.value
+        ].text;
+
+        if (textoFalaJogador != null)
+        {
+            textoFalaJogador.text = "Você disse antes: " + anotacao;
+        }
+
+        if (anotacao.Contains("garrafa") && garrafaApresentada)
+        {
+            textoResposta.text =
+                "Eu... talvez eu tenha visto essa garrafa antes.";
+        }
+        else if (anotacao.Contains("faca") && facaApresentada)
+        {
+            textoResposta.text =
+                "Está bem, eu conhecia a faca. Mas isso não significa que fui eu!";
+        }
+        else if (anotacao.Contains("tocou") && digitalApresentada)
+        {
+            textoResposta.text =
+                "Eu posso ter tocado nos objetos, mas não queria que ninguém se machucasse.";
+        }
+        else if (anotacao.Contains("22 horas") && garrafaApresentada)
+        {
+            textoResposta.text =
+                "Eu não estava em casa o tempo todo. Só saí por alguns minutos!";
+        }
+        else
+        {
+            textoResposta.text =
+                "Isso não prova nada! Você está tirando conclusões precipitadas.";
+        }
+
+        TocarAnimacao(triggerProva);
+
+
+        VerificarPistas();
+
+        if (garrafaApresentada &&
+            facaApresentada &&
+            digitalApresentada &&
+            !confissaoIniciada)
+        {
+            confissaoIniciada = true;
+
+            StartCoroutine(IniciarConfissao());
+        }
+
+    }
+
 }
