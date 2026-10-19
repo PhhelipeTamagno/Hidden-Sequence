@@ -66079,7 +66079,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6e22b840de7dc294289f7ba36df140f6, type: 3}
       propertyPath: m_Name
-      value: FPoliceOfficer
+      value: NPCDialogo
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6e22b840de7dc294289f7ba36df140f6, type: 3}
       propertyPath: m_Layer
@@ -66152,6 +66152,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e22b840de7dc294289f7ba36df140f6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1772058974}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 6e22b840de7dc294289f7ba36df140f6, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1772058976}
     - targetCorrespondingSourceObject: {fileID: -7146521406498821007, guid: 6e22b840de7dc294289f7ba36df140f6, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1414494405}
@@ -67615,6 +67618,135 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b70344daffb9fe6409ff75c541fc7685, type: 3}
+--- !u!1 &1693015593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1693015595}
+  - component: {fileID: 1693015594}
+  m_Layer: 0
+  m_Name: carroligado
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &1693015594
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693015593}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: -4144277259412326929, guid: e93c1000836e6104abd75469687a3bab, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 862b95b077b2b824d9f65936aa8345b5, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1693015595
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1693015593}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.07303, y: 1.41651, z: -108.28142}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1696948702 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7613629695922728268, guid: a49144b2f371e7e4bb8a4f356ce2ab8b, type: 3}
@@ -70597,6 +70729,27 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
+--- !u!114 &1772058976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1772058969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306008a2ca8e19f4d8ab34a3d99ba0f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCDialogo
+  nomeNPC: Policial
+  falas:
+  - "Ol\xE1, Detetive!"
+  - Precisa de alguma coisa?
+  offsetDialogo: {x: 0, y: 2.5, z: 0}
+  offsetIndicador: {x: 0, y: 2, z: 0}
+  imagemMouseEsquerdo: {fileID: -518640780, guid: 2ce9eecea85740242a80c9fb57436d33, type: 3}
+  tamanhoIndicador: {x: 50, y: 50}
+  tamanhoCaixa: {x: 500, y: 200}
 --- !u!1 &1774934102 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5594365513533716239, guid: a49144b2f371e7e4bb8a4f356ce2ab8b, type: 3}
@@ -85122,7 +85275,7 @@ MonoBehaviour:
   intensidadeBrilho: 1.5
   carroController: {fileID: 1043370837384252702}
   cameraCarro: {fileID: 985635598}
-  mira: {fileID: 0}
+  mira: {fileID: 172961030}
   indicadorDestino: {fileID: 1138901042}
   cenaDoCrimeIntro: {fileID: 1138901040}
   sensibilidadeMouse: 3
@@ -85955,3 +86108,4 @@ SceneRoots:
   - {fileID: 1557668011}
   - {fileID: 431457341}
   - {fileID: 191129909}
+  - {fileID: 1693015595}
