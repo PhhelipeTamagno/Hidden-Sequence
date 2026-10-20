@@ -15,7 +15,7 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
   m_Fog: 1
-  m_FogColor: {r: 0, g: 0, b: 0, a: 1}
+  m_FogColor: {r: 0.066037714, g: 0.066037714, b: 0.066037714, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.04
   m_LinearFogStart: 0
@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0.82
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 2100000, guid: cc421da483ed06c49933077a621bff25, type: 2}
@@ -64434,7 +64434,7 @@ PrefabInstance:
     - target: {fileID: 5276914992623515723, guid: 616d511151a6c554caddf1c754e4f91d, type: 3}
       propertyPath: transitionSettings
       value: 
-      objectReference: {fileID: 11400000, guid: 06fa0ad2bc756f44ab258bc74947381d, type: 2}
+      objectReference: {fileID: 11400000, guid: b0126e1e0c6c2a04895d564bd230dfb9, type: 2}
     - target: {fileID: 5276914992623515724, guid: 616d511151a6c554caddf1c754e4f91d, type: 3}
       propertyPath: m_Name
       value: TransitionTemplate
@@ -85359,7 +85359,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 374111662706923425}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
@@ -85462,10 +85462,10 @@ MonoBehaviour:
   colliderEsquerda: {fileID: 1754186277}
   colliderDireita: {fileID: 878703352}
   ignorarCollidersDoProprioCarro: 1
-  frenteBloqueada: 0
-  trasBloqueado: 0
-  esquerdaBloqueada: 0
-  direitaBloqueada: 0
+  frenteBloqueada: 1
+  trasBloqueado: 1
+  esquerdaBloqueada: 1
+  direitaBloqueada: 1
 --- !u!23 &1396797208142960036
 MeshRenderer:
   m_ObjectHideFlags: 0
