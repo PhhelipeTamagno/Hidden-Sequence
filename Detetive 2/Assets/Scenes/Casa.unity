@@ -2892,7 +2892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce8598197735d44479c58d33ea92e259, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TimerPistas
-  tempo: 180
+  tempo: 300
   totalPistas: 3
   pistasEncontradas: 0
   textoTimer: {fileID: 224321347}
