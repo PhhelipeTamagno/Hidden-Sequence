@@ -70744,7 +70744,7 @@ MonoBehaviour:
   nomeNPC: Policial
   falas:
   - "Ol\xE1, Detetive!"
-  - Precisa de alguma coisa?
+  - "voc\xEA tera apenas 4 minutos para achar todas as pistas "
   offsetDialogo: {x: 0, y: 2.5, z: 0}
   offsetIndicador: {x: 0, y: 2, z: 0}
   imagemMouseEsquerdo: {fileID: -518640780, guid: 2ce9eecea85740242a80c9fb57436d33, type: 3}
@@ -85359,7 +85359,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 374111662706923425}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
