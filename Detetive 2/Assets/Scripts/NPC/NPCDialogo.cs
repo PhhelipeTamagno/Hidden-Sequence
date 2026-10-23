@@ -21,24 +21,27 @@ public class NPCDialogo : MonoBehaviour
     [Header("Indicador do clique")]
     public Sprite imagemMouseEsquerdo;
 
-    [Header("Animação do NPC")]
+    [Header("Animações do NPC")]
     public Animator animatorNPC;
+    public string animacaoComputador = "MexendoPC";
+    public string animacaoFalando = "Falando";
 
-    [Tooltip("Nome do estado da animação dentro do Animator.")]
-    public string nomeAnimacao = "Interacao";
+    [Header("Tempo da animação de fala")]
+    [Tooltip("0 = detectar automaticamente o fim da animação.")]
+    public float duracaoFalaAnimacao = 0f;
 
-    [Tooltip("Tempo da animação em segundos. Use 0 para detectar o fim do clipe automaticamente.")]
-    public float duracaoAnimacao = 0f;
+    [Header("Tempo do diálogo")]
+    public float tempoParaSumir = 4f;
 
     private int indiceFala;
     private bool conversando;
-    private bool animacaoExecutando;
+    private bool animacaoFalandoAtiva;
 
     private Camera cameraPrincipal;
     private GameObject indicadorMouse;
 
     private float tempoAnimacao;
-    private float velocidadeOriginal;
+    private float temporizadorDialogo;
 
     private void Start()
     {
@@ -50,10 +53,11 @@ public class NPCDialogo : MonoBehaviour
         if (animatorNPC == null)
             animatorNPC = GetComponentInChildren<Animator>();
 
-        if (animatorNPC != null)
-            velocidadeOriginal = animatorNPC.speed;
-
         CriarIndicadorMouse();
+
+        // Começa mexendo no computador.
+        if (animatorNPC != null)
+            animatorNPC.Play(animacaoComputador, 0, 0f);
     }
 
     private void Update()
@@ -61,30 +65,16 @@ public class NPCDialogo : MonoBehaviour
         if (cameraPrincipal == null)
             cameraPrincipal = Camera.main;
 
-        // Controla o fim da animação.
-        if (animacaoExecutando)
+        // Faz o texto desaparecer após o tempo configurado.
+        if (conversando)
         {
-            tempoAnimacao += Time.deltaTime;
+            temporizadorDialogo += Time.deltaTime;
 
-            if (duracaoAnimacao > 0f &&
-                tempoAnimacao >= duracaoAnimacao)
-            {
-                PararAnimacao();
-            }
-            else if (duracaoAnimacao <= 0f &&
-                     animatorNPC != null)
-            {
-                AnimatorStateInfo estado =
-                    animatorNPC.GetCurrentAnimatorStateInfo(0);
-
-                if (!animatorNPC.IsInTransition(0) &&
-                    estado.IsName(nomeAnimacao) &&
-                    estado.normalizedTime >= 1f)
-                {
-                    PararAnimacao();
-                }
-            }
+            if (temporizadorDialogo >= tempoParaSumir)
+                EncerrarDialogo();
         }
+
+        AtualizarAnimacaoFalando();
 
         if (Mouse.current == null || cameraPrincipal == null)
             return;
@@ -94,14 +84,10 @@ public class NPCDialogo : MonoBehaviour
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
-        // Clique durante o diálogo: avança a fala.
+        // Se estiver conversando, não inicia outro diálogo.
         if (conversando)
-        {
-            ProximaFala();
             return;
-        }
 
-        // Detecta o NPC clicado.
         Ray raio = cameraPrincipal.ScreenPointToRay(
             Mouse.current.position.ReadValue()
         );
@@ -120,44 +106,8 @@ public class NPCDialogo : MonoBehaviour
             );
 
             if (distancia <= npc.distanciaMaxima)
-            {
-                // Executa a animação ao clicar no NPC.
-                npc.ExecutarAnimacao();
-
-                // Inicia o diálogo.
                 npc.IniciarDialogo();
-            }
         }
-    }
-
-    private void ExecutarAnimacao()
-    {
-        if (animatorNPC == null)
-        {
-            Debug.LogWarning(
-                "Animator não configurado no NPC: " + gameObject.name
-            );
-            return;
-        }
-
-        // Reinicia a animação desde o começo.
-        animatorNPC.speed = velocidadeOriginal;
-        animatorNPC.Play(nomeAnimacao, 0, 0f);
-        animatorNPC.Update(0f);
-
-        animacaoExecutando = true;
-        tempoAnimacao = 0f;
-    }
-
-    private void PararAnimacao()
-    {
-        if (animatorNPC == null)
-            return;
-
-        animacaoExecutando = false;
-
-        // Congela a animação no último quadro.
-        animatorNPC.speed = 0f;
     }
 
     private void IniciarDialogo()
@@ -169,6 +119,7 @@ public class NPCDialogo : MonoBehaviour
 
         conversando = true;
         indiceFala = 0;
+        temporizadorDialogo = 0f;
 
         textoDialogo.gameObject.SetActive(true);
         textoDialogo.text = falas[indiceFala];
@@ -176,25 +127,62 @@ public class NPCDialogo : MonoBehaviour
         if (indicadorMouse != null)
             indicadorMouse.SetActive(false);
 
+        // Executa a animação de fala.
+        if (animatorNPC != null)
+        {
+            animatorNPC.speed = 1f;
+            animatorNPC.Play(animacaoFalando, 0, 0f);
+
+            animacaoFalandoAtiva = true;
+            tempoAnimacao = 0f;
+        }
+
         AtualizarPosicaoTexto();
     }
 
-    private void ProximaFala()
+    private void AtualizarAnimacaoFalando()
     {
-        indiceFala++;
+        if (!animacaoFalandoAtiva || animatorNPC == null)
+            return;
 
-        if (indiceFala >= falas.Length)
+        tempoAnimacao += Time.deltaTime;
+
+        // Se houver duração manual, usa o tempo configurado.
+        if (duracaoFalaAnimacao > 0f)
         {
-            EncerrarDialogo();
+            if (tempoAnimacao >= duracaoFalaAnimacao)
+                VoltarAoComputador();
+
             return;
         }
 
-        textoDialogo.text = falas[indiceFala];
+        // Caso contrário, detecta o fim do clipe.
+        AnimatorStateInfo estado =
+            animatorNPC.GetCurrentAnimatorStateInfo(0);
+
+        if (!animatorNPC.IsInTransition(0) &&
+            estado.IsName(animacaoFalando) &&
+            estado.normalizedTime >= 1f)
+        {
+            VoltarAoComputador();
+        }
+    }
+
+    private void VoltarAoComputador()
+    {
+        animacaoFalandoAtiva = false;
+
+        if (animatorNPC != null)
+        {
+            animatorNPC.speed = 1f;
+            animatorNPC.Play(animacaoComputador, 0, 0f);
+        }
     }
 
     private void EncerrarDialogo()
     {
         conversando = false;
+        temporizadorDialogo = 0f;
 
         if (textoDialogo != null)
         {
@@ -272,6 +260,6 @@ public class NPCDialogo : MonoBehaviour
     private void OnDisable()
     {
         if (animatorNPC != null)
-            animatorNPC.speed = velocidadeOriginal;
+            animatorNPC.speed = 1f;
     }
 }
