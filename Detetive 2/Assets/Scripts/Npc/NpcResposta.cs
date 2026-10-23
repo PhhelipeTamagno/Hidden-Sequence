@@ -1,4 +1,3 @@
-
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -68,6 +67,9 @@ public class NPCResposta : MonoBehaviour
 
     public float velocidadeEscrita = 0.03f;
 
+    [Header("Tempo da resposta do suspeito")]
+    public float tempoRespostaVisivel = 3f;
+
     private int perguntasFeitas = 0;
     private bool respondendo = false;
     private bool interrogatorioFinalizado = false;
@@ -90,7 +92,6 @@ public class NPCResposta : MonoBehaviour
         if (textoCaderno != null)
             textoCaderno.text = "";
 
- 
         if (painelPensamento != null)
         {
             painelPensamento.alpha = 1f;
@@ -327,6 +328,13 @@ public class NPCResposta : MonoBehaviour
         DadosInterrogatorio.Adicionar(resposta);
 
         AtualizarCaderno();
+
+        // Aguarda antes de apagar a resposta do suspeito.
+        yield return new WaitForSeconds(tempoRespostaVisivel);
+
+        // Faz a mensagem desaparecer.
+        if (textoResposta != null)
+            textoResposta.text = "";
 
         respondendo = false;
 
