@@ -67134,8 +67134,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -71101,6 +71101,7 @@ MonoBehaviour:
   animacaoComputador: MexendoPC
   animacaoFalando: Falando
   duracaoFalaAnimacao: 0
+  tempoParaSumir: 4
 --- !u!1 &1774934102 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5594365513533716239, guid: a49144b2f371e7e4bb8a4f356ce2ab8b, type: 3}
