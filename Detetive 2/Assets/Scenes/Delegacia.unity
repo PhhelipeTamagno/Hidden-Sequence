@@ -5321,6 +5321,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1266519756}
+  - {fileID: 212377593}
   - {fileID: 1155430243}
   - {fileID: 738244702}
   - {fileID: 2120231416}
@@ -5328,7 +5329,6 @@ RectTransform:
   - {fileID: 743574177}
   - {fileID: 217490803}
   - {fileID: 1748215992}
-  - {fileID: 212377593}
   - {fileID: 908403088}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10836,6 +10836,7 @@ MonoBehaviour:
   mensagemFinal: Apos interrogar o suspeito, voce decide seguir para a cena do crime
     em busca de pistas.
   velocidadeEscrita: 0.03
+  tempoRespostaVisivel: 3
   textoResposta: {fileID: 558587315}
   textoDigitando: {fileID: 1005571426}
   fadeCanvasGroup: {fileID: 738244703}
