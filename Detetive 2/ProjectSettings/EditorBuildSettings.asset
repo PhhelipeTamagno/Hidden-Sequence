@@ -24,6 +24,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Final.unity
     guid: f09661eebd1f6814fb8d224250163ade
   - enabled: 1
+    path: Assets/enzo/CutsceneAssassinato.unity
+    guid: 7f06f6a94f3b39d4987f60f376f09496
+  - enabled: 1
     path: "Assets/Scenes/Pris\xE3o.unity"
     guid: 2b90ac45039686246a5d1936ead71a78
   - enabled: 1

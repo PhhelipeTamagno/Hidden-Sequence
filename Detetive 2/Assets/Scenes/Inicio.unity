@@ -10321,7 +10321,7 @@ MonoBehaviour:
   distanciaInteracao: 1
   fadeInteracao: {fileID: 681161431}
   transition: {fileID: 1819889568}
-  delay: 1
+  delay: 1.5
 --- !u!65 &1298286200
 BoxCollider:
   m_ObjectHideFlags: 0
