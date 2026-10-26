@@ -1,10 +1,12 @@
+
+using System;
+using System.Collections;
+using System.Globalization;
+using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections;
-using System.Globalization;
-using System.Text;
 
 public class NPCResposta : MonoBehaviour
 {
@@ -49,11 +51,11 @@ public class NPCResposta : MonoBehaviour
     [Header("Respostas do NPC")]
     public string[] respostasNegacao =
     {
-        "Não sei de nada. Eu não estava envolvido.",
-        "Já disse, não tenho nada a ver com isso.",
-        "Você está perdendo tempo comigo, eu não vi nada.",
-        "Não vou responder isso. Não fiz nada de errado.",
-        "Isso não tem nada a ver comigo, procure outra pessoa."
+        "Nao sei de nada. Eu não estava envolvido.",
+        "Ja disse, nao tenho nada a ver comigo.",
+        "Voce esta perdendo tempo comigo, eu nao vi nada.",
+        "Não vou responder isso. Nao fiz nada de errado.",
+        "Isso nao tem nada a ver comigo, procure outra pessoa."
     };
 
     private int ultimaRespostaIndex = -1;
@@ -84,6 +86,49 @@ public class NPCResposta : MonoBehaviour
     [Header("Cena")]
     public string nomeProximaCena = "CenaDoCrime";
     public float esperaAposTexto = 2f;
+
+    [Header("Provas")]
+    public Button botaoGarrafa;
+    public Button botaoFaca;
+    public Button botaoDigital;
+
+    public TMP_Text contadorGarrafa;
+    public TMP_Text contadorFaca;
+    public TMP_Text contadorDigital;
+
+    public Image imagemGarrafa;
+    public Image imagemFaca;
+    public Image imagemDigital;
+
+    public Color corPistaUsada = Color.gray;
+    public float tempoProva = 10f;
+
+    public string respostaGarrafa =
+        "Essa garrafa nao prova nada! Eu nunca vi isso antes.";
+
+    public string respostaFaca =
+        "Essa faca... eu nao sei de onde você tirou isso.";
+
+    public string respostaDigital =
+        "Essas digitais... nao... isso não pode ser possivel.";
+
+    [Header("Confissão")]
+    public Animator animatorNpc;
+    public string triggerConfissao = "Confessar1";
+
+    [TextArea]
+    public string mensagemConfissao =
+        "Esta bem... Eu confesso! Fui eu quem cometeu o crime.";
+
+    public float tempoConfissao = 5f;
+
+    private bool garrafaUsada;
+    private bool facaUsada;
+    private bool digitalUsada;
+
+    private Coroutine contadorGarrafaCoroutine;
+    private Coroutine contadorFacaCoroutine;
+    private Coroutine contadorDigitalCoroutine;
 
     void Start()
     {
@@ -129,13 +174,32 @@ public class NPCResposta : MonoBehaviour
                 textoExplicacao.text = mensagemExplicacao;
 
             popupExplicativo.gameObject.SetActive(false);
-
             StartCoroutine(FluxoPopupExplicativo());
         }
         else
         {
             LiberarInterrogatorio();
         }
+
+        EsconderContador(contadorGarrafa);
+        EsconderContador(contadorFaca);
+        EsconderContador(contadorDigital);
+
+        ConfigurarBotaoProva(botaoGarrafa, UsarGarrafa);
+        ConfigurarBotaoProva(botaoFaca, UsarFaca);
+        ConfigurarBotaoProva(botaoDigital, UsarDigital);
+
+        if (animatorNpc == null)
+            animatorNpc = GetComponent<Animator>();
+    }
+
+    void ConfigurarBotaoProva(Button botao, UnityEngine.Events.UnityAction acao)
+    {
+        if (botao == null)
+            return;
+
+        botao.onClick.RemoveListener(acao);
+        botao.onClick.AddListener(acao);
     }
 
     IEnumerator MostrarPensamento(string mensagem)
@@ -145,15 +209,10 @@ public class NPCResposta : MonoBehaviour
         foreach (char letra in mensagem)
         {
             textoPensamento.text += letra;
-
-            yield return new WaitForSeconds(
-                velocidadeDigitacaoPensamento
-            );
+            yield return new WaitForSeconds(velocidadeDigitacaoPensamento);
         }
 
-        yield return new WaitForSeconds(
-            tempoPensamentoVisivel
-        );
+        yield return new WaitForSeconds(tempoPensamentoVisivel);
 
         if (painelPensamento != null)
         {
@@ -169,9 +228,7 @@ public class NPCResposta : MonoBehaviour
                     : 1f;
 
                 painelPensamento.alpha = Mathf.Lerp(
-                    alphaInicial,
-                    0f,
-                    progresso
+                    alphaInicial, 0f, progresso
                 );
 
                 yield return null;
@@ -188,6 +245,9 @@ public class NPCResposta : MonoBehaviour
 
     void LiberarInterrogatorio()
     {
+        if (interrogatorioFinalizado)
+            return;
+
         if (campoTexto != null)
         {
             campoTexto.interactable = true;
@@ -229,18 +289,12 @@ public class NPCResposta : MonoBehaviour
         {
             tempo += Time.deltaTime;
 
-            float t = Mathf.Clamp01(
-                tempo / duracaoAnimacaoPopup
-            );
-
+            float t = Mathf.Clamp01(tempo / duracaoAnimacaoPopup);
             float suave = 1f - Mathf.Pow(1f - t, 3f);
 
-            popupExplicativo.anchoredPosition =
-                Vector2.Lerp(
-                    posicaoInicial,
-                    posicaoFinalPopupExplicativo,
-                    suave
-                );
+            popupExplicativo.anchoredPosition = Vector2.Lerp(
+                posicaoInicial, posicaoFinalPopupExplicativo, suave
+            );
 
             if (popupExplicativoCanvasGroup != null)
                 popupExplicativoCanvasGroup.alpha = suave;
@@ -248,8 +302,7 @@ public class NPCResposta : MonoBehaviour
             yield return null;
         }
 
-        popupExplicativo.anchoredPosition =
-            posicaoFinalPopupExplicativo;
+        popupExplicativo.anchoredPosition = posicaoFinalPopupExplicativo;
 
         if (popupExplicativoCanvasGroup != null)
             popupExplicativoCanvasGroup.alpha = 1f;
@@ -269,9 +322,7 @@ public class NPCResposta : MonoBehaviour
         {
             tempo += Time.deltaTime;
 
-            float t = Mathf.Clamp01(
-                tempo / duracaoAnimacaoPopup
-            );
+            float t = Mathf.Clamp01(tempo / duracaoAnimacaoPopup);
 
             popupExplicativo.anchoredPosition =
                 Vector2.Lerp(inicial, final, t * t);
@@ -283,7 +334,6 @@ public class NPCResposta : MonoBehaviour
         }
 
         popupExplicativo.gameObject.SetActive(false);
-
         LiberarInterrogatorio();
     }
 
@@ -313,7 +363,7 @@ public class NPCResposta : MonoBehaviour
     IEnumerator ResponderNPC()
     {
         if (textoDigitando != null)
-            textoDigitando.text = "Suspeito está pensando...";
+            textoDigitando.text = "Suspeito esta pensando...";
 
         yield return new WaitForSeconds(1.2f);
 
@@ -326,13 +376,10 @@ public class NPCResposta : MonoBehaviour
             textoResposta.text = resposta;
 
         DadosInterrogatorio.Adicionar(resposta);
-
         AtualizarCaderno();
 
-        // Aguarda antes de apagar a resposta do suspeito.
         yield return new WaitForSeconds(tempoRespostaVisivel);
 
-        // Faz a mensagem desaparecer.
         if (textoResposta != null)
             textoResposta.text = "";
 
@@ -341,21 +388,12 @@ public class NPCResposta : MonoBehaviour
         if (perguntasFeitas >= 3)
         {
             interrogatorioFinalizado = true;
-
             yield return new WaitForSeconds(2f);
-
             StartCoroutine(FinalInterrogatorio());
         }
         else
         {
-            if (campoTexto != null)
-            {
-                campoTexto.interactable = true;
-                campoTexto.ActivateInputField();
-            }
-
-            if (botaoEnviar != null)
-                botaoEnviar.interactable = true;
+            LiberarInterrogatorio();
         }
     }
 
@@ -376,8 +414,9 @@ public class NPCResposta : MonoBehaviour
             }
         }
 
-        return resultado.ToString()
-            .Normalize(NormalizationForm.FormC);
+        return resultado.ToString().Normalize(
+            NormalizationForm.FormC
+        );
     }
 
     bool ContemAlgum(string texto, params string[] palavras)
@@ -393,48 +432,35 @@ public class NPCResposta : MonoBehaviour
 
     string ObterResposta()
     {
-        // Companhia
         if (ContemAlgum(perguntaAtual,
             "sozinho", "companhia", "com quem",
             "alguem com voce", "estava acompanhado",
             "estava com alguem", "quem estava com",
             "tinha alguem"))
-        {
-            return "Eu estava sozinho em casa naquela noite. Não tinha ninguem comigo.";
-        }
+            return "Eu estava sozinho em casa naquela noite. Nao tinha ninguem comigo.";
 
-        // Atividades
         if (ContemAlgum(perguntaAtual,
             "o que fazia", "que fazia", "fazendo em casa",
             "fazendo naquele dia", "estava fazendo",
             "fazendo naquela noite", "estava ocupado",
             "fazendo no dia", "fazia perto"))
-        {
             return "Eu estava em casa tentando descansar. Nao fiz nada de especial naquela noite.";
-        }
 
-        // Relação com a vítima
         if (ContemAlgum(perguntaAtual,
             "conhecia", "conhece", "conhecer",
             "quem era aquele", "quem era a vitima",
             "relacao com", "amigo dele", "amigo dela",
             "conhecia aquele cara", "conhecia aquela pessoa",
             "conhecia a vitima", "como conheceu"))
-        {
-            return "Eu ja tinha visto essa pessoa algumas vezes, mas não eramos proximos.";
-        }
+            return "Eu ja tinha visto essa pessoa algumas vezes, mas nao eramos proximos.";
 
-        // Localização
         if (ContemAlgum(perguntaAtual,
             "onde estava", "onde voce estava",
             "estava em casa", "qual lugar",
             "estava aonde", "seu paradeiro",
             "foi para onde", "estava na casa"))
-        {
             return "Eu estava em casa naquela noite. Nao tenho motivo para inventar outro lugar.";
-        }
 
-        // Horário do crime
         if (ContemAlgum(perguntaAtual,
             "que horas", "horario", "22 horas",
             "dez da noite", "meia noite",
@@ -443,95 +469,62 @@ public class NPCResposta : MonoBehaviour
             "hora do crime", "na hora do crime",
             "perto do crime", "naquela hora",
             "naquele horario"))
-        {
-            return "Por volta das 22 horas, eu estava em casa.So isso que consigo lembrar.";
-        }
+            return "Por volta das 22 horas, eu estava em casa. So isso que consigo lembrar.";
 
-        // Saída de casa
         if (ContemAlgum(perguntaAtual,
             "saiu de casa", "sair de casa",
             "saiu naquela noite", "saiu naquele dia",
             "foi para fora", "deixou a casa",
             "saiu durante a noite"))
-        {
             return "Nao sai de casa naquela noite. Fiquei la praticamente o tempo todo.";
-        }
 
-        // Discussões
         if (ContemAlgum(perguntaAtual,
             "discutiu", "discussao", "brigou",
             "briga", "desentendimento", "ameacou",
             "ameaca", "tinha problemas com"))
-        {
             return "Eu tive alguns desentendimentos, mas nada que justificasse um crime.";
-        }
 
-        // Barulhos
         if (ContemAlgum(perguntaAtual,
             "ouviu barulho", "escutou barulho",
             "grito", "barulho estranho",
             "ouviu alguma coisa", "escutou alguma coisa"))
-        {
             return "Nao me lembro de ter ouvido nada estranho naquela noite.";
-        }
 
-        // Motivo
         if (ContemAlgum(perguntaAtual,
             "por que", "porque", "motivo", "razao",
             "raiva", "vinganca", "vingar"))
-        {
-            return "Eu não tinha motivo para machucar ninguem. Não ganharia nada com isso.";
-        }
+            return "Eu nao tinha motivo para machucar ninguem. Nao ganharia nada com isso.";
 
-        // Garrafa
-        if (ContemAlgum(perguntaAtual,
-            "garrafa", "bebida", "frasco"))
-        {
-            return "Eu nao reconheço essa garrafa. Não sei por que ela estaria ligada a mim.";
-        }
+        if (ContemAlgum(perguntaAtual, "garrafa", "bebida", "frasco"))
+            return "Eu nao reconheço essa garrafa. Nao sei por que ela estaria ligada a mim.";
 
-        // Faca
         if (ContemAlgum(perguntaAtual,
             "faca", "arma branca", "lamina", "objeto cortante"))
-        {
-            return "Nao conheço essa faca. Não tenho nada a esconder sobre isso.";
-        }
+            return "Nao conheço essa faca. Nao tenho nada a esconder sobre isso.";
 
-        // Impressões digitais
         if (ContemAlgum(perguntaAtual,
             "digital", "digitais", "impressao",
             "toquei", "tocou", "encostou", "encostei"))
-        {
             return "Eu nao me lembro de ter tocado em nada relacionado a esse caso.";
-        }
 
-        // Acusação de crime
         if (ContemAlgum(perguntaAtual,
             "matou", "assassinou", "cometeu o crime",
             "foi voce", "culpado", "participou",
             "envolvido", "fez isso", "machucou"))
-        {
-            return "Nao fui eu! Você esta tentando me culpar sem ter certeza.";
-        }
+            return "Nao fui eu! Voce esta tentando me culpar sem ter certeza.";
 
-        // Perguntas gerais
         if (ContemAlgum(perguntaAtual,
             "o que aconteceu", "me conte", "conte tudo",
             "o que sabe", "sabe sobre o caso",
             "explique o que"))
-        {
             return "Eu nao sei exatamente o que aconteceu. So sei que estao me acusando de algo que nao fiz.";
-        }
 
-        // Perguntas sobre a vítima
         if (ContemAlgum(perguntaAtual,
             "vitima", "morto", "morta", "morreu",
             "corpo", "encontraram"))
-        {
             return "Eu soube do caso, mas nao sei dizer o que aconteceu com essa pessoa.";
-        }
 
-        return "Nao sei responder isso. Ja falei tudo o que sei sobre aquela noite.";
+        return "NAo sei responder isso. Já falei tudo o que sei sobre aquela noite.";
     }
 
     void AtualizarCaderno()
@@ -543,6 +536,247 @@ public class NPCResposta : MonoBehaviour
             "\n\n",
             DadosInterrogatorio.anotacoes
         );
+    }
+
+    public void UsarGarrafa()
+    {
+        if (respondendo || interrogatorioFinalizado || garrafaUsada)
+            return;
+
+        garrafaUsada = true;
+
+        if (botaoGarrafa != null)
+            botaoGarrafa.interactable = false;
+
+        if (imagemGarrafa != null)
+            imagemGarrafa.color = corPistaUsada;
+
+        PararContador(ref contadorGarrafaCoroutine, contadorGarrafa);
+
+        IniciarContadorSeNecessario(
+            ref contadorFacaCoroutine, contadorFaca,
+            botaoFaca, () => facaUsada
+        );
+
+        IniciarContadorSeNecessario(
+            ref contadorDigitalCoroutine, contadorDigital,
+            botaoDigital, () => digitalUsada
+        );
+
+        StartCoroutine(ResponderProva(respostaGarrafa));
+    }
+
+    public void UsarFaca()
+    {
+        if (respondendo || interrogatorioFinalizado || facaUsada)
+            return;
+
+        facaUsada = true;
+
+        if (botaoFaca != null)
+            botaoFaca.interactable = false;
+
+        if (imagemFaca != null)
+            imagemFaca.color = corPistaUsada;
+
+        PararContador(ref contadorFacaCoroutine, contadorFaca);
+
+        IniciarContadorSeNecessario(
+            ref contadorGarrafaCoroutine, contadorGarrafa,
+            botaoGarrafa, () => garrafaUsada
+        );
+
+        IniciarContadorSeNecessario(
+            ref contadorDigitalCoroutine, contadorDigital,
+            botaoDigital, () => digitalUsada
+        );
+
+        StartCoroutine(ResponderProva(respostaFaca));
+    }
+
+    public void UsarDigital()
+    {
+        if (respondendo || interrogatorioFinalizado || digitalUsada)
+            return;
+
+        digitalUsada = true;
+
+        if (botaoDigital != null)
+            botaoDigital.interactable = false;
+
+        if (imagemDigital != null)
+            imagemDigital.color = corPistaUsada;
+
+        PararContador(ref contadorDigitalCoroutine, contadorDigital);
+
+        IniciarContadorSeNecessario(
+            ref contadorGarrafaCoroutine, contadorGarrafa,
+            botaoGarrafa, () => garrafaUsada
+        );
+
+        IniciarContadorSeNecessario(
+            ref contadorFacaCoroutine, contadorFaca,
+            botaoFaca, () => facaUsada
+        );
+
+        StartCoroutine(ResponderProva(respostaDigital));
+    }
+
+    void IniciarContadorSeNecessario(
+        ref Coroutine rotina,
+        TMP_Text contador,
+        Button botao,
+        Func<bool> provaJaUsada)
+    {
+        if (provaJaUsada() || rotina != null)
+            return;
+
+        rotina = StartCoroutine(
+            ContagemRegressiva(contador, botao, provaJaUsada)
+        );
+    }
+
+    IEnumerator ContagemRegressiva(
+        TMP_Text contador,
+        Button botao,
+        Func<bool> provaJaUsada)
+    {
+        float restante = tempoProva;
+
+        if (contador != null)
+            contador.gameObject.SetActive(true);
+
+        if (botao != null)
+            botao.interactable = false;
+
+        while (restante > 0f)
+        {
+            if (provaJaUsada() || interrogatorioFinalizado)
+            {
+                EsconderContador(contador);
+                yield break;
+            }
+
+            if (contador != null)
+            {
+                contador.gameObject.SetActive(true);
+                contador.text = Mathf.CeilToInt(restante).ToString();
+            }
+
+            restante -= Time.deltaTime;
+            yield return null;
+        }
+
+        EsconderContador(contador);
+
+        if (!provaJaUsada() && !interrogatorioFinalizado && botao != null)
+            botao.interactable = true;
+
+        if (contador == contadorGarrafa)
+            contadorGarrafaCoroutine = null;
+        else if (contador == contadorFaca)
+            contadorFacaCoroutine = null;
+        else if (contador == contadorDigital)
+            contadorDigitalCoroutine = null;
+    }
+
+    void PararContador(ref Coroutine rotina, TMP_Text contador)
+    {
+        if (rotina != null)
+        {
+            StopCoroutine(rotina);
+            rotina = null;
+        }
+
+        EsconderContador(contador);
+    }
+
+    void EsconderContador(TMP_Text contador)
+    {
+        if (contador == null)
+            return;
+
+        contador.text = "";
+        contador.gameObject.SetActive(false);
+    }
+
+    IEnumerator ResponderProva(string resposta)
+    {
+        respondendo = true;
+
+        if (campoTexto != null)
+            campoTexto.interactable = false;
+
+        if (botaoEnviar != null)
+            botaoEnviar.interactable = false;
+
+        if (textoDigitando != null)
+            textoDigitando.text = "Suspeito está pensando...";
+
+        yield return new WaitForSeconds(1.2f);
+
+        if (textoDigitando != null)
+            textoDigitando.text = "";
+
+        if (textoResposta != null)
+            textoResposta.text = resposta;
+
+        yield return new WaitForSeconds(tempoRespostaVisivel);
+
+        if (textoResposta != null)
+            textoResposta.text = "";
+
+        respondendo = false;
+
+        if (TodasAsProvasUsadas())
+        {
+            interrogatorioFinalizado = true;
+            StartCoroutine(Confessar());
+        }
+        else
+        {
+            LiberarInterrogatorio();
+        }
+    }
+
+    bool TodasAsProvasUsadas()
+    {
+        return garrafaUsada && facaUsada && digitalUsada;
+    }
+
+    IEnumerator Confessar()
+    {
+        respondendo = true;
+        interrogatorioFinalizado = true;
+
+        PararContador(ref contadorGarrafaCoroutine, contadorGarrafa);
+        PararContador(ref contadorFacaCoroutine, contadorFaca);
+        PararContador(ref contadorDigitalCoroutine, contadorDigital);
+
+        if (campoTexto != null)
+            campoTexto.gameObject.SetActive(false);
+
+        if (botaoEnviar != null)
+            botaoEnviar.gameObject.SetActive(false);
+
+        if (textoDigitando != null)
+            textoDigitando.gameObject.SetActive(false);
+
+        if (playerMovement != null)
+            playerMovement.enabled = false;
+
+        if (textoResposta != null)
+            textoResposta.text = mensagemConfissao;
+
+        if (animatorNpc != null && !string.IsNullOrEmpty(triggerConfissao))
+            animatorNpc.SetTrigger(triggerConfissao);
+
+        yield return new WaitForSeconds(tempoConfissao);
+
+        if (textoResposta != null)
+            textoResposta.text = "";
+
+        yield return StartCoroutine(FinalInterrogatorio());
     }
 
     IEnumerator FinalInterrogatorio()
@@ -574,7 +808,6 @@ public class NPCResposta : MonoBehaviour
         }
 
         yield return new WaitForSeconds(esperaAposTexto);
-
         SceneManager.LoadScene(nomeProximaCena);
     }
 
