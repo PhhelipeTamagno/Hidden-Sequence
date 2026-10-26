@@ -12509,14 +12509,14 @@ MonoBehaviour:
   mensagemConfissao2: Eu esculpi a estaca com uma faca e carregava na minha garrafa
     termica.
   esperaAntesConfissao: 1
-  tempoConfissao1: 4
-  tempoConfissao2: 4
+  tempoConfissao1: 2
+  tempoConfissao2: 2
   tempoPonto: 0.3
   tempoAntesResposta: 0.8
   tempoRespostaVisivel: 3
   fadeCanvasGroup: {fileID: 0}
   duracaoFade: 1.5
-  nomeProximaCena: CutscenePrisao
+  nomeProximaCena: CutsceneAssassinato
   popupExplicativo: {fileID: 0}
   textoExplicacao: {fileID: 0}
   tempoPopup: 3

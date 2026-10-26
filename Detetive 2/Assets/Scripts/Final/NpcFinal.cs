@@ -105,15 +105,20 @@ public class NpcFinal : MonoBehaviour
 
     [TextArea(2, 5)]
     public string mensagemConfissao1 =
-        "Esta bem... Eu confesso! Fui eu quem cometeu o crime. Eu o matei com uma estaca de gelo.";
+        "Esta bem... Eu confesso! Fui eu quem cometeu o crime. " +
+        "Eu matei a vitima com uma estaca de gelo, que eu escupi uma hora antes " +
+        "Ela descobriu um segredo meu e ameacou acabar com a minha vida. " +
+        "Eu fiquei com medo de perder tudo e decidi silencia-la.";
 
     [TextArea(2, 5)]
     public string mensagemConfissao2 =
-        "Eu esculpi a estaca com uma faca e carregava na minha garrafa termica.";
+        "Eu esculpi a estaca usando uma faca e a escondi na minha garrafa termica. " +
+        "Achei que conseguiria apagar os rastros, mas deixei minhas digitais. " +
+        "Quando voce apresentou as tres provas, percebi que nao tinha mais como negar.";
 
     public float esperaAntesConfissao = 1f;
-    public float tempoConfissao1 = 4f;
-    public float tempoConfissao2 = 4f;
+    public float tempoConfissao1 = 7f;
+    public float tempoConfissao2 = 7f;
 
     [Header("Tempo das respostas")]
     public float tempoPonto = 0.3f;
@@ -262,10 +267,6 @@ public class NpcFinal : MonoBehaviour
         botao.onClick.AddListener(acao);
     }
 
-    // =========================================================
-    // CADERNO
-    // =========================================================
-
     void CarregarAnotacoes()
     {
         anotacoesDisponiveis.Clear();
@@ -277,10 +278,7 @@ public class NpcFinal : MonoBehaviour
                 if (string.IsNullOrWhiteSpace(item))
                     continue;
 
-                string[] partes = Regex.Split(
-                    item.Trim(),
-                    @"(?:\r?\n\s*){2,}"
-                );
+                string[] partes = Regex.Split(item.Trim(), @"(?:\r?\n\s*){2,}");
 
                 foreach (string parte in partes)
                 {
@@ -321,8 +319,7 @@ public class NpcFinal : MonoBehaviour
 
             if (existe)
             {
-                TMP_Text rotulo =
-                    botao.GetComponentInChildren<TMP_Text>(true);
+                TMP_Text rotulo = botao.GetComponentInChildren<TMP_Text>(true);
 
                 if (rotulo != null)
                     rotulo.text = anotacoesDisponiveis[i];
@@ -391,7 +388,6 @@ public class NpcFinal : MonoBehaviour
 
         string resposta = ObterRespostaConfronto(anotacao);
 
-        // A fala do suspeito aparece inteira, sem digitacao.
         yield return StartCoroutine(
             MostrarRespostaSuspeito(resposta, triggerProva)
         );
@@ -404,7 +400,6 @@ public class NpcFinal : MonoBehaviour
 
         if (TodasAsProvasApresentadas() && !confissaoIniciada)
         {
-            confissaoIniciada = true;
             StartCoroutine(IniciarConfissao());
             yield break;
         }
@@ -412,7 +407,6 @@ public class NpcFinal : MonoBehaviour
         LiberarInterrogatorio();
     }
 
-    // Somente a fala do jogador e digitada.
     IEnumerator MostrarFalaJogador(string mensagem)
     {
         if (textoFalaJogador == null)
@@ -439,10 +433,6 @@ public class NpcFinal : MonoBehaviour
 
         rotinaFalaJogador = null;
     }
-
-    // =========================================================
-    // PERGUNTAS E RESPOSTAS
-    // =========================================================
 
     void EnviarPerguntaPorEnter(string texto)
     {
@@ -472,7 +462,6 @@ public class NpcFinal : MonoBehaviour
 
         string resposta = ObterRespostaNormal(pergunta);
 
-        // O suspeito continua falando instantaneamente.
         yield return StartCoroutine(
             MostrarRespostaSuspeito(resposta, triggerNegacao)
         );
@@ -557,283 +546,102 @@ public class NpcFinal : MonoBehaviour
             textoResposta.gameObject.SetActive(false);
     }
 
-    // =========================================================
-    // RESPOSTAS CONTRADITORIAS
-    // =========================================================
-
     string ObterRespostaNormal(string pergunta)
     {
         string texto = Normalizar(pergunta);
 
-        if (ContemAlgum(texto,
-            "sozinho", "companhia", "com quem",
-            "alguem com voce", "estava acompanhado",
-            "estava com alguem", "quem estava com",
-            "tinha alguem"))
-        {
-            return "Eu estava com um conhecido naquela noite. "
-                + "Ele pode confirmar que nos encontramos.";
-        }
+        if (ContemAlgum(texto, "sozinho", "companhia", "com quem", "alguem com voce", "estava acompanhado", "estava com alguem", "quem estava com", "tinha alguem"))
+            return "Eu estava com um conhecido naquela noite. Ele pode confirmar que nos encontramos.";
 
-        if (ContemAlgum(texto,
-            "o que fazia", "que fazia", "fazendo em casa",
-            "fazendo naquele dia", "estava fazendo",
-            "fazendo naquela noite", "estava ocupado",
-            "fazendo no dia", "fazia perto"))
-        {
-            return "Eu estava ocupado consertando algumas coisas "
-                + "em casa, mas precisei sair para resolver um problema.";
-        }
+        if (ContemAlgum(texto, "o que fazia", "que fazia", "fazendo em casa", "fazendo naquele dia", "estava fazendo", "fazendo naquela noite", "estava ocupado", "fazendo no dia", "fazia perto"))
+            return "Eu estava ocupado consertando algumas coisas em casa, mas precisei sair para resolver um problema.";
 
-        if (ContemAlgum(texto,
-            "conhecia", "conhece", "conhecer",
-            "quem era aquele", "quem era a vitima",
-            "relacao com", "amigo dele", "amigo dela",
-            "conhecia aquele cara", "conhecia aquela pessoa",
-            "conhecia a vitima", "como conheceu"))
-        {
-            return "Eu trabalhava com a vitima. "
-                + "Nos conheciamos bem, embora nossa relacao "
-                + "tenha ficado complicada ultimamente.";
-        }
+        if (ContemAlgum(texto, "conhecia", "conhece", "conhecer", "quem era aquele", "quem era a vitima", "relacao com", "amigo dele", "amigo dela", "conhecia aquele cara", "conhecia aquela pessoa", "conhecia a vitima", "como conheceu"))
+            return "Eu trabalhava com a vitima. Nos conheciamos bem, embora nossa relacao tenha ficado complicada ultimamente.";
 
-        if (ContemAlgum(texto,
-            "onde estava", "onde voce estava",
-            "estava em casa", "qual lugar",
-            "estava aonde", "seu paradeiro",
-            "foi para onde", "estava na casa"))
-        {
-            return "Eu estava caminhando perto da praca naquela noite. "
-                + "Precisava sair um pouco de casa.";
-        }
+        if (ContemAlgum(texto, "onde estava", "onde voce estava", "estava em casa", "qual lugar", "estava aonde", "seu paradeiro", "foi para onde", "estava na casa"))
+            return "Eu estava caminhando perto da praca naquela noite. Precisava sair um pouco de casa.";
 
-        if (ContemAlgum(texto,
-            "que horas", "horario", "22 horas",
-            "dez da noite", "meia noite",
-            "a que horas", "qual hora",
-            "quando aconteceu", "horario do crime",
-            "hora do crime", "na hora do crime",
-            "perto do crime", "naquela hora",
-            "naquele horario"))
-        {
-            return "Por volta das 22 horas, eu estava perto "
-                + "do local do crime. Passei por la, mas nao parei.";
-        }
+        if (ContemAlgum(texto, "que horas", "horario", "22 horas", "dez da noite", "meia noite", "a que horas", "qual hora", "quando aconteceu", "horario do crime", "hora do crime", "na hora do crime", "perto do crime", "naquela hora", "naquele horario"))
+            return "Por volta das 22 horas, eu estava perto do local do crime. Passei por la, mas nao parei.";
 
-        if (ContemAlgum(texto,
-            "saiu de casa", "sair de casa",
-            "saiu naquela noite", "saiu naquele dia",
-            "foi para fora", "deixou a casa",
-            "saiu durante a noite"))
-        {
-            return "Sai de casa naquela noite para encontrar "
-                + "uma pessoa. Nao achei que isso fosse importante.";
-        }
+        if (ContemAlgum(texto, "saiu de casa", "sair de casa", "saiu naquela noite", "saiu naquele dia", "foi para fora", "deixou a casa", "saiu durante a noite"))
+            return "Sai de casa naquela noite para encontrar uma pessoa. Nao achei que isso fosse importante.";
 
-        if (ContemAlgum(texto,
-            "discutiu", "discussao", "brigou",
-            "briga", "desentendimento", "ameacou",
-            "ameaca", "tinha problemas com"))
-        {
-            return "Eu discuti seriamente com a vitima alguns dias "
-                + "antes. Ela estava me pressionando por causa de um segredo.";
-        }
+        if (ContemAlgum(texto, "discutiu", "discussao", "brigou", "briga", "desentendimento", "ameacou", "ameaca", "tinha problemas com"))
+            return "Eu discuti seriamente com a vitima alguns dias antes. Ela estava me pressionando por causa de um segredo.";
 
-        if (ContemAlgum(texto,
-            "ouviu barulho", "escutou barulho",
-            "grito", "barulho estranho",
-            "ouviu alguma coisa", "escutou alguma coisa"))
-        {
-            return "Eu ouvi um grito naquela noite. "
-                + "Achei melhor nao me envolver e continuei andando.";
-        }
+        if (ContemAlgum(texto, "ouviu barulho", "escutou barulho", "grito", "barulho estranho", "ouviu alguma coisa", "escutou alguma coisa"))
+            return "Eu ouvi um grito naquela noite. Achei melhor nao me envolver e continuei andando.";
 
-        if (ContemAlgum(texto,
-            "por que", "porque", "motivo", "razao",
-            "raiva", "vinganca", "vingar"))
-        {
-            return "A vitima sabia de algo que poderia acabar "
-                + "com a minha vida. Mas isso nao significa que eu "
-                + "teria coragem de fazer alguma coisa.";
-        }
+        if (ContemAlgum(texto, "por que", "porque", "motivo", "razao", "raiva", "vinganca", "vingar"))
+            return "A vitima sabia de algo que poderia acabar com a minha vida. Mas isso nao significa que eu teria coragem de fazer alguma coisa.";
 
         if (ContemAlgum(texto, "garrafa", "bebida", "frasco"))
-        {
-            return "Essa garrafa era minha, mas eu a perdi naquela "
-                + "semana. Qualquer pessoa poderia ter pegado.";
-        }
+            return "Essa garrafa era minha, mas eu a perdi naquela semana. Qualquer pessoa poderia ter pegado.";
 
-        if (ContemAlgum(texto,
-            "faca", "arma branca", "lamina", "objeto cortante"))
-        {
-            return "Eu tinha uma faca parecida com essa. "
-                + "Usei para cortar algumas coisas, mas nao sei "
-                + "como ela foi parar nessa investigacao.";
-        }
+        if (ContemAlgum(texto, "faca", "arma branca", "lamina", "objeto cortante"))
+            return "Eu tinha uma faca parecida com essa. Usei para cortar algumas coisas, mas nao sei como ela foi parar nessa investigacao.";
 
-        if (ContemAlgum(texto,
-            "digital", "digitais", "impressao",
-            "toquei", "tocou", "encostou", "encostei"))
-        {
-            return "Eu toquei naquele objeto alguns dias antes. "
-                + "A vitima me mostrou algo relacionado a ele.";
-        }
+        if (ContemAlgum(texto, "digital", "digitais", "impressao", "toquei", "tocou", "encostou", "encostei"))
+            return "Eu toquei naquele objeto alguns dias antes. A vitima me mostrou algo relacionado a ele.";
 
-        if (ContemAlgum(texto,
-            "matou", "assassinou", "cometeu o crime",
-            "foi voce", "culpado", "participou",
-            "envolvido", "fez isso", "machucou"))
-        {
-            return "Nao fui eu! Posso ter escondido algumas coisas, "
-                + "mas nunca faria algo tao grave.";
-        }
+        if (ContemAlgum(texto, "matou", "assassinou", "cometeu o crime", "foi voce", "culpado", "participou", "envolvido", "fez isso", "machucou"))
+            return "Nao fui eu! Posso ter escondido algumas coisas, mas nunca faria algo tao grave.";
 
-        if (ContemAlgum(texto,
-            "o que aconteceu", "me conte", "conte tudo",
-            "o que sabe", "sabe sobre o caso", "explique o que"))
-        {
-            return "Eu encontrei a vitima naquela noite e tivemos "
-                + "uma conversa dificil. Depois fui embora.";
-        }
+        if (ContemAlgum(texto, "o que aconteceu", "me conte", "conte tudo", "o que sabe", "sabe sobre o caso", "explique o que"))
+            return "Eu encontrei a vitima naquela noite e tivemos uma conversa dificil. Depois fui embora.";
 
-        if (ContemAlgum(texto,
-            "vitima", "morto", "morta", "morreu",
-            "corpo", "encontraram"))
-        {
-            return "Eu vi a vitima pouco antes de tudo acontecer. "
-                + "Ela parecia nervosa e queria falar comigo.";
-        }
+        if (ContemAlgum(texto, "vitima", "morto", "morta", "morreu", "corpo", "encontraram"))
+            return "Eu vi a vitima pouco antes de tudo acontecer. Ela parecia nervosa e queria falar comigo.";
 
-        return "Nao sei responder isso. Ja falei mais do que "
-            + "deveria sobre aquela noite.";
+        return "Nao sei responder isso. Ja falei mais do que deveria sobre aquela noite.";
     }
 
     string ObterRespostaConfronto(string anotacao)
     {
         string texto = Normalizar(anotacao);
 
-        if (ContemAlgum(texto,
-            "sozinho", "companhia", "com quem",
-            "alguem com voce", "estava acompanhado",
-            "estava com alguem", "quem estava com",
-            "tinha alguem"))
-        {
-            return "Eu nao disse que estava acompanhado! "
-                + "Voce deve ter entendido errado. Eu estava sozinho.";
-        }
+        if (ContemAlgum(texto, "sozinho", "companhia", "com quem", "alguem com voce", "estava acompanhado", "estava com alguem", "quem estava com", "tinha alguem"))
+            return "Eu nao disse que estava acompanhado! Voce deve ter entendido errado. Eu estava sozinho.";
 
-        if (ContemAlgum(texto,
-            "o que fazia", "que fazia", "fazendo em casa",
-            "fazendo naquele dia", "estava fazendo",
-            "fazendo naquela noite", "estava ocupado",
-            "fazendo no dia"))
-        {
-            return "Eu nao estava fazendo isso! "
-                + "Voce esta misturando as coisas. Eu fiquei em casa.";
-        }
+        if (ContemAlgum(texto, "o que fazia", "que fazia", "fazendo em casa", "fazendo naquele dia", "estava fazendo", "fazendo naquela noite", "estava ocupado", "fazendo no dia"))
+            return "Eu nao estava fazendo isso! Voce esta misturando as coisas. Eu fiquei em casa.";
 
-        if (ContemAlgum(texto,
-            "conhecia", "conhece", "conhecer",
-            "quem era a vitima", "relacao com",
-            "amigo dele", "amigo dela", "como conheceu",
-            "trabalhava com"))
-        {
-            return "Eu mal conhecia aquela pessoa! "
-                + "Trabalhar no mesmo lugar nao significa que "
-                + "fossemos proximos.";
-        }
+        if (ContemAlgum(texto, "conhecia", "conhece", "conhecer", "quem era a vitima", "relacao com", "amigo dele", "amigo dela", "como conheceu", "trabalhava com"))
+            return "Eu mal conhecia aquela pessoa! Trabalhar no mesmo lugar nao significa que fossemos proximos.";
 
-        if (ContemAlgum(texto,
-            "onde estava", "onde voce estava",
-            "estava em casa", "qual lugar",
-            "estava aonde", "paradeiro",
-            "foi para onde", "estava na casa",
-            "caminhando", "praca"))
-        {
-            return "Eu estava em casa naquela noite! "
-                + "Nao sei de onde voce tirou essa historia "
-                + "de que eu estava caminhando.";
-        }
+        if (ContemAlgum(texto, "onde estava", "onde voce estava", "estava em casa", "qual lugar", "estava aonde", "paradeiro", "foi para onde", "estava na casa", "caminhando", "praca"))
+            return "Eu estava em casa naquela noite! Nao sei de onde voce tirou essa historia de que eu estava caminhando.";
 
-        if (ContemAlgum(texto,
-            "que horas", "horario", "22 horas",
-            "dez da noite", "meia noite",
-            "quando aconteceu", "horario do crime",
-            "hora do crime", "naquela hora"))
-        {
-            return "Nao lembro de ter dito isso. "
-                + "Tenho certeza de que ja estava em casa "
-                + "naquele horario.";
-        }
+        if (ContemAlgum(texto, "que horas", "horario", "22 horas", "dez da noite", "meia noite", "quando aconteceu", "horario do crime", "hora do crime", "naquela hora"))
+            return "Nao lembro de ter dito isso. Tenho certeza de que ja estava em casa naquele horario.";
 
-        if (ContemAlgum(texto,
-            "saiu de casa", "sair de casa",
-            "saiu naquela noite", "saiu naquele dia",
-            "foi para fora", "deixou a casa",
-            "saiu durante a noite"))
-        {
-            return "Eu nao sai de casa naquela noite. "
-                + "Devo ter me expressado mal quando conversamos.";
-        }
+        if (ContemAlgum(texto, "saiu de casa", "sair de casa", "saiu naquela noite", "saiu naquele dia", "foi para fora", "deixou a casa", "saiu durante a noite"))
+            return "Eu nao sai de casa naquela noite. Devo ter me expressado mal quando conversamos.";
 
-        if (ContemAlgum(texto,
-            "discutiu", "discussao", "brigou",
-            "briga", "desentendimento", "ameacou",
-            "ameaca", "problemas com"))
-        {
-            return "Aquilo nao foi uma discussao de verdade. "
-                + "Tivemos apenas uma conversa e nada mais.";
-        }
+        if (ContemAlgum(texto, "discutiu", "discussao", "brigou", "briga", "desentendimento", "ameacou", "ameaca", "problemas com"))
+            return "Aquilo nao foi uma discussao de verdade. Tivemos apenas uma conversa e nada mais.";
 
-        if (ContemAlgum(texto,
-            "ouviu barulho", "escutou barulho",
-            "grito", "barulho estranho", "ouviu alguma coisa"))
-        {
-            return "Eu nao ouvi grito nenhum. "
-                + "Se alguem gritou, eu nao estava por perto.";
-        }
+        if (ContemAlgum(texto, "ouviu barulho", "escutou barulho", "grito", "barulho estranho", "ouviu alguma coisa"))
+            return "Eu nao ouvi grito nenhum. Se alguem gritou, eu nao estava por perto.";
 
-        if (ContemAlgum(texto,
-            "por que", "porque", "motivo", "razao",
-            "raiva", "vinganca", "vingar"))
-        {
-            return "Eu nunca tive motivo para machucar aquela pessoa. "
-                + "Voce esta tentando transformar uma discussao "
-                + "em alguma coisa que ela nao foi.";
-        }
+        if (ContemAlgum(texto, "por que", "porque", "motivo", "razao", "raiva", "vinganca", "vingar"))
+            return "Eu nunca tive motivo para machucar aquela pessoa. Voce esta tentando transformar uma discussao em alguma coisa que ela nao foi.";
 
         if (ContemAlgum(texto, "garrafa", "bebida", "frasco"))
-        {
-            return "Essa garrafa nao e minha! "
-                + "Nunca tive uma garrafa igual a essa.";
-        }
+            return "Essa garrafa nao e minha! Nunca tive uma garrafa igual a essa.";
 
-        if (ContemAlgum(texto,
-            "faca", "arma branca", "lamina", "objeto cortante"))
-        {
-            return "Eu nunca tive essa faca. "
-                + "Nao sei por que ela teria alguma ligacao comigo.";
-        }
+        if (ContemAlgum(texto, "faca", "arma branca", "lamina", "objeto cortante"))
+            return "Eu nunca tive essa faca. Nao sei por que ela teria alguma ligacao comigo.";
 
-        if (ContemAlgum(texto,
-            "digital", "digitais", "impressao",
-            "toquei", "tocou", "encostou", "encostei"))
-        {
-            return "Essas digitais nao provam que eu cometi o crime. "
-                + "Posso ter tocado nesse objeto em outra ocasiao.";
-        }
+        if (ContemAlgum(texto, "digital", "digitais", "impressao", "toquei", "tocou", "encostou", "encostei"))
+            return "Essas digitais nao provam que eu cometi o crime. Posso ter tocado nesse objeto em outra ocasiao.";
 
-        if (ContemAlgum(texto,
-            "matou", "assassinou", "cometeu o crime",
-            "foi voce", "culpado", "participou", "envolvido"))
-        {
-            return "Nao fui eu! Voce esta usando minhas palavras "
-                + "contra mim, mas nao tem a historia completa.";
-        }
+        if (ContemAlgum(texto, "matou", "assassinou", "cometeu o crime", "foi voce", "culpado", "participou", "envolvido"))
+            return "Nao fui eu! Voce esta usando minhas palavras contra mim, mas nao tem a historia completa.";
 
-        return "Essa anotacao esta fora de contexto. "
-            + "Voce esta tentando me incriminar com palavras "
-            + "que nao provam nada.";
+        return "Essa anotacao esta fora de contexto. Voce esta tentando me incriminar com palavras que nao provam nada.";
     }
 
     string Normalizar(string texto)
@@ -841,24 +649,16 @@ public class NpcFinal : MonoBehaviour
         if (string.IsNullOrEmpty(texto))
             return "";
 
-        string original = texto.ToLowerInvariant().Normalize(
-            NormalizationForm.FormD
-        );
-
+        string original = texto.ToLowerInvariant().Normalize(NormalizationForm.FormD);
         StringBuilder resultado = new StringBuilder();
 
         foreach (char letra in original)
         {
-            if (CharUnicodeInfo.GetUnicodeCategory(letra)
-                != UnicodeCategory.NonSpacingMark)
-            {
+            if (CharUnicodeInfo.GetUnicodeCategory(letra) != UnicodeCategory.NonSpacingMark)
                 resultado.Append(letra);
-            }
         }
 
-        return resultado.ToString().Normalize(
-            NormalizationForm.FormC
-        );
+        return resultado.ToString().Normalize(NormalizationForm.FormC);
     }
 
     bool ContemAlgum(string texto, params string[] palavras)
@@ -871,10 +671,6 @@ public class NpcFinal : MonoBehaviour
 
         return false;
     }
-
-    // =========================================================
-    // PROVAS E CONTADORES
-    // =========================================================
 
     public void ApresentarGarrafa()
     {
@@ -967,20 +763,17 @@ public class NpcFinal : MonoBehaviour
 
     void EsconderContador(TMP_Text contador)
     {
-        if (contador != null)
-        {
-            contador.text = "";
-            contador.gameObject.SetActive(false);
-        }
+        if (contador == null)
+            return;
+
+        contador.text = "";
+        contador.gameObject.SetActive(false);
     }
 
     IEnumerator ContadorGarrafa()
     {
         yield return StartCoroutine(
-            ExecutarContador(
-                contadorGarrafa, botaoGarrafa,
-                () => garrafaApresentada
-            )
+            ExecutarContador(contadorGarrafa, botaoGarrafa, () => garrafaApresentada)
         );
 
         contadorGarrafaCoroutine = null;
@@ -989,10 +782,7 @@ public class NpcFinal : MonoBehaviour
     IEnumerator ContadorFaca()
     {
         yield return StartCoroutine(
-            ExecutarContador(
-                contadorFaca, botaoFaca,
-                () => facaApresentada
-            )
+            ExecutarContador(contadorFaca, botaoFaca, () => facaApresentada)
         );
 
         contadorFacaCoroutine = null;
@@ -1001,19 +791,13 @@ public class NpcFinal : MonoBehaviour
     IEnumerator ContadorDigital()
     {
         yield return StartCoroutine(
-            ExecutarContador(
-                contadorDigital, botaoDigital,
-                () => digitalApresentada
-            )
+            ExecutarContador(contadorDigital, botaoDigital, () => digitalApresentada)
         );
 
         contadorDigitalCoroutine = null;
     }
 
-    IEnumerator ExecutarContador(
-        TMP_Text contador,
-        Button botao,
-        Func<bool> jaApresentada)
+    IEnumerator ExecutarContador(TMP_Text contador, Button botao, Func<bool> jaApresentada)
     {
         if (contador != null)
         {
@@ -1029,7 +813,10 @@ public class NpcFinal : MonoBehaviour
         while (tempo > 0f)
         {
             if (jaApresentada())
+            {
+                EsconderContador(contador);
                 yield break;
+            }
 
             if (contador != null)
                 contador.text = Mathf.CeilToInt(tempo).ToString();
@@ -1038,16 +825,9 @@ public class NpcFinal : MonoBehaviour
             yield return null;
         }
 
-        if (jaApresentada())
-            yield break;
+        EsconderContador(contador);
 
-        if (contador != null)
-        {
-            contador.text = "0";
-            contador.gameObject.SetActive(true);
-        }
-
-        if (botao != null)
+        if (!jaApresentada() && !confissaoIniciada && botao != null)
             botao.interactable = true;
     }
 
@@ -1066,51 +846,39 @@ public class NpcFinal : MonoBehaviour
 
         EsconderRespostaSuspeito();
 
-        respondendo = false;
+        if (TodasAsProvasApresentadas() && !confissaoIniciada)
+        {
+            confissaoIniciada = true;
+            StartCoroutine(IniciarConfissao());
+            yield break;
+        }
 
-        VerificarPistas();
+        respondendo = false;
         LiberarInterrogatorio();
     }
 
     bool TodasAsProvasApresentadas()
     {
-        return garrafaApresentada
-            && facaApresentada
-            && digitalApresentada;
+        return garrafaApresentada && facaApresentada && digitalApresentada;
     }
-
-    void VerificarPistas()
-    {
-        if (TodasAsProvasApresentadas())
-        {
-            StartCoroutine(
-                MostrarRespostaSuspeito(
-                    "Todas as provas foram apresentadas. "
-                    + "Abra o caderno e selecione uma anotacao "
-                    + "para confrontar o suspeito.",
-                    triggerProva
-                )
-            );
-        }
-    }
-
-    // =========================================================
-    // CONFISSAO
-    // =========================================================
 
     IEnumerator IniciarConfissao()
     {
+        confissaoIniciada = true;
         respondendo = true;
 
-        EsconderContador(contadorGarrafa);
-        EsconderContador(contadorFaca);
-        EsconderContador(contadorDigital);
+        PararContador(ref contadorGarrafaCoroutine, contadorGarrafa);
+        PararContador(ref contadorFacaCoroutine, contadorFaca);
+        PararContador(ref contadorDigitalCoroutine, contadorDigital);
 
         if (campoTexto != null)
             campoTexto.gameObject.SetActive(false);
 
         if (botaoEnviar != null)
             botaoEnviar.gameObject.SetActive(false);
+
+        if (botaoOlharCaderno != null)
+            botaoOlharCaderno.interactable = false;
 
         if (painelRespostaSuspeito != null)
             painelRespostaSuspeito.SetActive(false);
@@ -1126,6 +894,18 @@ public class NpcFinal : MonoBehaviour
 
         if (painelFalaJogador != null)
             painelFalaJogador.SetActive(false);
+
+        if (painelProvas != null)
+        {
+            if (botaoGarrafa != null)
+                botaoGarrafa.interactable = false;
+
+            if (botaoFaca != null)
+                botaoFaca.interactable = false;
+
+            if (botaoDigital != null)
+                botaoDigital.interactable = false;
+        }
 
         if (playerMovement != null)
             playerMovement.enabled = false;
@@ -1184,8 +964,7 @@ public class NpcFinal : MonoBehaviour
             if (textoExplicacao != null)
             {
                 textoExplicacao.text =
-                    "Faca perguntas ao suspeito. Apresente as provas "
-                    + "e selecione anotacoes do caderno para confronta-lo.";
+                    "Faca perguntas ao suspeito. Apresente as tres provas para descobrir a verdade.";
             }
         }
 
@@ -1208,11 +987,7 @@ public class NpcFinal : MonoBehaviour
         while (tempo < duracaoFade)
         {
             tempo += Time.deltaTime;
-
-            fadeCanvasGroup.alpha = Mathf.Clamp01(
-                tempo / duracaoFade
-            );
-
+            fadeCanvasGroup.alpha = Mathf.Clamp01(tempo / duracaoFade);
             yield return null;
         }
 
