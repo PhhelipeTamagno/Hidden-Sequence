@@ -12517,9 +12517,9 @@ MonoBehaviour:
   fadeCanvasGroup: {fileID: 0}
   duracaoFade: 1.5
   nomeProximaCena: CutsceneAssassinato
-  popupExplicativo: {fileID: 0}
-  textoExplicacao: {fileID: 0}
-  tempoPopup: 3
+  popupExplicativo: {fileID: 1586153278}
+  textoExplicacao: {fileID: 243509347}
+  tempoPopup: 4
 --- !u!114 &1980958277 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6548066863918119022, guid: 60be908c6d035074f8e0835432b98735, type: 3}

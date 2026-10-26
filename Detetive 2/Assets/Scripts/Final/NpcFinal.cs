@@ -964,7 +964,7 @@ public class NpcFinal : MonoBehaviour
             if (textoExplicacao != null)
             {
                 textoExplicacao.text =
-                    "Faca perguntas ao suspeito. Apresente as tres provas para descobrir a verdade.";
+                    "Faca perguntas a ele, utilize as provas e caso necessite utilize as falas anotadas em seu caderno para descobrir a verdade.";
             }
         }
 
