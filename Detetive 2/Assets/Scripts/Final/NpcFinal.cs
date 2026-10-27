@@ -580,7 +580,7 @@ public class NpcFinal : MonoBehaviour
             return "Essa garrafa era minha, mas eu a perdi naquela semana. Qualquer pessoa poderia ter pegado.";
 
         if (ContemAlgum(texto, "faca", "arma branca", "lamina", "objeto cortante"))
-            return "Eu tinha uma faca parecida com essa. Usei para cortar algumas coisas, mas nao sei como ela foi parar nessa investigacao.";
+            return "Eu tinha uma faca parecida com essa.mas eu n tenho nada haver com este crime.";
 
         if (ContemAlgum(texto, "digital", "digitais", "impressao", "toquei", "tocou", "encostou", "encostei"))
             return "Eu toquei naquele objeto alguns dias antes. A vitima me mostrou algo relacionado a ele.";
