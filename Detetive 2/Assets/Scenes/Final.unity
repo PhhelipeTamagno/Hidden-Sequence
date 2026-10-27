@@ -5801,6 +5801,7 @@ RectTransform:
   - {fileID: 541248076}
   - {fileID: 128598344}
   - {fileID: 1537067428}
+  - {fileID: 1109968278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -6549,6 +6550,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &307845784 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5276914992623515723, guid: 616d511151a6c554caddf1c754e4f91d, type: 3}
+  m_PrefabInstance: {fileID: 2051117754}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4666d1a46cb76542b7e6e7a7f4893cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &308055601
 GameObject:
   m_ObjectHideFlags: 0
@@ -9554,6 +9566,94 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60be908c6d035074f8e0835432b98735, type: 3}
+--- !u!1 &1109968277
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1109968278}
+  - component: {fileID: 1109968281}
+  - component: {fileID: 1109968280}
+  - component: {fileID: 1109968279}
+  m_Layer: 5
+  m_Name: Panel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1109968278
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109968277}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 180928824}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &1109968279
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109968277}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &1109968280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109968277}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1109968281
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109968277}
+  m_CullTransparentMesh: 1
 --- !u!1 &1155430242
 GameObject:
   m_ObjectHideFlags: 0
@@ -11925,7 +12025,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 20.020195, w: 0}
+  m_margin: {x: -4.5461044, y: 0, z: -7.9049454, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -11955,7 +12055,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -23.1, y: -11.30001}
+  m_AnchoredPosition: {x: -23.1, y: 0.9}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1776742989 stripped
@@ -12474,8 +12574,6 @@ MonoBehaviour:
   animatorNpc: {fileID: 1351997175}
   triggerNegacao: Negar
   triggerProva: Nervoso
-  triggerConfissao1: Confessar1
-  triggerConfissao2: Confessar2
   respostasNegacao:
   - Nao sei de nada. Eu nao estava envolvido.
   - Ja disse, nao tenho nada a ver com isso.
@@ -12502,20 +12600,32 @@ MonoBehaviour:
   respostaGarrafa: Essa garrafa nao prova nada! Eu nunca vi isso antes.
   respostaFaca: "Essa faca... eu nao sei de onde voc\xEA tirou isso."
   respostaDigital: "Essas digitais... nao... isso nao pode ser poss\xEDvel."
-  textoConfissao1: {fileID: 1759166374}
-  textoConfissao2: {fileID: 0}
-  mensagemConfissao1: Esta bem... Eu confesso! Fui eu quem cometeu o crime. Eu o
-    matei com uma estaca de gelo.
-  mensagemConfissao2: Eu esculpi a estaca com uma faca e carregava na minha garrafa
-    termica.
+  textoConfissao: {fileID: 1759166374}
   esperaAntesConfissao: 1
-  tempoConfissao1: 2
-  tempoConfissao2: 2
+  tempoEntreBlocos: 0.4
+  tempoMinimoBloco: 3
+  tempoPorLetraConfissao: 0.045
+  blocosConfissao:
+  - Esta bem... Eu confesso! Fui eu.
+  - Eu trabalhava com ele ha muito tempo.
+  - Certo dia, descobri que ele desviava uma parte do meu salario para a conta dele.
+  - Tivemos uma discussao feia naquele dia.
+  - Em casa, eu ainda estava muito nervoso e agi por impulso.
+  - Esculpi uma estaca de gelo com uma faca e a coloquei em uma garrafa termica,
+    pois achei que ninguem ia conseguir descobrir quem matou.
+  - Fui ate a casa dele e o ataquei na sauna.
+  - Depois, virei a casa dele de pernas pro ar, como ele fez com a minha vida.
+  - Me arrependo muito do que fiz.
+  triggersConfissao:
+  - Confessar1
+  - Confessar2
   tempoPonto: 0.3
   tempoAntesResposta: 0.8
   tempoRespostaVisivel: 3
-  fadeCanvasGroup: {fileID: 0}
+  fadeCanvasGroup: {fileID: 1109968279}
   duracaoFade: 1.5
+  transition: {fileID: 307845784}
+  delayTransicao: 1
   nomeProximaCena: CutsceneAssassinato
   popupExplicativo: {fileID: 1586153278}
   textoExplicacao: {fileID: 243509347}

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using EasyTransition;
 
 public class NpcFinal : MonoBehaviour
 {
@@ -47,8 +47,6 @@ public class NpcFinal : MonoBehaviour
     public Animator animatorNpc;
     public string triggerNegacao = "Negar";
     public string triggerProva = "Nervoso";
-    public string triggerConfissao1 = "Confessar1";
-    public string triggerConfissao2 = "Confessar2";
 
     [Header("Respostas de negacao")]
     public string[] respostasNegacao =
@@ -100,25 +98,28 @@ public class NpcFinal : MonoBehaviour
         "Essas digitais... nao... isso nao pode ser possivel.";
 
     [Header("Confissao")]
-    public TMP_Text textoConfissao1;
-    public TMP_Text textoConfissao2;
-
-    [TextArea(2, 5)]
-    public string mensagemConfissao1 =
-        "Esta bem... Eu confesso! Fui eu quem cometeu o crime. " +
-        "Eu matei a vitima com uma estaca de gelo, que eu escupi uma hora antes " +
-        "Ela descobriu um segredo meu e ameacou acabar com a minha vida. " +
-        "Eu fiquei com medo de perder tudo e decidi silencia-la.";
-
-    [TextArea(2, 5)]
-    public string mensagemConfissao2 =
-        "Eu esculpi a estaca usando uma faca e a escondi na minha garrafa termica. " +
-        "Achei que conseguiria apagar os rastros, mas deixei minhas digitais. " +
-        "Quando voce apresentou as tres provas, percebi que nao tinha mais como negar.";
-
+    public TMP_Text textoConfissao;             
     public float esperaAntesConfissao = 1f;
-    public float tempoConfissao1 = 7f;
-    public float tempoConfissao2 = 7f;
+    public float tempoEntreBlocos = 0.4f;       
+    public float tempoMinimoBloco = 3f;           
+    public float tempoPorLetraConfissao = 0.045f; 
+
+    [TextArea(2, 5)]
+    public string[] blocosConfissao =
+    {
+        "Esta bem... Eu confesso! Fui eu.",
+        "Eu trabalhava com ele ha muito tempo.",
+        "Certo dia, descobri que ele desviava uma parte do meu salario para a conta dele.",
+        "Tivemos uma discussao feia naquele dia.",
+        "Em casa, eu ainda estava muito nervoso e agi por impulso.",
+        "Esculpi uma estaca de gelo com uma faca e a coloquei em uma garrafa termica, pois achei que ninguem ia conseguir descobrir quem matou.",
+        "Fui ate a casa dele e o ataquei na sauna.",
+        "Depois, virei a casa dele de pernas pro ar, como ele fez com a minha vida.",
+        "Me arrependo muito do que fiz."
+    };
+
+    [Header("Animacao da confissao")]
+    public string[] triggersConfissao = { "Confessar1", "Confessar2" };
 
     [Header("Tempo das respostas")]
     public float tempoPonto = 0.3f;
@@ -128,6 +129,10 @@ public class NpcFinal : MonoBehaviour
     [Header("Fade")]
     public CanvasGroup fadeCanvasGroup;
     public float duracaoFade = 1.5f;
+
+    [Header("Easy Transition")]
+    public Transition transition;
+    public float delayTransicao = 1f;
 
     [Header("Proxima cena")]
     public string nomeProximaCena = "CutscenePrisao";
@@ -226,16 +231,10 @@ public class NpcFinal : MonoBehaviour
             imagemDigital.color = Color.white;
         }
 
-        if (textoConfissao1 != null)
+        if (textoConfissao != null)
         {
-            textoConfissao1.gameObject.SetActive(false);
-            textoConfissao1.text = mensagemConfissao1;
-        }
-
-        if (textoConfissao2 != null)
-        {
-            textoConfissao2.gameObject.SetActive(false);
-            textoConfissao2.text = mensagemConfissao2;
+            textoConfissao.text = "";
+            textoConfissao.gameObject.SetActive(false);
         }
 
         EsconderContador(contadorGarrafa);
@@ -912,33 +911,49 @@ public class NpcFinal : MonoBehaviour
 
         yield return new WaitForSeconds(esperaAntesConfissao);
 
-        if (textoConfissao1 != null)
+        if (textoConfissao != null)
+            textoConfissao.gameObject.SetActive(true);
+
+        for (int i = 0; i < blocosConfissao.Length; i++)
         {
-            textoConfissao1.gameObject.SetActive(true);
-            textoConfissao1.text = mensagemConfissao1;
+            string bloco = blocosConfissao[i];
+
+            if (textoConfissao != null)
+                textoConfissao.text = bloco;
+
+         
+            if (triggersConfissao != null && triggersConfissao.Length > 0)
+                TocarAnimacao(triggersConfissao[i % triggersConfissao.Length]);
+
+           
+            float tempoBloco = Mathf.Max(
+                tempoMinimoBloco,
+                bloco.Length * tempoPorLetraConfissao
+            );
+
+            yield return new WaitForSeconds(tempoBloco);
+
+           
+            if (textoConfissao != null)
+                textoConfissao.text = "";
+
+            yield return new WaitForSeconds(tempoEntreBlocos);
         }
 
-        TocarAnimacao(triggerConfissao1);
+        if (textoConfissao != null)
+            textoConfissao.gameObject.SetActive(false);
 
-        yield return new WaitForSeconds(tempoConfissao1);
-
-        if (textoConfissao1 != null)
-            textoConfissao1.gameObject.SetActive(false);
-
-        if (textoConfissao2 != null)
+        if (transition != null)
         {
-            textoConfissao2.gameObject.SetActive(true);
-            textoConfissao2.text = mensagemConfissao2;
+            
+            transition.gameObject.SetActive(true);
+            yield return new WaitForSeconds(delayTransicao);
         }
-
-        TocarAnimacao(triggerConfissao2);
-
-        yield return new WaitForSeconds(tempoConfissao2);
-
-        if (textoConfissao2 != null)
-            textoConfissao2.gameObject.SetActive(false);
-
-        yield return StartCoroutine(FadeParaPreto());
+        else
+        {
+           
+            yield return StartCoroutine(FadeParaPreto());
+        }
 
         if (painelProvas != null)
             painelProvas.SetActive(false);
