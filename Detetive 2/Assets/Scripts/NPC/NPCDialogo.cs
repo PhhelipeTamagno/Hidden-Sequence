@@ -55,7 +55,7 @@ public class NPCDialogo : MonoBehaviour
 
         CriarIndicadorMouse();
 
-        // Começa mexendo no computador.
+       
         if (animatorNPC != null)
             animatorNPC.Play(animacaoComputador, 0, 0f);
     }
@@ -65,7 +65,7 @@ public class NPCDialogo : MonoBehaviour
         if (cameraPrincipal == null)
             cameraPrincipal = Camera.main;
 
-        // Faz o texto desaparecer após o tempo configurado.
+       
         if (conversando)
         {
             temporizadorDialogo += Time.deltaTime;
@@ -84,7 +84,7 @@ public class NPCDialogo : MonoBehaviour
         if (!Mouse.current.leftButton.wasPressedThisFrame)
             return;
 
-        // Se estiver conversando, não inicia outro diálogo.
+       
         if (conversando)
             return;
 
@@ -127,7 +127,7 @@ public class NPCDialogo : MonoBehaviour
         if (indicadorMouse != null)
             indicadorMouse.SetActive(false);
 
-        // Executa a animação de fala.
+        
         if (animatorNPC != null)
         {
             animatorNPC.speed = 1f;
@@ -147,7 +147,7 @@ public class NPCDialogo : MonoBehaviour
 
         tempoAnimacao += Time.deltaTime;
 
-        // Se houver duração manual, usa o tempo configurado.
+       
         if (duracaoFalaAnimacao > 0f)
         {
             if (tempoAnimacao >= duracaoFalaAnimacao)
@@ -156,7 +156,7 @@ public class NPCDialogo : MonoBehaviour
             return;
         }
 
-        // Caso contrário, detecta o fim do clipe.
+        
         AnimatorStateInfo estado =
             animatorNPC.GetCurrentAnimatorStateInfo(0);
 

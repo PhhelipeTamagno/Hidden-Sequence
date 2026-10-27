@@ -54,7 +54,7 @@ public class NPCResposta : MonoBehaviour
         "Nao sei de nada. Eu não estava envolvido.",
         "Ja disse, nao tenho nada a ver comigo.",
         "Voce esta perdendo tempo comigo, eu nao vi nada.",
-        "Não vou responder isso. Nao fiz nada de errado.",
+        "Nao vou responder isso. Nao fiz nada de errado.",
         "Isso nao tem nada a ver comigo, procure outra pessoa."
     };
 
@@ -104,13 +104,13 @@ public class NPCResposta : MonoBehaviour
     public float tempoProva = 10f;
 
     public string respostaGarrafa =
-        "Essa garrafa nao prova nada! Eu nunca vi isso antes.";
+        "Não tenho nada para falar, voces estao inventando muita babozeira.";
 
     public string respostaFaca =
-        "Essa faca... eu nao sei de onde você tirou isso.";
+        "Voce me trouxe ate aqui, e ainda me acusa de usar uma faca?eu sou inocente.";
 
     public string respostaDigital =
-        "Essas digitais... nao... isso não pode ser possivel.";
+        "Que digitais cara? ta ficando maluco, nao sei de nada nao.";
 
     [Header("Confissão")]
     public Animator animatorNpc;
@@ -118,7 +118,7 @@ public class NPCResposta : MonoBehaviour
 
     [TextArea]
     public string mensagemConfissao =
-        "Esta bem... Eu confesso! Fui eu quem cometeu o crime.";
+        "Esta bem,desisto, Eu confesso! Fui eu que cometi o crime.";
 
     public float tempoConfissao = 5f;
 
@@ -496,11 +496,11 @@ public class NPCResposta : MonoBehaviour
             return "Eu nao tinha motivo para machucar ninguem. Nao ganharia nada com isso.";
 
         if (ContemAlgum(perguntaAtual, "garrafa", "bebida", "frasco"))
-            return "Eu nao reconheço essa garrafa. Nao sei por que ela estaria ligada a mim.";
+            return "Nao sei por que ela estaria ligada a mim, que que tem haver uma garrafa com uma morte?";
 
         if (ContemAlgum(perguntaAtual,
             "faca", "arma branca", "lamina", "objeto cortante"))
-            return "Nao conheço essa faca. Nao tenho nada a esconder sobre isso.";
+            return "Nunca machucaria alguem. Nao tenho nada a esconder sobre isso.";
 
         if (ContemAlgum(perguntaAtual,
             "digital", "digitais", "impressao",
@@ -524,7 +524,7 @@ public class NPCResposta : MonoBehaviour
             "corpo", "encontraram"))
             return "Eu soube do caso, mas nao sei dizer o que aconteceu com essa pessoa.";
 
-        return "NAo sei responder isso. Já falei tudo o que sei sobre aquela noite.";
+        return "Voces não tem provas de que fui eu!Voce ja sabe tudo sobre mim e ja falei o que sei sobre aquela noite.";
     }
 
     void AtualizarCaderno()

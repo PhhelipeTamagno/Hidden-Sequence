@@ -640,7 +640,7 @@ public class NpcFinal : MonoBehaviour
         if (ContemAlgum(texto, "matou", "assassinou", "cometeu o crime", "foi voce", "culpado", "participou", "envolvido"))
             return "Nao fui eu! Voce esta usando minhas palavras contra mim, mas nao tem a historia completa.";
 
-        return "Essa anotacao esta fora de contexto. Voce esta tentando me incriminar com palavras que nao provam nada.";
+        return "Voce esta colocando tudo fora de contexto. Voce esta tentando me incriminar com palavras que nao provam nada.";
     }
 
     string Normalizar(string texto)
