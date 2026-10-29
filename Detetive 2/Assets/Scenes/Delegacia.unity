@@ -6457,7 +6457,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -22.5, y: -13.3}
+  m_AnchoredPosition: {x: -22.5, y: 4.3}
   m_SizeDelta: {x: 200, y: 71.42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &558587315
@@ -6546,7 +6546,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 7.7589636, y: 3.7797887, z: 2.9053926, w: 8.601469}
+  m_margin: {x: 1.8914785, y: 3.7797887, z: -1.8496733, w: 8.601469}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -10843,6 +10843,24 @@ MonoBehaviour:
   duracaoFade: 1.5
   nomeProximaCena: CenaDoCrime
   esperaAposTexto: 2
+  botaoGarrafa: {fileID: 0}
+  botaoFaca: {fileID: 0}
+  botaoDigital: {fileID: 0}
+  contadorGarrafa: {fileID: 0}
+  contadorFaca: {fileID: 0}
+  contadorDigital: {fileID: 0}
+  imagemGarrafa: {fileID: 0}
+  imagemFaca: {fileID: 0}
+  imagemDigital: {fileID: 0}
+  corPistaUsada: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  tempoProva: 10
+  respostaGarrafa: Essa garrafa nao prova nada! Eu nunca vi isso antes.
+  respostaFaca: "Essa faca... eu nao sei de onde voc\xEA tirou isso."
+  respostaDigital: "Essas digitais... nao... isso n\xE3o pode ser possivel."
+  animatorNpc: {fileID: 0}
+  triggerConfissao: Confessar1
+  mensagemConfissao: Esta bem... Eu confesso! Fui eu quem cometeu o crime.
+  tempoConfissao: 5
 --- !u!4 &1977678594
 Transform:
   m_ObjectHideFlags: 0

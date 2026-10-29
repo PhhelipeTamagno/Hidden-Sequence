@@ -79547,7 +79547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPCDialogo
   textoDialogo: {fileID: 1669009576}
   falas:
-  - "Ol\xE1, Detetive!\nvoc\xEA tera apenas 4 minutos para achar todas as pistas "
+  - "Ol\xE1, Detetive!\nvoc\xEA tera apenas 2 minutos para achar todas as pistas "
   - 'Mas tem um problema, Cortaram a Luz do bairro todo
 
 '

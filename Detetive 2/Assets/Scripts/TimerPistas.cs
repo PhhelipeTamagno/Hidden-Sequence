@@ -50,7 +50,7 @@ public class TimerPistas : MonoBehaviour
 
             textoTimer.text = "Tempo: 0";
 
-            // Mostra somente a frase
+            
             mensagem.text = "Você não conseguiu encontrar todas as pistas!";
 
             reiniciando = true;

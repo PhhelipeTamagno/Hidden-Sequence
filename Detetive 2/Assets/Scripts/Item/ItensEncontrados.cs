@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -34,6 +33,16 @@ public class ItensEncontrados : MonoBehaviour
     [Header("Texto Final")]
     public TMP_Text textoFinal;
 
+    [Header("Fala do Policial")]
+    public GameObject painelFala;
+    public TMP_Text textoFala;
+
+    [TextArea(2, 4)]
+    public string falaPolicial = "EU ACHEI TUDO QUE EU PRECISO, AGORA TENHO PROVAS PARA USAR NO INTERROGATÓRIO E VER SE É ELE MESMO.";
+
+    [SerializeField] private float velocidadeDigitacao = 0.04f;
+    [SerializeField] private float tempoAposFala = 1.5f;
+
     [Header("Cena para carregar")]
     public string nomeDaCena;
 
@@ -53,6 +62,11 @@ public class ItensEncontrados : MonoBehaviour
         if (textoFinal != null)
         {
             textoFinal.gameObject.SetActive(false);
+        }
+
+        if (painelFala != null)
+        {
+            painelFala.SetActive(false);
         }
     }
 
@@ -159,7 +173,7 @@ public class ItensEncontrados : MonoBehaviour
 
         transicaoIniciada = true;
 
-        // Mostra a mensagem final
+      
         if (textoFinal != null)
         {
             textoFinal.gameObject.SetActive(true);
@@ -168,8 +182,21 @@ public class ItensEncontrados : MonoBehaviour
                 "Depois que voce encontrou as pistas, voce voltou para a delegacia para terminar o caso.";
         }
 
-        // Aguarda antes de iniciar a transicao
         yield return new WaitForSeconds(1f);
+
+        
+        if (painelFala != null && textoFala != null)
+        {
+            if (textoFinal != null)
+                textoFinal.gameObject.SetActive(false);
+
+            painelFala.SetActive(true);
+
+            yield return StartCoroutine(DigitarFala(falaPolicial));
+
+       
+            yield return new WaitForSeconds(tempoAposFala);
+        }
 
         if (string.IsNullOrEmpty(nomeDaCena))
         {
@@ -182,7 +209,7 @@ public class ItensEncontrados : MonoBehaviour
 
         if (transition != null)
         {
-            // Ativa a mesma transicao usada nas portas
+           
             transition.gameObject.SetActive(true);
         }
         else
@@ -192,10 +219,21 @@ public class ItensEncontrados : MonoBehaviour
             );
         }
 
-        // Aguarda a transicao, como no script da porta
+     
         yield return new WaitForSeconds(delay);
 
         SceneManager.LoadScene(nomeDaCena);
+    }
+
+    private IEnumerator DigitarFala(string fala)
+    {
+        textoFala.text = "";
+
+        foreach (char letra in fala)
+        {
+            textoFala.text += letra;
+            yield return new WaitForSeconds(velocidadeDigitacao);
+        }
     }
 
     private void AtualizarItem(Item item)
