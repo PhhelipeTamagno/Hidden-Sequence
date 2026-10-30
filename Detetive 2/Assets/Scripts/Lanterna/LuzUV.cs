@@ -14,17 +14,21 @@ public class LuzUV : MonoBehaviour
     public float velocidadeAparecer = 3f;
     public float velocidadeDesaparecer = 5f;
 
-    [Header("Luz Normal")]
+    [Header("Luz UV")]
     public float alcanceNormal = 10f;
     public float intensidadeNormal = 5f;
 
-    [Header("Luz Perto da Digital")]
+    [Header("Luz UV Perto da Digital")]
     public float distanciaParaAmpliar = 2.5f;
     public float alcancePerto = 15f;
     public float intensidadePerto = 2f;
 
+    [Header("Luz Branca")]
+    public float alcanceLuzBranca = 30f;
+    public float intensidadeLuzBranca = 5f;
+
     [Header("Cores da Luz")]
-    public Color corUV = new Color(0.5f, 0f, 1f); 
+    public Color corUV = new Color(0.5f, 0f, 1f);
     public Color corBranca = Color.white;
 
     private bool luzUV = true;
@@ -34,32 +38,20 @@ public class LuzUV : MonoBehaviour
         ApagarPegadas();
 
         if (spotLight != null)
-        {
-            spotLight.range = alcanceNormal;
-            spotLight.intensity = intensidadeNormal;
-            spotLight.color = corUV;
-        }
+            AplicarConfiguracaoUV();
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(1))
-        {
             AlternarLuz();
-        }
 
         if (spotLight == null)
-        {
-            ApagarPegadas();
             return;
-        }
-        if (!luzUV)
-        {
-            ApagarPegadas();
-            return;
-        }
 
-        if (!spotLight.gameObject.activeInHierarchy || !spotLight.enabled)
+        if (!luzUV ||
+            !spotLight.gameObject.activeInHierarchy ||
+            !spotLight.enabled)
         {
             ApagarPegadas();
             return;
@@ -74,10 +66,13 @@ public class LuzUV : MonoBehaviour
             if (imagem == null)
                 continue;
 
+            // Ignora digitais que não foram sorteadas.
+            if (!imagem.gameObject.activeInHierarchy)
+                continue;
+
             bool estaNoFeixe = EstaNoFeixeUV(imagem);
 
             float alphaAtual = imagem.color.a;
-
             float alphaAlvo = estaNoFeixe ? 1f : 0f;
 
             float velocidade = estaNoFeixe
@@ -94,12 +89,11 @@ public class LuzUV : MonoBehaviour
 
             if (estaNoFeixe && novoAlpha >= 0.95f)
             {
-                DigitalUV digital = imagem.GetComponent<DigitalUV>();
+                DigitalUV digital =
+                    imagem.GetComponent<DigitalUV>();
 
                 if (digital != null)
-                {
                     digital.MarcarEncontrada();
-                }
             }
         }
     }
@@ -108,15 +102,31 @@ public class LuzUV : MonoBehaviour
     {
         luzUV = !luzUV;
 
+        if (spotLight == null)
+            return;
+
         if (luzUV)
         {
-            spotLight.color = corUV;
+            AplicarConfiguracaoUV();
         }
         else
         {
             spotLight.color = corBranca;
+            spotLight.range = alcanceLuzBranca;
+            spotLight.intensity = intensidadeLuzBranca;
+
             ApagarPegadas();
         }
+    }
+
+    void AplicarConfiguracaoUV()
+    {
+        if (spotLight == null)
+            return;
+
+        spotLight.color = corUV;
+        spotLight.range = alcanceNormal;
+        spotLight.intensity = intensidadeNormal;
     }
 
     float EncontrarImagemMaisProxima()
@@ -125,7 +135,8 @@ public class LuzUV : MonoBehaviour
 
         foreach (Image imagem in imagens)
         {
-            if (imagem == null)
+            if (imagem == null ||
+                !imagem.gameObject.activeInHierarchy)
                 continue;
 
             float distancia = Vector3.Distance(
@@ -134,9 +145,7 @@ public class LuzUV : MonoBehaviour
             );
 
             if (distancia < menorDistancia)
-            {
                 menorDistancia = distancia;
-            }
         }
 
         return menorDistancia;
@@ -177,8 +186,7 @@ public class LuzUV : MonoBehaviour
             direcao
         );
 
-        float metadeDoAngulo =
-            spotLight.spotAngle / 2f;
+        float metadeDoAngulo = spotLight.spotAngle / 2f;
 
         return angulo <= metadeDoAngulo;
     }
@@ -186,14 +194,15 @@ public class LuzUV : MonoBehaviour
     void DefinirAlpha(Image imagem, float alpha)
     {
         Color cor = imagem.color;
-
         cor.a = alpha;
-
         imagem.color = cor;
     }
 
     public void ApagarPegadas()
     {
+        if (imagens == null)
+            return;
+
         foreach (Image imagem in imagens)
         {
             if (imagem == null)
@@ -208,4 +217,3 @@ public class LuzUV : MonoBehaviour
         ApagarPegadas();
     }
 }
-
