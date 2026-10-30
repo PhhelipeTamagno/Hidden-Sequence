@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -13,9 +14,27 @@ public class TimerPistas : MonoBehaviour
     public int totalPistas = 5;
     public int pistasEncontradas = 0;
 
-    [Header("Texto")]
+    [Header("Textos")]
     public TMP_Text textoTimer;
     public TMP_Text mensagem;
+
+    [Header("Elementos que desaparecem quando o tempo acaba")]
+    public GameObject[] elementosParaEsconder;
+
+    [Header("Painel de fala")]
+    public GameObject painelFala;
+    public TMP_Text textoPersonagem;
+
+    [Header("Mensagem quando o tempo acaba")]
+    [TextArea(2, 5)]
+    public string mensagemTempoAcabado =
+        "Não consegui achar dentro do tempo, tiveram que soltar o suspeito por falta de prova.";
+
+    [Header("Velocidade da digitação")]
+    public float velocidadeDigitacao = 0.04f;
+
+    [Header("Tempo antes da transição")]
+    public float esperaDepoisDaFala = 2f;
 
     [Header("Easy Transition")]
     [SerializeField] private Transition transition;
@@ -25,47 +44,113 @@ public class TimerPistas : MonoBehaviour
 
     private void Start()
     {
-        mensagem.text = "";
+        if (mensagem != null)
+            mensagem.text = "";
+
+        if (painelFala != null)
+            painelFala.SetActive(false);
+
+        if (textoPersonagem != null)
+            textoPersonagem.text = "";
+
+        AtualizarTextoTimer();
     }
 
-    void Update()
+    private void Update()
     {
         if (reiniciando)
             return;
 
-        tempo -= Time.deltaTime;
-
-        textoTimer.text = "Tempo: " + Mathf.Ceil(tempo);
-
         if (pistasEncontradas >= totalPistas)
         {
-            mensagem.text = "Você conseguiu encontrar todas as pistas!";
+            if (mensagem != null)
+                mensagem.text = "Você conseguiu encontrar todas as pistas!";
+
             enabled = false;
             return;
         }
 
+        tempo -= Time.deltaTime;
+
+        AtualizarTextoTimer();
+
         if (tempo <= 0)
         {
             tempo = 0;
-
-            textoTimer.text = "Tempo: 0";
-
-            
-            mensagem.text = "Você não conseguiu encontrar todas as pistas!";
+            AtualizarTextoTimer();
 
             reiniciando = true;
 
-            StartCoroutine(ReiniciarComFade());
+            StartCoroutine(MostrarFalaEReiniciar());
         }
+    }
+
+    private void AtualizarTextoTimer()
+    {
+        if (textoTimer != null)
+            textoTimer.text = "Tempo: " + Mathf.Ceil(tempo);
     }
 
     public void EncontrouPista()
     {
+        if (reiniciando || pistasEncontradas >= totalPistas)
+            return;
+
         pistasEncontradas++;
+
+        if (pistasEncontradas >= totalPistas)
+        {
+            if (mensagem != null)
+                mensagem.text = "Você conseguiu encontrar todas as pistas!";
+
+            enabled = false;
+        }
     }
 
-    private IEnumerator ReiniciarComFade()
+    private IEnumerator MostrarFalaEReiniciar()
     {
+        // Esconde todos os elementos escolhidos no Inspector.
+        if (elementosParaEsconder != null)
+        {
+            foreach (GameObject elemento in elementosParaEsconder)
+            {
+                if (elemento != null)
+                    elemento.SetActive(false);
+            }
+        }
+
+        // Esconde também a mensagem anterior.
+        if (mensagem != null)
+            mensagem.gameObject.SetActive(false);
+
+        // Mostra somente o painel de fala.
+        if (painelFala != null)
+            painelFala.SetActive(true);
+
+        // Limpa o texto antes de começar.
+        if (textoPersonagem != null)
+        {
+            textoPersonagem.text = "";
+
+            // Digita a mensagem letra por letra.
+            foreach (char letra in mensagemTempoAcabado)
+            {
+                textoPersonagem.text += letra;
+
+                yield return new WaitForSeconds(velocidadeDigitacao);
+            }
+        }
+        else
+        {
+            Debug.LogWarning(
+                "TimerPistas: Texto Personagem não configurado!"
+            );
+        }
+
+        // Aguarda o jogador ler a mensagem.
+        yield return new WaitForSeconds(esperaDepoisDaFala);
+
+        // Inicia a transição.
         if (transition != null)
         {
             transition.gameObject.SetActive(true);
@@ -73,12 +158,13 @@ public class TimerPistas : MonoBehaviour
         else
         {
             Debug.LogWarning(
-                "TimerPistas: Transition não foi colocado no Inspector!"
+                "TimerPistas: Transition não configurada!"
             );
         }
 
         yield return new WaitForSeconds(delay);
 
+        // Recarrega a cena.
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
