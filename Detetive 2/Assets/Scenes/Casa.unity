@@ -3037,6 +3037,18 @@ MonoBehaviour:
     corEncontrado: {r: 0.07035947, g: 1, b: 0, a: 1}
     corNaoEncontrado: {r: 0, g: 0, b: 0, a: 1}
     encontrado: 0
+  elementosParaEsconder:
+  - {fileID: 431910568}
+  - {fileID: 2025295608}
+  - {fileID: 217702684}
+  - {fileID: 97848797}
+  - {fileID: 1558083384}
+  - {fileID: 263609308}
+  - {fileID: 168669809}
+  - {fileID: 1214961737}
+  - {fileID: 991639061}
+  - {fileID: 224321345}
+  - {fileID: 1025068766}
   textoFinal: {fileID: 87480754}
   painelFala: {fileID: 55388542}
   textoFala: {fileID: 1462785716}
@@ -7854,7 +7866,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7094052850816917833, guid: db56365c672d3224badf7a3e73c7487d, type: 3}
       propertyPath: m_Name
-      value: garrfa ermica (1)
+      value: Garrafa Termica
       objectReference: {fileID: 0}
     - target: {fileID: 7582078080718109683, guid: db56365c672d3224badf7a3e73c7487d, type: 3}
       propertyPath: m_LocalScale.x

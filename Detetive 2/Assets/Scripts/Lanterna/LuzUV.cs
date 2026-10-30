@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,7 +23,7 @@ public class LuzUV : MonoBehaviour
     public float intensidadePerto = 2f;
 
     [Header("Luz Branca")]
-    public float alcanceLuzBranca = 30f;
+    public float alcanceLuzBranca = 50f;
     public float intensidadeLuzBranca = 5f;
 
     [Header("Cores da Luz")]

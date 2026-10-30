@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -30,6 +31,9 @@ public class ItensEncontrados : MonoBehaviour
     public Item faca;
     public Item digital;
 
+    [Header("Elementos do Canvas para esconder")]
+    public GameObject[] elementosParaEsconder;
+
     [Header("Texto Final")]
     public TMP_Text textoFinal;
 
@@ -38,7 +42,8 @@ public class ItensEncontrados : MonoBehaviour
     public TMP_Text textoFala;
 
     [TextArea(2, 4)]
-    public string falaPolicial = "EU ACHEI TUDO QUE EU PRECISO, AGORA TENHO PROVAS PARA USAR NO INTERROGATÓRIO E VER SE É ELE MESMO.";
+    public string falaPolicial =
+        "EU ACHEI TUDO QUE EU PRECISO, AGORA TENHO PROVAS PARA USAR NO INTERROGATÓRIO E VER SE É ELE MESMO.";
 
     [SerializeField] private float velocidadeDigitacao = 0.04f;
     [SerializeField] private float tempoAposFala = 1.5f;
@@ -60,18 +65,17 @@ public class ItensEncontrados : MonoBehaviour
         AtualizarItem(digital);
 
         if (textoFinal != null)
-        {
             textoFinal.gameObject.SetActive(false);
-        }
 
         if (painelFala != null)
-        {
             painelFala.SetActive(false);
-        }
     }
 
     private void Update()
     {
+        if (transicaoIniciada)
+            return;
+
         GarantirImagemVisivel(garrafa);
         GarantirImagemVisivel(faca);
         GarantirImagemVisivel(digital);
@@ -88,13 +92,12 @@ public class ItensEncontrados : MonoBehaviour
 
         Color cor = item.imagem.color;
         cor.a = 1f;
-
         item.imagem.color = cor;
     }
 
     public void EncontrarGarrafa()
     {
-        if (garrafa == null || garrafa.encontrado)
+        if (garrafa == null || garrafa.encontrado || transicaoIniciada)
             return;
 
         garrafa.encontrado = true;
@@ -103,7 +106,7 @@ public class ItensEncontrados : MonoBehaviour
 
     public void EncontrarFaca()
     {
-        if (faca == null || faca.encontrado)
+        if (faca == null || faca.encontrado || transicaoIniciada)
             return;
 
         faca.encontrado = true;
@@ -112,7 +115,7 @@ public class ItensEncontrados : MonoBehaviour
 
     public void EncontrarDigital()
     {
-        if (digital == null || digital.encontrado)
+        if (digital == null || digital.encontrado || transicaoIniciada)
             return;
 
         digital.encontrado = true;
@@ -127,9 +130,7 @@ public class ItensEncontrados : MonoBehaviour
             return;
 
         if (!digital.encontrado)
-        {
             EncontrarDigital();
-        }
     }
 
     public void DigitalNaoMirada()
@@ -161,7 +162,6 @@ public class ItensEncontrados : MonoBehaviour
             digital.encontrado)
         {
             todasEncontradas = true;
-
             StartCoroutine(TransicaoECarregarCena());
         }
     }
@@ -173,35 +173,41 @@ public class ItensEncontrados : MonoBehaviour
 
         transicaoIniciada = true;
 
-      
+        if (elementosParaEsconder != null)
+        {
+            foreach (GameObject elemento in elementosParaEsconder)
+            {
+                if (elemento != null)
+                    elemento.SetActive(false);
+            }
+        }
+
         if (textoFinal != null)
         {
             textoFinal.gameObject.SetActive(true);
 
             textoFinal.text =
-                "Depois que voce encontrou as pistas, voce voltou para a delegacia para terminar o caso.";
+                "Depois que você encontrou as pistas, você voltou para a delegacia para terminar o caso.";
         }
 
         yield return new WaitForSeconds(1f);
 
-        
-        if (painelFala != null && textoFala != null)
-        {
-            if (textoFinal != null)
-                textoFinal.gameObject.SetActive(false);
+        if (textoFinal != null)
+            textoFinal.gameObject.SetActive(false);
 
+        if (painelFala != null)
             painelFala.SetActive(true);
 
+        if (painelFala != null && textoFala != null)
+        {
             yield return StartCoroutine(DigitarFala(falaPolicial));
-
-       
             yield return new WaitForSeconds(tempoAposFala);
         }
 
         if (string.IsNullOrEmpty(nomeDaCena))
         {
             Debug.LogError(
-                "ItensEncontrados: Nome da cena nao foi definido!"
+                "ItensEncontrados: Nome da cena não foi definido!"
             );
 
             yield break;
@@ -209,17 +215,15 @@ public class ItensEncontrados : MonoBehaviour
 
         if (transition != null)
         {
-           
             transition.gameObject.SetActive(true);
         }
         else
         {
             Debug.LogWarning(
-                "ItensEncontrados: Transition nao foi colocado no Inspector!"
+                "ItensEncontrados: Transition não foi colocado no Inspector!"
             );
         }
 
-     
         yield return new WaitForSeconds(delay);
 
         SceneManager.LoadScene(nomeDaCena);

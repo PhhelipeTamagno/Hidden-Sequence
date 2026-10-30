@@ -1,4 +1,5 @@
 
+using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
@@ -10,7 +11,19 @@ public class NPCDialogo : MonoBehaviour
     public TMP_Text textoDialogo;
 
     [TextArea(2, 5)]
-    public string[] falas;
+    public string falaInicial = "Olá, Detetive! Você terá apenas 2 minutos para achar todas as pistas.";
+
+    [TextArea(2, 5)]
+    public string falaProblema = "Mas tem um problema, cortaram a luz do bairro todo.";
+
+    [TextArea(2, 5)]
+    public string falaTerceira = "Você pode colocar sua terceira fala aqui.";
+
+    [Header("Tempo entre as frases")]
+    public float intervaloFalas = 2f;
+
+    [Header("Tempo para sumir a terceira fala")]
+    public float tempoParaSumir = 4f;
 
     [Header("Distância de interação")]
     public float distanciaMaxima = 3f;
@@ -26,22 +39,18 @@ public class NPCDialogo : MonoBehaviour
     public string animacaoComputador = "MexendoPC";
     public string animacaoFalando = "Falando";
 
-    [Header("Tempo da animação de fala")]
-    [Tooltip("0 = detectar automaticamente o fim da animação.")]
-    public float duracaoFalaAnimacao = 0f;
-
-    [Header("Tempo do diálogo")]
-    public float tempoParaSumir = 4f;
-
-    private int indiceFala;
-    private bool conversando;
-    private bool animacaoFalandoAtiva;
-
     private Camera cameraPrincipal;
     private GameObject indicadorMouse;
 
-    private float tempoAnimacao;
-    private float temporizadorDialogo;
+    // 0 = aguardando primeiro clique
+    // 1 = exibindo as duas primeiras frases
+    // 2 = aguardando clique para terceira frase
+    // 3 = terceira frase exibida
+    // 4 = diálogo encerrado
+
+    private int etapaDialogo = 0;
+
+    private Coroutine sequenciaCoroutine;
 
     private void Start()
     {
@@ -55,9 +64,7 @@ public class NPCDialogo : MonoBehaviour
 
         CriarIndicadorMouse();
 
-       
-        if (animatorNPC != null)
-            animatorNPC.Play(animacaoComputador, 0, 0f);
+        TrocarAnimacao(animacaoComputador);
     }
 
     private void Update()
@@ -65,27 +72,12 @@ public class NPCDialogo : MonoBehaviour
         if (cameraPrincipal == null)
             cameraPrincipal = Camera.main;
 
-       
-        if (conversando)
-        {
-            temporizadorDialogo += Time.deltaTime;
-
-            if (temporizadorDialogo >= tempoParaSumir)
-                EncerrarDialogo();
-        }
-
-        AtualizarAnimacaoFalando();
-
-        if (Mouse.current == null || cameraPrincipal == null)
+        if (cameraPrincipal == null || Mouse.current == null)
             return;
 
         AtualizarPosicaoTexto();
 
         if (!Mouse.current.leftButton.wasPressedThisFrame)
-            return;
-
-       
-        if (conversando)
             return;
 
         Ray raio = cameraPrincipal.ScreenPointToRay(
@@ -105,95 +97,118 @@ public class NPCDialogo : MonoBehaviour
                 npc.transform.position
             );
 
-            if (distancia <= npc.distanciaMaxima)
-                npc.IniciarDialogo();
+            if (distancia > npc.distanciaMaxima)
+                return;
+
+            npc.Interagir();
         }
     }
 
-    private void IniciarDialogo()
+    private void Interagir()
     {
-        if (textoDialogo == null ||
-            falas == null ||
-            falas.Length == 0)
-            return;
-
-        conversando = true;
-        indiceFala = 0;
-        temporizadorDialogo = 0f;
-
-        textoDialogo.gameObject.SetActive(true);
-        textoDialogo.text = falas[indiceFala];
-
-        if (indicadorMouse != null)
-            indicadorMouse.SetActive(false);
-
-        
-        if (animatorNPC != null)
+        // Primeiro clique: inicia as duas primeiras frases
+        if (etapaDialogo == 0)
         {
-            animatorNPC.speed = 1f;
-            animatorNPC.Play(animacaoFalando, 0, 0f);
+            etapaDialogo = 1;
 
-            animacaoFalandoAtiva = true;
-            tempoAnimacao = 0f;
+            if (indicadorMouse != null)
+                indicadorMouse.SetActive(false);
+
+            if (sequenciaCoroutine != null)
+                StopCoroutine(sequenciaCoroutine);
+
+            sequenciaCoroutine = StartCoroutine(SequenciaInicial());
         }
 
-        AtualizarPosicaoTexto();
-    }
-
-    private void AtualizarAnimacaoFalando()
-    {
-        if (!animacaoFalandoAtiva || animatorNPC == null)
-            return;
-
-        tempoAnimacao += Time.deltaTime;
-
-       
-        if (duracaoFalaAnimacao > 0f)
+        // Só permite clicar novamente depois que as duas frases sumirem
+        else if (etapaDialogo == 2)
         {
-            if (tempoAnimacao >= duracaoFalaAnimacao)
-                VoltarAoComputador();
-
-            return;
-        }
-
-        
-        AnimatorStateInfo estado =
-            animatorNPC.GetCurrentAnimatorStateInfo(0);
-
-        if (!animatorNPC.IsInTransition(0) &&
-            estado.IsName(animacaoFalando) &&
-            estado.normalizedTime >= 1f)
-        {
-            VoltarAoComputador();
+            MostrarTerceiraFala();
         }
     }
 
-    private void VoltarAoComputador()
+    private IEnumerator SequenciaInicial()
     {
-        animacaoFalandoAtiva = false;
+        // PRIMEIRA FRASE
+        MostrarTexto(falaInicial);
+        TrocarAnimacao(animacaoFalando);
 
-        if (animatorNPC != null)
+        yield return new WaitForSeconds(intervaloFalas);
+
+        // SEGUNDA FRASE
+        MostrarTexto(falaProblema);
+        TrocarAnimacao(animacaoFalando);
+
+        yield return new WaitForSeconds(intervaloFalas);
+
+        // ESCONDE O TEXTO AUTOMATICAMENTE
+        if (textoDialogo != null)
         {
-            animatorNPC.speed = 1f;
-            animatorNPC.Play(animacaoComputador, 0, 0f);
+            textoDialogo.text = "";
+            textoDialogo.gameObject.SetActive(false);
         }
+
+        TrocarAnimacao(animacaoComputador);
+
+        // Agora o jogador pode clicar para ver a terceira frase
+        etapaDialogo = 2;
+
+        sequenciaCoroutine = null;
     }
 
-    private void EncerrarDialogo()
+    private void MostrarTerceiraFala()
     {
-        conversando = false;
-        temporizadorDialogo = 0f;
+        etapaDialogo = 3;
+
+        MostrarTexto(falaTerceira);
+        TrocarAnimacao(animacaoFalando);
+
+        StartCoroutine(EsconderTerceiraFala());
+    }
+
+    private IEnumerator EsconderTerceiraFala()
+    {
+        yield return new WaitForSeconds(tempoParaSumir);
 
         if (textoDialogo != null)
         {
             textoDialogo.text = "";
             textoDialogo.gameObject.SetActive(false);
         }
+
+        TrocarAnimacao(animacaoComputador);
+
+        etapaDialogo = 4;
+    }
+
+    private void MostrarTexto(string mensagem)
+    {
+        if (textoDialogo == null)
+            return;
+
+        textoDialogo.gameObject.SetActive(true);
+        textoDialogo.text = mensagem;
+
+        AtualizarPosicaoTexto();
+    }
+
+    private void TrocarAnimacao(string nomeAnimacao)
+    {
+        if (animatorNPC == null || string.IsNullOrEmpty(nomeAnimacao))
+            return;
+
+        int hash = Animator.StringToHash(nomeAnimacao);
+
+        if (animatorNPC.HasState(0, hash))
+        {
+            animatorNPC.speed = 1f;
+            animatorNPC.CrossFade(hash, 0.15f);
+        }
     }
 
     private void AtualizarPosicaoTexto()
     {
-        if (textoDialogo == null || !conversando)
+        if (textoDialogo == null || !textoDialogo.gameObject.activeSelf)
             return;
 
         textoDialogo.transform.position =
@@ -202,7 +217,7 @@ public class NPCDialogo : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (conversando || indicadorMouse == null)
+        if (etapaDialogo != 0 || indicadorMouse == null)
             return;
 
         if (cameraPrincipal == null)
@@ -241,6 +256,7 @@ public class NPCDialogo : MonoBehaviour
         canvasObj.AddComponent<GraphicRaycaster>();
 
         indicadorMouse = new GameObject("IndicadorClique");
+
         indicadorMouse.transform.SetParent(
             canvasObj.transform, false
         );
@@ -259,6 +275,9 @@ public class NPCDialogo : MonoBehaviour
 
     private void OnDisable()
     {
+        if (sequenciaCoroutine != null)
+            StopCoroutine(sequenciaCoroutine);
+
         if (animatorNPC != null)
             animatorNPC.speed = 1f;
     }
