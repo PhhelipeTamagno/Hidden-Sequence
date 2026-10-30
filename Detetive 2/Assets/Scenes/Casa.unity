@@ -3052,8 +3052,8 @@ MonoBehaviour:
   textoFinal: {fileID: 87480754}
   painelFala: {fileID: 55388542}
   textoFala: {fileID: 1462785716}
-  falaPolicial: "Eu achei tudo que eu preciso, agora tenho provas para usar no interrogat\xF3rio
-    e ver se \xE9 ele mesmo."
+  falaPolicial: Eu achei tudo que eu preciso, agora tenho provas para usar no interrogatorio
+    e ver se e ele mesmo.
   velocidadeDigitacao: 0.04
   tempoAposFala: 1.5
   nomeDaCena: Final
@@ -3126,8 +3126,8 @@ MonoBehaviour:
   - {fileID: 1025068766}
   painelFala: {fileID: 55388542}
   textoPersonagem: {fileID: 1462785716}
-  mensagemTempoAcabado: "N\xE3o consegui achar dentro do tempo, tiveram que soltar
-    o suspeito por falta de prova."
+  mensagemTempoAcabado: Nao consegui achar dentro do tempo, tiveram que soltar o
+    suspeito por falta de prova.
   velocidadeDigitacao: 0.04
   esperaDepoisDaFala: 2
   transition: {fileID: 512295924}
@@ -4036,12 +4036,12 @@ MonoBehaviour:
   - {fileID: 906702751}
   velocidadeAparecer: 1.5
   velocidadeDesaparecer: 10
-  alcanceNormal: 12
+  alcanceNormal: 30
   intensidadeNormal: 120
   distanciaParaAmpliar: 2.5
   alcancePerto: 15
-  intensidadePerto: 11
-  alcanceLuzBranca: 30
+  intensidadePerto: 120
+  alcanceLuzBranca: 80
   intensidadeLuzBranca: 80
   corUV: {r: 0.5, g: 0, b: 1, a: 1}
   corBranca: {r: 1, g: 1, b: 1, a: 1}
@@ -11285,11 +11285,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4669529396336095812, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.433
+      value: 0.431
       objectReference: {fileID: 0}
     - target: {fileID: 4669529396336095812, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.903
+      value: -2.043
       objectReference: {fileID: 0}
     - target: {fileID: 4669529396336095812, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12094,7 +12094,7 @@ Transform:
   m_GameObject: {fileID: 1153396884}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.889851, y: -0.4148903, z: -9.38099}
+  m_LocalPosition: {x: -14.615, y: -0.4148903, z: -8.858}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15020,8 +15020,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1d35a4d69ea7a3448871543af8bb7d35, type: 2}
+  m_sharedMaterial: {fileID: -7201661361017214313, guid: 1d35a4d69ea7a3448871543af8bb7d35, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

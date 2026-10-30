@@ -1435,9 +1435,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 380113078}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 380113079}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
       insertIndex: -1
@@ -1445,6 +1442,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
       insertIndex: -1
       addedObject: {fileID: 380113081}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 380113083}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 380113085}
     - targetCorrespondingSourceObject: {fileID: -7146521406498821007, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1518809524}
@@ -3043,7 +3046,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &367731296
 Canvas:
   m_ObjectHideFlags: 0
@@ -3178,29 +3181,6 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: 19a10b3c46676d24086ecb4ac3d1df84, type: 3}
   m_PrefabInstance: {fileID: 91433998}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &380113078
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 380113075}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306008a2ca8e19f4d8ab34a3d99ba0f4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPCDialogo
-  textoDialogo: {fileID: 2119252725}
-  falas:
-  - Esse trabalho esta me matando!
-  distanciaMaxima: 3
-  deslocamentoTexto: {x: 0, y: 1.5, z: 0}
-  imagemMouseEsquerdo: {fileID: -518640780, guid: 2ce9eecea85740242a80c9fb57436d33, type: 3}
-  animatorNPC: {fileID: 380113076}
-  animacaoComputador: MexendoPC
-  animacaoFalando: Falando
-  duracaoFalaAnimacao: 5
-  tempoParaSumir: 3
 --- !u!114 &380113079
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3215,7 +3195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Outline
   outlineMode: 0
   outlineColor: {r: 1, g: 0.989954, b: 0, a: 1}
-  outlineWidth: 8.42
+  outlineWidth: 7
   ativarAoMirar: 1
   cameraPlayer: {fileID: 386135686}
   distanciaMaxima: 5
@@ -3237,7 +3217,7 @@ MonoBehaviour:
   cameraPlayer: {fileID: 386135686}
   distanciaMaxima: 5
   larguraNormal: 0
-  larguraAoMirar: 4
+  larguraAoMirar: 8
 --- !u!65 &380113081
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3257,8 +3237,58 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.0567365, z: 1.8241522}
-  m_Center: {x: -0.0000000011806949, y: 1.4120708, z: 0.24797186}
+  m_Size: {x: 1, y: 1.472049, z: 0.9842073}
+  m_Center: {x: -4.06023e-11, y: 1.5080891, z: 0.01880083}
+--- !u!114 &380113083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380113075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306008a2ca8e19f4d8ab34a3d99ba0f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCDialogo
+  textoDialogo: {fileID: 2119252725}
+  pontoTexto: {fileID: 0}
+  deslocamentoTexto: {x: 0, y: 1.4, z: 0}
+  textoOlhaParaCamera: 1
+  etapas:
+  - nome: "Secret\xE1ria"
+    falas:
+    - texto: 'Este trabalho esta me matando! '
+      duracao: 3
+      animacao: 
+  repetirUltimaEtapa: 1
+  distanciaMaxima: 3
+  imagemMouseEsquerdo: {fileID: 21300000, guid: bffdf8cbd8232a14c9e2eb0ebe93c6c4, type: 3}
+  animatorNPC: {fileID: 380113076}
+  animacaoParado: MexendoPC
+  animacaoFalando: Falando
+--- !u!64 &380113085
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 380113075}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!4 &384321664 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -13313,7 +13343,7 @@ MonoBehaviour:
   mensagemJogador: {fileID: 479807549}
   textoMensagemJogador: {fileID: 491201662}
   duracaoAnimacaoJogador: 2.16
-  tempoParaInvestigar: 6
+  tempoParaInvestigar: 5
 --- !u!224 &1721933489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15101,7 +15131,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 1.35, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -775.164, y: -538.611}
+  m_AnchoredPosition: {x: -775.164, y: -538.7581}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2119252725
@@ -15190,7 +15220,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -81.45184, y: 0, z: -236.13834, w: 0}
+  m_margin: {x: -81.45184, y: 0, z: -358.62573, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

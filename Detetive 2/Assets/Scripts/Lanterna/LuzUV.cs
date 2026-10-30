@@ -65,7 +65,6 @@ public class LuzUV : MonoBehaviour
             if (imagem == null)
                 continue;
 
-            // Ignora digitais que não foram sorteadas.
             if (!imagem.gameObject.activeInHierarchy)
                 continue;
 

@@ -79546,17 +79546,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPCDialogo
   textoDialogo: {fileID: 1669009576}
-  falaInicial: "Ol\xE1, Detetive! Voc\xEA ter\xE1 apenas 2 minutos para achar todas
-    as pistas."
-  falaProblema: Mas tem um problema, cortaram a luz do bairro todo.
-  falaTerceira: "Ei v\xE1 logo procurar as pistas n\xE3o temos muito tempo!"
-  intervaloFalas: 3.5
-  tempoParaSumir: 4
+  pontoTexto: {fileID: 0}
+  deslocamentoTexto: {x: 0, y: 2.4, z: 1}
+  textoOlhaParaCamera: 1
+  etapas:
+  - nome: Policial
+    falas:
+    - texto: Oi tudo bem?
+      duracao: 2
+      animacao: 
+    - texto: "Voc\xEA tera apenas 2 minutos para achar tudo que possamos usar como
+        prova,antes que de acabe o tempo da investigacao"
+      duracao: 4.5
+      animacao: 
+    - texto: Mas tem um problema.A luz da rua foi cortada.Algo que ira te ajudar
+        e procurar marcas escondidas com sua lanterna UV
+      duracao: 4.5
+      animacao: 
+  - nome: Policial
+    falas:
+    - texto: Ei va logo, antes que acabe o tempo e tenhamos que liberar o cara por
+        nao ter provas suficientes.
+      duracao: 3
+      animacao: 
+  repetirUltimaEtapa: 1
   distanciaMaxima: 4
-  deslocamentoTexto: {x: 0, y: 2.5, z: 1}
   imagemMouseEsquerdo: {fileID: -518640780, guid: 2ce9eecea85740242a80c9fb57436d33, type: 3}
   animatorNPC: {fileID: 1772058971}
-  animacaoComputador: MexendoPC
+  animacaoParado: MexendoPC
   animacaoFalando: Falando
 --- !u!1001 &1772789394
 PrefabInstance:

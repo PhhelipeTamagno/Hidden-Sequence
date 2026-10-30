@@ -5987,7 +5987,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 26, y: -3}
+  m_AnchoredPosition: {x: 26, y: 127}
   m_SizeDelta: {x: 657.0651, y: 209.0004}
   m_Pivot: {x: 0.49999973, y: 0.49999952}
 --- !u!114 &243509347
@@ -6013,7 +6013,7 @@ MonoBehaviour:
   m_text: New Text
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 5235271126669178786, guid: ac44e3a8fd50f9f47bec375dfa9e7e04, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -6044,7 +6044,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 8
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -6076,10 +6076,10 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -4.248413, z: 79.05774, w: -64.73303}
+  m_margin: {x: 0, y: -4.248413, z: 28.438477, w: -201.9885}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
-  m_hasFontAssetChanged: 1
+  m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!222 &243509348
@@ -8471,8 +8471,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: New Text
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 1d35a4d69ea7a3448871543af8bb7d35, type: 2}
+  m_sharedMaterial: {fileID: -7201661361017214313, guid: 1d35a4d69ea7a3448871543af8bb7d35, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -10698,8 +10698,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.864}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50.999878, y: 74}
-  m_SizeDelta: {x: 427.71, y: 64.048}
+  m_AnchoredPosition: {x: 48, y: -13}
+  m_SizeDelta: {x: 427.71, y: 156.4504}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1388300269
 MonoBehaviour:
@@ -11299,8 +11299,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.864}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 50.999878, y: 169}
-  m_SizeDelta: {x: 427.71, y: 64.048}
+  m_AnchoredPosition: {x: 50.179268, y: 143.7857}
+  m_SizeDelta: {x: 427.71, y: 114.5033}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1578517293
 MonoBehaviour:
@@ -11402,7 +11402,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1586153279
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12598,7 +12598,7 @@ MonoBehaviour:
   contadorFaca: {fileID: 40808156}
   contadorDigital: {fileID: 2050511735}
   respostaGarrafa: Essa garrafa nao prova nada! Eu nunca vi isso antes.
-  respostaFaca: "Essa faca... eu nao sei de onde voc\xEA tirou isso."
+  respostaFaca: Essa faca nao e minha, eu nei usar uma dessa direito
   respostaDigital: "Essas digitais... nao... isso nao pode ser poss\xEDvel."
   textoConfissao: {fileID: 1759166374}
   esperaAntesConfissao: 1

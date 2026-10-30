@@ -979,7 +979,7 @@ public class NpcFinal : MonoBehaviour
             if (textoExplicacao != null)
             {
                 textoExplicacao.text =
-                    "Faca perguntas a ele, utilize as provas e caso necessite utilize as falas anotadas em seu caderno para descobrir a verdade.";
+                    "Faca perguntas a ele, utilize as provas e caso necessite utilize as falas anotadas em seu caderno para descobrir a verdade.Dica:Tente fazer as mesma que perguntas que antes, se ele responder algo diferente,podemos provar com o caderno que ele está mentindo em algo.";
             }
         }
 
