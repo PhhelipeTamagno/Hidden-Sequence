@@ -41,10 +41,6 @@ public class PlayerMovement : MonoBehaviour
     float rotacaoX = 0f;
     float velocidadeY = 0f;
 
-    // =========================================================
-    // SOM DE PASSOS
-    // =========================================================
-
     [Header("Som de Passos")]
     public AudioSource audioPassos;
 
@@ -54,8 +50,6 @@ public class PlayerMovement : MonoBehaviour
     [Range(0f, 1f)]
     public float volumePassos = 1f;
 
-    // =========================================================
-
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -63,7 +57,6 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Configura o áudio de passos
         if (audioPassos != null)
         {
             audioPassos.clip = somPassos;
@@ -171,10 +164,6 @@ public class PlayerMovement : MonoBehaviour
             Time.deltaTime
         );
 
-        // =====================================================
-        // ANDANDO / SOM DE PASSOS
-        // =====================================================
-
         bool andando =
             horizontal != 0 ||
             vertical != 0;
@@ -186,8 +175,6 @@ public class PlayerMovement : MonoBehaviour
                 andando
             );
         }
-
-        // Só toca passos quando estiver andando NO CHÃO
         if (andando && controller.isGrounded && velocidade > 0)
         {
             TocarPassos();
@@ -196,8 +183,6 @@ public class PlayerMovement : MonoBehaviour
         {
             PararPassos();
         }
-
-        // =====================================================
 
         Ray ray =
             new Ray(
@@ -315,10 +300,6 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    // =========================================================
-    // FUNÇÕES DO SOM DE PASSOS
-    // =========================================================
-
     void TocarPassos()
     {
         if (audioPassos == null || somPassos == null)
@@ -337,6 +318,4 @@ public class PlayerMovement : MonoBehaviour
             audioPassos.Stop();
         }
     }
-
-    // =========================================================
 }

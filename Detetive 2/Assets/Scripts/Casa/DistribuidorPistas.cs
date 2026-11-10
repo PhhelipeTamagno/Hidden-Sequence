@@ -88,7 +88,6 @@ public class DistribuidorPistas : MonoBehaviour
             return;
         }
 
-        // Sorteia a faca sem repetir o último local.
         List<Transform> opcoesFaca = new List<Transform>();
 
         string ultimoPontoFaca = ObterUltimoPonto(faca);
@@ -108,7 +107,6 @@ public class DistribuidorPistas : MonoBehaviour
         PosicionarProva(faca, pontoEscolhidoFaca);
         pontosDisponiveis.Remove(pontoEscolhidoFaca);
 
-        // Distribui as outras provas.
         foreach (GameObject prova in provasValidas)
         {
             List<Transform> opcoes = new List<Transform>();
@@ -169,7 +167,6 @@ public class DistribuidorPistas : MonoBehaviour
             return;
         }
 
-        // Evita escolher as digitais da rodada anterior.
         List<Image> opcoes = new List<Image>();
 
         foreach (Image digital in digitaisValidas)
@@ -178,11 +175,9 @@ public class DistribuidorPistas : MonoBehaviour
                 opcoes.Add(digital);
         }
 
-        // Se não houver opções suficientes, permite repetir.
         if (opcoes.Count < quantidadeDigitais)
             opcoes = new List<Image>(digitaisValidas);
 
-        // Embaralha as opções.
         for (int i = opcoes.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
@@ -194,7 +189,6 @@ public class DistribuidorPistas : MonoBehaviour
 
         ultimasDigitais.Clear();
 
-        // Ativa somente as digitais sorteadas.
         for (int i = 0; i < quantidadeDigitais; i++)
         {
             Image digital = opcoes[i];

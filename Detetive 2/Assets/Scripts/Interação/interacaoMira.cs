@@ -29,7 +29,6 @@ public class InteracaoMira : MonoBehaviour
 
     void VerificarMira()
     {
-        // Primeiro remove o destaque do objeto anterior
         if (outlineAtual != null)
         {
             outlineAtual.OutlineWidth = larguraNormal;
@@ -53,11 +52,8 @@ public class InteracaoMira : MonoBehaviour
             Physics.DefaultRaycastLayers,
             QueryTriggerInteraction.Ignore))
         {
-            // Tenta pegar a tag do objeto atingido
             Transform objeto = hit.transform;
 
-            // Se o Collider estiver em um filho,
-            // procura o objeto pai com a tag
             if (!objeto.CompareTag("Interagivel"))
             {
                 if (objeto.parent != null &&
@@ -70,17 +66,14 @@ public class InteracaoMira : MonoBehaviour
                     return;
                 }
             }
-
-            // Procura o Outline
             Outline outline = objeto.GetComponent<Outline>();
 
-            // Caso o Outline esteja no filho
+      
             if (outline == null)
             {
                 outline = objeto.GetComponentInChildren<Outline>();
             }
 
-            // Caso o Outline esteja no pai
             if (outline == null)
             {
                 outline = objeto.GetComponentInParent<Outline>();
@@ -90,7 +83,6 @@ public class InteracaoMira : MonoBehaviour
             {
                 outlineAtual = outline;
 
-                // Faz o contorno aparecer
                 outlineAtual.OutlineWidth = larguraAoMirar;
             }
         }

@@ -146,7 +146,7 @@ public class NPCResposta : MonoBehaviour
         if (textoPensamento != null)
         {
             string pensamento =
-                "Vou anotar o que ele falar. Vai que ele diz algo totalmente contrário depois.";
+                "Vou anotar o que ele falar. Vai que ele diz algo totalmente contrario depois.";
 
             rotinaPensamento = StartCoroutine(
                 MostrarPensamento(pensamento)

@@ -1,47 +1,64 @@
-
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using TMPro;
+
+[System.Serializable]
+public class Fala
+{
+    [TextArea(2, 5)]
+    public string texto;
+
+    [Tooltip("Quanto tempo a fala fica na tela")]
+    public float duracao = 2.5f;
+
+    [Tooltip("Deixe vazio para usar a animação padrão de falar")]
+    public string animacao = "";
+}
+
+[System.Serializable]
+public class EtapaDialogo
+{
+    public string nome = "Etapa";
+    public List<Fala> falas = new List<Fala>();
+}
 
 public class NPCDialogo : MonoBehaviour
 {
-    [Header("Texto do NPC")]
+    [Header("Texto")]
     public TMP_Text textoDialogo;
 
-    [TextArea(2, 5)]
-    public string[] falas;
+    [Tooltip("Objeto vazio filho da NPC, posicionado acima da cabeça")]
+    public Transform pontoTexto;
 
-    [Header("Distância de interação")]
+    [Tooltip("Ajuste fino em cima do Ponto Texto")]
+    public Vector3 deslocamentoTexto = new Vector3(0f, 0.5f, 0f);
+
+    [Tooltip("Faz o texto sempre virar para a câmera (útil em World Space)")]
+    public bool textoOlhaParaCamera = true;
+
+    [Header("Diálogo (cada clique avança uma etapa)")]
+    public List<EtapaDialogo> etapas = new List<EtapaDialogo>();
+
+    [Tooltip("Se marcado, clicar depois do fim repete a última etapa")]
+    public bool repetirUltimaEtapa = false;
+
+    [Header("Interação")]
     public float distanciaMaxima = 3f;
-
-    [Header("Posição do texto")]
-    public Vector3 deslocamentoTexto = new Vector3(0f, 2f, 0f);
-
-    [Header("Indicador do clique")]
     public Sprite imagemMouseEsquerdo;
 
-    [Header("Animações do NPC")]
+    [Header("Animações")]
     public Animator animatorNPC;
-    public string animacaoComputador = "MexendoPC";
+    public string animacaoParado = "MexendoPC";
     public string animacaoFalando = "Falando";
-
-    [Header("Tempo da animação de fala")]
-    [Tooltip("0 = detectar automaticamente o fim da animação.")]
-    public float duracaoFalaAnimacao = 0f;
-
-    [Header("Tempo do diálogo")]
-    public float tempoParaSumir = 4f;
-
-    private int indiceFala;
-    private bool conversando;
-    private bool animacaoFalandoAtiva;
 
     private Camera cameraPrincipal;
     private GameObject indicadorMouse;
-
-    private float tempoAnimacao;
-    private float temporizadorDialogo;
+    private int indiceEtapa = 0;
+    private bool falando = false;
+    private Coroutine rotina;
 
     private void Start()
     {
@@ -54,10 +71,7 @@ public class NPCDialogo : MonoBehaviour
             animatorNPC = GetComponentInChildren<Animator>();
 
         CriarIndicadorMouse();
-
-       
-        if (animatorNPC != null)
-            animatorNPC.Play(animacaoComputador, 0, 0f);
+        TrocarAnimacao(animacaoParado);
     }
 
     private void Update()
@@ -65,165 +79,121 @@ public class NPCDialogo : MonoBehaviour
         if (cameraPrincipal == null)
             cameraPrincipal = Camera.main;
 
-       
-        if (conversando)
-        {
-            temporizadorDialogo += Time.deltaTime;
-
-            if (temporizadorDialogo >= tempoParaSumir)
-                EncerrarDialogo();
-        }
-
-        AtualizarAnimacaoFalando();
-
-        if (Mouse.current == null || cameraPrincipal == null)
+        if (cameraPrincipal == null)
             return;
 
         AtualizarPosicaoTexto();
 
-        if (!Mouse.current.leftButton.wasPressedThisFrame)
-            return;
+        bool podeInteragir = !falando &&
+            (indiceEtapa < etapas.Count ||
+             (repetirUltimaEtapa && etapas.Count > 0));
 
-       
-        if (conversando)
-            return;
-
-        Ray raio = cameraPrincipal.ScreenPointToRay(
-            Mouse.current.position.ReadValue()
-        );
-
-        if (Physics.Raycast(raio, out RaycastHit hit))
-        {
-            NPCDialogo npc =
-                hit.collider.GetComponentInParent<NPCDialogo>();
-
-            if (npc == null)
-                return;
-
-            float distancia = Vector3.Distance(
-                cameraPrincipal.transform.position,
-                npc.transform.position
-            );
-
-            if (distancia <= npc.distanciaMaxima)
-                npc.IniciarDialogo();
-        }
-    }
-
-    private void IniciarDialogo()
-    {
-        if (textoDialogo == null ||
-            falas == null ||
-            falas.Length == 0)
-            return;
-
-        conversando = true;
-        indiceFala = 0;
-        temporizadorDialogo = 0f;
-
-        textoDialogo.gameObject.SetActive(true);
-        textoDialogo.text = falas[indiceFala];
+        bool olhando = podeInteragir && EstaOlhandoParaMim();
 
         if (indicadorMouse != null)
-            indicadorMouse.SetActive(false);
+            indicadorMouse.SetActive(olhando);
 
-        
-        if (animatorNPC != null)
+        if (olhando &&
+            Mouse.current != null &&
+            Mouse.current.leftButton.wasPressedThisFrame)
         {
-            animatorNPC.speed = 1f;
-            animatorNPC.Play(animacaoFalando, 0, 0f);
-
-            animacaoFalandoAtiva = true;
-            tempoAnimacao = 0f;
-        }
-
-        AtualizarPosicaoTexto();
-    }
-
-    private void AtualizarAnimacaoFalando()
-    {
-        if (!animacaoFalandoAtiva || animatorNPC == null)
-            return;
-
-        tempoAnimacao += Time.deltaTime;
-
-       
-        if (duracaoFalaAnimacao > 0f)
-        {
-            if (tempoAnimacao >= duracaoFalaAnimacao)
-                VoltarAoComputador();
-
-            return;
-        }
-
-        
-        AnimatorStateInfo estado =
-            animatorNPC.GetCurrentAnimatorStateInfo(0);
-
-        if (!animatorNPC.IsInTransition(0) &&
-            estado.IsName(animacaoFalando) &&
-            estado.normalizedTime >= 1f)
-        {
-            VoltarAoComputador();
+            Interagir();
         }
     }
 
-    private void VoltarAoComputador()
+    private bool EstaOlhandoParaMim()
     {
-        animacaoFalandoAtiva = false;
+        // Raio saindo do centro da tela (a mira)
+        Ray raio = cameraPrincipal.ViewportPointToRay(
+            new Vector3(0.5f, 0.5f, 0f));
 
-        if (animatorNPC != null)
+        if (Physics.Raycast(raio, out RaycastHit hit, distanciaMaxima,
+            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
         {
-            animatorNPC.speed = 1f;
-            animatorNPC.Play(animacaoComputador, 0, 0f);
+            return hit.collider.GetComponentInParent<NPCDialogo>() == this;
         }
+
+        return false;
     }
 
-    private void EncerrarDialogo()
+    private void Interagir()
     {
-        conversando = false;
-        temporizadorDialogo = 0f;
+        int i = Mathf.Min(indiceEtapa, etapas.Count - 1);
+        indiceEtapa++;
+
+        if (rotina != null)
+            StopCoroutine(rotina);
+
+        rotina = StartCoroutine(ExecutarEtapa(etapas[i]));
+    }
+
+    private IEnumerator ExecutarEtapa(EtapaDialogo etapa)
+    {
+        falando = true;
+
+        foreach (Fala fala in etapa.falas)
+        {
+            MostrarTexto(fala.texto);
+
+            TrocarAnimacao(string.IsNullOrEmpty(fala.animacao)
+                ? animacaoFalando
+                : fala.animacao);
+
+            yield return new WaitForSeconds(fala.duracao);
+        }
 
         if (textoDialogo != null)
         {
             textoDialogo.text = "";
             textoDialogo.gameObject.SetActive(false);
         }
+
+        TrocarAnimacao(animacaoParado);
+
+        falando = false;
+        rotina = null;
+    }
+
+    private void MostrarTexto(string mensagem)
+    {
+        if (textoDialogo == null)
+            return;
+
+        textoDialogo.gameObject.SetActive(true);
+        textoDialogo.text = mensagem;
+        AtualizarPosicaoTexto();
+    }
+
+    private void TrocarAnimacao(string nome)
+    {
+        if (animatorNPC == null || string.IsNullOrEmpty(nome))
+            return;
+
+        int hash = Animator.StringToHash(nome);
+
+        if (animatorNPC.HasState(0, hash))
+        {
+            animatorNPC.speed = 1f;
+            animatorNPC.CrossFade(hash, 0.15f);
+        }
     }
 
     private void AtualizarPosicaoTexto()
     {
-        if (textoDialogo == null || !conversando)
+        if (textoDialogo == null || !textoDialogo.gameObject.activeSelf)
             return;
 
-        textoDialogo.transform.position =
-            transform.position + deslocamentoTexto;
-    }
+        Vector3 basePos = pontoTexto != null
+            ? pontoTexto.position
+            : transform.position;
 
-    private void OnMouseEnter()
-    {
-        if (conversando || indicadorMouse == null)
-            return;
+        textoDialogo.transform.position = basePos + deslocamentoTexto;
 
-        if (cameraPrincipal == null)
-            cameraPrincipal = Camera.main;
-
-        if (cameraPrincipal == null)
-            return;
-
-        float distancia = Vector3.Distance(
-            cameraPrincipal.transform.position,
-            transform.position
-        );
-
-        if (distancia <= distanciaMaxima)
-            indicadorMouse.SetActive(true);
-    }
-
-    private void OnMouseExit()
-    {
-        if (indicadorMouse != null)
-            indicadorMouse.SetActive(false);
+        if (textoOlhaParaCamera && cameraPrincipal != null)
+        {
+            // Gira o texto para ficar de frente para a câmera
+            textoDialogo.transform.rotation = cameraPrincipal.transform.rotation;
+        }
     }
 
     private void CriarIndicadorMouse()
@@ -231,34 +201,33 @@ public class NPCDialogo : MonoBehaviour
         if (imagemMouseEsquerdo == null)
             return;
 
-        GameObject canvasObj =
-            new GameObject("CanvasIndicadorMouse");
+        GameObject canvasObj = new GameObject("CanvasIndicadorMouse");
+        canvasObj.transform.SetParent(transform, false);
 
         Canvas canvas = canvasObj.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-
         canvasObj.AddComponent<CanvasScaler>();
-        canvasObj.AddComponent<GraphicRaycaster>();
 
         indicadorMouse = new GameObject("IndicadorClique");
-        indicadorMouse.transform.SetParent(
-            canvasObj.transform, false
-        );
+        indicadorMouse.transform.SetParent(canvasObj.transform, false);
 
-        Image imagem = indicadorMouse.AddComponent<Image>();
-        imagem.sprite = imagemMouseEsquerdo;
-        imagem.raycastTarget = false;
+        Image img = indicadorMouse.AddComponent<Image>();
+        img.sprite = imagemMouseEsquerdo;
+        img.raycastTarget = false;
 
-        RectTransform rect =
-            indicadorMouse.GetComponent<RectTransform>();
-
-        rect.sizeDelta = new Vector2(45f, 45f);
+        indicadorMouse.GetComponent<RectTransform>().sizeDelta =
+            new Vector2(45f, 45f);
 
         indicadorMouse.SetActive(false);
     }
 
     private void OnDisable()
     {
+        if (rotina != null)
+            StopCoroutine(rotina);
+
+        falando = false;
+
         if (animatorNPC != null)
             animatorNPC.speed = 1f;
     }

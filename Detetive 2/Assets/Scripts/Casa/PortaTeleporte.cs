@@ -1,4 +1,6 @@
+
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TeleportDoor : MonoBehaviour
 {
@@ -9,7 +11,7 @@ public class TeleportDoor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             jogadorPerto = true;
             jogador = other.gameObject;
@@ -18,7 +20,7 @@ public class TeleportDoor : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             jogadorPerto = false;
             jogador = null;
@@ -27,9 +29,13 @@ public class TeleportDoor : MonoBehaviour
 
     private void Update()
     {
-        if (jogadorPerto && Input.GetKeyDown(KeyCode.E))
+        if (jogadorPerto && Keyboard.current != null &&
+            Keyboard.current.eKey.wasPressedThisFrame)
         {
-            jogador.transform.position = destino.position;
+            if (destino != null && jogador != null)
+            {
+                jogador.transform.position = destino.position;
+            }
         }
     }
 }

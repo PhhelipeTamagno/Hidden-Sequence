@@ -109,7 +109,6 @@ public class TimerPistas : MonoBehaviour
 
     private IEnumerator MostrarFalaEReiniciar()
     {
-        // Esconde todos os elementos escolhidos no Inspector.
         if (elementosParaEsconder != null)
         {
             foreach (GameObject elemento in elementosParaEsconder)
@@ -119,20 +118,16 @@ public class TimerPistas : MonoBehaviour
             }
         }
 
-        // Esconde também a mensagem anterior.
         if (mensagem != null)
             mensagem.gameObject.SetActive(false);
 
-        // Mostra somente o painel de fala.
         if (painelFala != null)
             painelFala.SetActive(true);
 
-        // Limpa o texto antes de começar.
         if (textoPersonagem != null)
         {
             textoPersonagem.text = "";
 
-            // Digita a mensagem letra por letra.
             foreach (char letra in mensagemTempoAcabado)
             {
                 textoPersonagem.text += letra;
@@ -146,11 +141,8 @@ public class TimerPistas : MonoBehaviour
                 "TimerPistas: Texto Personagem não configurado!"
             );
         }
-
-        // Aguarda o jogador ler a mensagem.
         yield return new WaitForSeconds(esperaDepoisDaFala);
 
-        // Inicia a transição.
         if (transition != null)
         {
             transition.gameObject.SetActive(true);
@@ -164,7 +156,6 @@ public class TimerPistas : MonoBehaviour
 
         yield return new WaitForSeconds(delay);
 
-        // Recarrega a cena.
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
