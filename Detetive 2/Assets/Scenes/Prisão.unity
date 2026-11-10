@@ -221,7 +221,8 @@ PrefabInstance:
       value: prisao cutscene
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: -7146521406498821007, guid: bf38b6bdc5cb0d94e936e8a231ab01d9, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: bf38b6bdc5cb0d94e936e8a231ab01d9, type: 3}
       insertIndex: -1
