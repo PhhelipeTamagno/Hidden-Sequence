@@ -405,9 +405,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -8688061628624383634, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -584,9 +581,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -3306323938231950867, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -1647,9 +1641,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 5478744154574422978, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -1927,9 +1918,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 7501636236557990520, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -2361,9 +2349,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -7688299279557711301, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -2505,9 +2490,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 7062858506885272375, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -2562,9 +2544,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -6716194861568436264, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -2730,9 +2709,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -3826393228482187471, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -3320,9 +3296,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.989954, b: 0, a: 1}
   outlineWidth: 7
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -3340,8 +3313,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteracaoMira
   cameraPlayer: {fileID: 386135686}
   distanciaMaxima: 5
+  raioMira: 0.1
+  raizPlayer: {fileID: 0}
+  camadas:
+    serializedVersion: 2
+    m_Bits: 2043
   larguraNormal: 0
   larguraAoMirar: 8
+  debug: 0
 --- !u!65 &380113081
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3386,8 +3365,8 @@ MonoBehaviour:
       duracao: 3
       animacao: 
   repetirUltimaEtapa: 1
-  distanciaMaxima: 3
   imagemMouseEsquerdo: {fileID: 21300000, guid: bffdf8cbd8232a14c9e2eb0ebe93c6c4, type: 3}
+  deslocamentoIcone: {x: 0, y: -70}
   animatorNPC: {fileID: 380113076}
   animacaoParado: MexendoPC
   animacaoFalando: Falando
@@ -3550,9 +3529,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 7731778232887500320, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -3607,9 +3583,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 2372339332001435084, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -3835,9 +3808,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -6997758898313238361, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -3999,9 +3969,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 859391582799588631, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -4809,9 +4776,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -8408193764945971187, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -5329,9 +5293,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 9211877219183864916, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -5832,9 +5793,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 9186958192981938656, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -6336,9 +6294,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 1845877371863535914, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -6583,9 +6538,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 6816056568353194770, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -7466,9 +7418,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 1175421896598077840, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -7587,9 +7536,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 6979454398666282119, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -7639,9 +7585,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -255468208702362266, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -7691,9 +7634,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -8350794294121194893, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -8390,9 +8330,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.8938142, b: 0, a: 1}
   outlineWidth: 7.53
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 10
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -8688061628624383634, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -9444,8 +9381,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteracaoMira
   cameraPlayer: {fileID: 386135686}
   distanciaMaxima: 10
+  raioMira: 0.1
+  raizPlayer: {fileID: 0}
+  camadas:
+    serializedVersion: 2
+    m_Bits: 4294967291
   larguraNormal: 0
   larguraAoMirar: 4
+  debug: 0
 --- !u!4 &1167856624 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 64041bfabe2e7844196bcb2bb322ec4e, type: 3}
@@ -9887,9 +9830,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -6365095914667693574, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -10100,9 +10040,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 8513583361662838125, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -10537,9 +10474,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -2134531033871021105, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -11333,9 +11267,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 6111123408103607573, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -11975,9 +11906,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 1887957283880229007, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -12272,8 +12200,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteracaoMira
   cameraPlayer: {fileID: 386135686}
   distanciaMaxima: 5
+  raioMira: 0.1
+  raizPlayer: {fileID: 0}
+  camadas:
+    serializedVersion: 2
+    m_Bits: 4294967291
   larguraNormal: 0
   larguraAoMirar: 4
+  debug: 0
 --- !u!114 &1518809524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12289,9 +12223,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.8835707, b: 0, a: 1}
   outlineWidth: 8.1
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -12569,9 +12500,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 4452290623274093348, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -12822,9 +12750,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -5859100827614154413, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -13468,6 +13393,10 @@ MonoBehaviour:
   textoMensagemJogador: {fileID: 491201662}
   duracaoAnimacaoJogador: 2.16
   tempoParaInvestigar: 5
+  tempoAteLembrete: 20
+  mensagemObjetivo: "V\xE1 investigar o suspeito."
+  mensagemLembrete: "Preciso ir logo para o interrogat\xF3rio. N\xE3o posso perder
+    mais tempo."
 --- !u!224 &1721933489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13605,9 +13534,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -4743410143253783052, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -13657,9 +13583,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -8184171944467252145, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -13805,9 +13728,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.8564266, b: 0, a: 1}
   outlineWidth: 10
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 6
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -13825,8 +13745,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteracaoMira
   cameraPlayer: {fileID: 386135686}
   distanciaMaxima: 5
+  raioMira: 0.1
+  raizPlayer: {fileID: 0}
+  camadas:
+    serializedVersion: 2
+    m_Bits: 2043
   larguraNormal: 0
-  larguraAoMirar: 10
+  larguraAoMirar: 12
+  debug: 0
 --- !u!1001 &1819889566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14122,9 +14048,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 69321784758351912, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -14640,9 +14563,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: -3604391813229247769, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -14891,9 +14811,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 2730392604143906057, guid: 66318b972014ef94e85db603beb44254, type: 3}
@@ -14943,9 +14860,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.903612, b: 0, a: 1}
   outlineWidth: 4.11
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 386135686}
-  distanciaMaxima: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 860997615471331017, guid: 66318b972014ef94e85db603beb44254, type: 3}
