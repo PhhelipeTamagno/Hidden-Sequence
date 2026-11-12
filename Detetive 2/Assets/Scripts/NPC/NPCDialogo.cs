@@ -46,8 +46,10 @@ public class NPCDialogo : MonoBehaviour
     public bool repetirUltimaEtapa = false;
 
     [Header("Interação")]
-    public float distanciaMaxima = 3f;
     public Sprite imagemMouseEsquerdo;
+
+    [Tooltip("Posição do ícone em relação ao centro da tela (a mira)")]
+    public Vector2 deslocamentoIcone = new Vector2(0f, -70f);
 
     [Header("Animações")]
     public Animator animatorNPC;
@@ -58,6 +60,7 @@ public class NPCDialogo : MonoBehaviour
     private GameObject indicadorMouse;
     private int indiceEtapa = 0;
     private bool falando = false;
+    private bool mirado = false;
     private Coroutine rotina;
 
     private void Start()
@@ -72,6 +75,10 @@ public class NPCDialogo : MonoBehaviour
 
         CriarIndicadorMouse();
         TrocarAnimacao(animacaoParado);
+    }
+    public void DefinirMirado(bool valor)
+    {
+        mirado = valor;
     }
 
     private void Update()
@@ -88,7 +95,7 @@ public class NPCDialogo : MonoBehaviour
             (indiceEtapa < etapas.Count ||
              (repetirUltimaEtapa && etapas.Count > 0));
 
-        bool olhando = podeInteragir && EstaOlhandoParaMim();
+        bool olhando = podeInteragir && mirado;
 
         if (indicadorMouse != null)
             indicadorMouse.SetActive(olhando);
@@ -99,21 +106,6 @@ public class NPCDialogo : MonoBehaviour
         {
             Interagir();
         }
-    }
-
-    private bool EstaOlhandoParaMim()
-    {
-        // Raio saindo do centro da tela (a mira)
-        Ray raio = cameraPrincipal.ViewportPointToRay(
-            new Vector3(0.5f, 0.5f, 0f));
-
-        if (Physics.Raycast(raio, out RaycastHit hit, distanciaMaxima,
-            Physics.DefaultRaycastLayers, QueryTriggerInteraction.Ignore))
-        {
-            return hit.collider.GetComponentInParent<NPCDialogo>() == this;
-        }
-
-        return false;
     }
 
     private void Interagir()
@@ -191,7 +183,6 @@ public class NPCDialogo : MonoBehaviour
 
         if (textoOlhaParaCamera && cameraPrincipal != null)
         {
-            // Gira o texto para ficar de frente para a câmera
             textoDialogo.transform.rotation = cameraPrincipal.transform.rotation;
         }
     }
@@ -215,8 +206,9 @@ public class NPCDialogo : MonoBehaviour
         img.sprite = imagemMouseEsquerdo;
         img.raycastTarget = false;
 
-        indicadorMouse.GetComponent<RectTransform>().sizeDelta =
-            new Vector2(45f, 45f);
+        RectTransform rt = indicadorMouse.GetComponent<RectTransform>();
+        rt.sizeDelta = new Vector2(45f, 45f);
+        rt.anchoredPosition = deslocamentoIcone;
 
         indicadorMouse.SetActive(false);
     }
@@ -227,6 +219,10 @@ public class NPCDialogo : MonoBehaviour
             StopCoroutine(rotina);
 
         falando = false;
+        mirado = false;
+
+        if (indicadorMouse != null)
+            indicadorMouse.SetActive(false);
 
         if (animatorNPC != null)
             animatorNPC.speed = 1f;

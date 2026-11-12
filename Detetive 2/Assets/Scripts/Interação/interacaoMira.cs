@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class InteracaoMira : MonoBehaviour
@@ -8,18 +9,32 @@ public class InteracaoMira : MonoBehaviour
     [Header("Configuração")]
     public float distanciaMaxima = 5f;
 
+    [Tooltip("Espessura do raio. Deixa a mira mais tolerante.")]
+    public float raioMira = 0.1f;
+
+    [Tooltip("Raiz do Player, para ignorar os colliders dele.")]
+    public Transform raizPlayer;
+
+    public LayerMask camadas = Physics.DefaultRaycastLayers;
+
     [Header("Outline")]
     public float larguraNormal = 0f;
     public float larguraAoMirar = 4f;
 
+    [Header("Debug")]
+    public bool debug = false;
+
+    private Transform alvoAtual;
     private Outline outlineAtual;
+    private NPCDialogo npcAtual;
 
     void Start()
     {
         if (cameraPlayer == null)
-        {
             cameraPlayer = Camera.main;
-        }
+
+        if (raizPlayer == null)
+            raizPlayer = transform.root;
     }
 
     void Update()
@@ -29,62 +44,135 @@ public class InteracaoMira : MonoBehaviour
 
     void VerificarMira()
     {
-        if (outlineAtual != null)
-        {
-            outlineAtual.OutlineWidth = larguraNormal;
-            outlineAtual = null;
-        }
-
         if (cameraPlayer == null)
             return;
 
-        Ray ray = new Ray(
-            cameraPlayer.transform.position,
-            cameraPlayer.transform.forward
+        Transform novoAlvo = ProcurarInteragivelNaMira();
+
+        if (novoAlvo == alvoAtual)
+            return;
+
+        DesativarAtual();
+
+        if (novoAlvo == null)
+            return;
+
+        alvoAtual = novoAlvo;
+
+        outlineAtual = alvoAtual.GetComponent<Outline>();
+        if (outlineAtual == null)
+            outlineAtual = alvoAtual.GetComponentInChildren<Outline>();
+
+        if (outlineAtual != null)
+        {
+            outlineAtual.OutlineWidth = larguraAoMirar;
+            outlineAtual.AtivarOutline();
+        }
+        npcAtual = alvoAtual.GetComponent<NPCDialogo>();
+        if (npcAtual == null)
+            npcAtual = alvoAtual.GetComponentInParent<NPCDialogo>();
+        if (npcAtual == null)
+            npcAtual = alvoAtual.GetComponentInChildren<NPCDialogo>();
+
+        if (npcAtual != null)
+            npcAtual.DefinirMirado(true);
+    }
+
+    Transform ProcurarInteragivelNaMira()
+    {
+        Ray ray = cameraPlayer.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        RaycastHit[] hits = Physics.SphereCastAll(
+            ray,
+            raioMira,
+            distanciaMaxima,
+            camadas,
+            QueryTriggerInteraction.Collide
         );
 
-        RaycastHit hit;
+        if (hits.Length == 0)
+            return null;
 
-        if (Physics.Raycast(
-            ray,
-            out hit,
-            distanciaMaxima,
-            Physics.DefaultRaycastLayers,
-            QueryTriggerInteraction.Ignore))
+        hits = hits.OrderBy(h => h.distance).ToArray();
+
+        foreach (RaycastHit hit in hits)
         {
-            Transform objeto = hit.transform;
+            if (hit.distance <= 0.001f)
+                continue;
 
-            if (!objeto.CompareTag("Interagivel"))
+            Transform t = hit.collider.transform;
+
+            if (raizPlayer != null && t.IsChildOf(raizPlayer))
+                continue;
+
+            Transform interagivel = t;
+            while (interagivel != null && !interagivel.CompareTag("Interagivel"))
+                interagivel = interagivel.parent;
+
+            if (debug)
             {
-                if (objeto.parent != null &&
-                    objeto.parent.CompareTag("Interagivel"))
+                Debug.Log("Mira acertou: " + hit.collider.name +
+                          " | trigger: " + hit.collider.isTrigger +
+                          " | dist: " + hit.distance.ToString("F2") +
+                          " | Interagivel: " + (interagivel != null ? interagivel.name : "não"));
+            }
+
+            if (interagivel != null)
+            {
+                if (!RaioFinoAcerta(ray, hit.collider))
                 {
-                    objeto = objeto.parent;
+                    if (!hit.collider.isTrigger)
+                        return null;
+
+                    continue;
                 }
-                else
-                {
-                    return;
-                }
-            }
-            Outline outline = objeto.GetComponent<Outline>();
 
-      
-            if (outline == null)
-            {
-                outline = objeto.GetComponentInChildren<Outline>();
+                return interagivel;
             }
 
-            if (outline == null)
-            {
-                outline = objeto.GetComponentInParent<Outline>();
-            }
-
-            if (outline != null)
-            {
-                outlineAtual = outline;
-
-                outlineAtual.OutlineWidth = larguraAoMirar;
-            }
+            if (!hit.collider.isTrigger)
+                return null;
         }
+
+        return null;
+    }
+
+    bool RaioFinoAcerta(Ray ray, Collider alvo)
+    {
+        RaycastHit[] finos = Physics.RaycastAll(
+            ray,
+            distanciaMaxima,
+            camadas,
+            QueryTriggerInteraction.Collide
+        );
+
+        foreach (RaycastHit f in finos)
+        {
+            if (f.collider == alvo && f.distance > 0.001f)
+                return true;
+        }
+
+        return false;
+    }
+
+    void DesativarAtual()
+    {
+        if (outlineAtual != null)
+        {
+            outlineAtual.OutlineWidth = larguraNormal;
+            outlineAtual.DesativarOutline();
+        }
+
+        if (npcAtual != null)
+            npcAtual.DefinirMirado(false);
+
+        outlineAtual = null;
+        npcAtual = null;
+        alvoAtual = null;
+    }
+
+    void OnDisable()
+    {
+        DesativarAtual();
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-
 public class Outline : MonoBehaviour
 {
     private static HashSet<Mesh> registeredMeshes = new HashSet<Mesh>();
@@ -63,17 +62,6 @@ public class Outline : MonoBehaviour
     [SerializeField, Range(0f, 10f)]
     private float outlineWidth = 7f;
 
-    [Header("Mira do Player")]
-
-    [SerializeField]
-    private bool ativarAoMirar = true;
-
-    [SerializeField]
-    private Camera cameraPlayer;
-
-    [SerializeField]
-    private float distanciaMaxima = 5f;
-
     [Header("Optional")]
 
     [SerializeField]
@@ -92,7 +80,6 @@ public class Outline : MonoBehaviour
 
     private bool needsUpdate;
 
-    private bool estaMirando = false;
     private bool outlineAtivo = false;
 
     void Awake()
@@ -100,11 +87,11 @@ public class Outline : MonoBehaviour
         renderers = GetComponentsInChildren<Renderer>();
 
         outlineMaskMaterial = Instantiate(
-            Resources.Load<Material>(@"Materials/OutlineMask")
+            Resources.Load<Material>("Materials/OutlineMask")
         );
 
         outlineFillMaterial = Instantiate(
-            Resources.Load<Material>(@"Materials/OutlineFill")
+            Resources.Load<Material>("Materials/OutlineFill")
         );
 
         outlineMaskMaterial.name = "OutlineMask (Instance)";
@@ -112,27 +99,16 @@ public class Outline : MonoBehaviour
 
         LoadSmoothNormals();
 
-        if (cameraPlayer == null)
-        {
-            cameraPlayer = Camera.main;
-        }
-
         needsUpdate = true;
     }
 
     void OnEnable()
     {
-     
         outlineAtivo = false;
     }
 
     void Update()
     {
-        if (ativarAoMirar)
-        {
-            VerificarMira();
-        }
-
         if (needsUpdate)
         {
             needsUpdate = false;
@@ -140,55 +116,7 @@ public class Outline : MonoBehaviour
         }
     }
 
-    void VerificarMira()
-    {
-        if (cameraPlayer == null)
-        {
-            cameraPlayer = Camera.main;
-
-            if (cameraPlayer == null)
-                return;
-        }
-
-        Ray ray = new Ray(
-            cameraPlayer.transform.position,
-            cameraPlayer.transform.forward
-        );
-
-        RaycastHit hit;
-
-        bool olhandoParaEsteObjeto = false;
-
-        if (Physics.Raycast(
-            ray,
-            out hit,
-            distanciaMaxima,
-            Physics.DefaultRaycastLayers,
-            QueryTriggerInteraction.Ignore))
-        {
-            if (hit.transform == transform ||
-                hit.transform.IsChildOf(transform))
-            {
-                olhandoParaEsteObjeto = true;
-            }
-        }
-
-        if (olhandoParaEsteObjeto != estaMirando)
-        {
-            estaMirando = olhandoParaEsteObjeto;
-
-            if (estaMirando)
-            {
-                AtivarOutline();
-            }
-            else
-            {
-                DesativarOutline();
-            }
-        }
-    }
-
-    void AtivarOutline()
+    public void AtivarOutline()
     {
         if (outlineAtivo)
             return;
@@ -200,15 +128,14 @@ public class Outline : MonoBehaviour
             materials.Add(outlineMaskMaterial);
             materials.Add(outlineFillMaterial);
 
-            renderer.materials = materials.ToArray();
+            renderer.sharedMaterials = materials.ToArray();
         }
 
         outlineAtivo = true;
-
         needsUpdate = true;
     }
 
-    void DesativarOutline()
+    public void DesativarOutline()
     {
         if (!outlineAtivo)
             return;
@@ -220,11 +147,10 @@ public class Outline : MonoBehaviour
             materials.Remove(outlineMaskMaterial);
             materials.Remove(outlineFillMaterial);
 
-            renderer.materials = materials.ToArray();
+            renderer.sharedMaterials = materials.ToArray();
         }
 
         outlineAtivo = false;
-
         needsUpdate = true;
     }
 
@@ -246,7 +172,7 @@ public class Outline : MonoBehaviour
     {
         needsUpdate = true;
 
-        if (!precomputeOutline && bakeKeys.Count != 0 ||
+        if ((!precomputeOutline && bakeKeys.Count != 0) ||
             bakeKeys.Count != bakeValues.Count)
         {
             bakeKeys.Clear();
@@ -272,12 +198,10 @@ public class Outline : MonoBehaviour
 
             bakeKeys.Add(meshFilter.sharedMesh);
 
-            bakeValues.Add(
-                new ListVector3()
-                {
-                    data = smoothNormals
-                }
-            );
+            bakeValues.Add(new ListVector3()
+            {
+                data = smoothNormals
+            });
         }
     }
 
@@ -290,8 +214,7 @@ public class Outline : MonoBehaviour
 
             var index = bakeKeys.IndexOf(meshFilter.sharedMesh);
 
-            var smoothNormals =
-                index >= 0
+            var smoothNormals = index >= 0
                 ? bakeValues[index].data
                 : SmoothNormals(meshFilter.sharedMesh);
 
@@ -315,9 +238,7 @@ public class Outline : MonoBehaviour
                 continue;
 
             skinnedMeshRenderer.sharedMesh.uv4 =
-                new Vector2[
-                    skinnedMeshRenderer.sharedMesh.vertexCount
-                ];
+                new Vector2[skinnedMeshRenderer.sharedMesh.vertexCount];
 
             CombineSubmeshes(
                 skinnedMeshRenderer.sharedMesh,
@@ -376,109 +297,42 @@ public class Outline : MonoBehaviour
 
     void UpdateMaterialProperties()
     {
-        if (outlineFillMaterial == null)
+        if (outlineFillMaterial == null ||
+            outlineMaskMaterial == null)
             return;
 
-        outlineFillMaterial.SetColor(
-            "_OutlineColor",
-            outlineColor
-        );
+        outlineFillMaterial.SetColor("_OutlineColor", outlineColor);
 
         switch (outlineMode)
         {
             case Mode.OutlineAll:
-
-                outlineMaskMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Always
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Always
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_OutlineWidth",
-                    outlineWidth
-                );
-
+                outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
                 break;
 
             case Mode.OutlineVisible:
-
-                outlineMaskMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Always
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.LessEqual
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_OutlineWidth",
-                    outlineWidth
-                );
-
+                outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+                outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
                 break;
 
             case Mode.OutlineHidden:
-
-                outlineMaskMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Always
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Greater
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_OutlineWidth",
-                    outlineWidth
-                );
-
+                outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Greater);
+                outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
                 break;
 
             case Mode.OutlineAndSilhouette:
-
-                outlineMaskMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.LessEqual
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Always
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_OutlineWidth",
-                    outlineWidth
-                );
-
+                outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+                outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+                outlineFillMaterial.SetFloat("_OutlineWidth", outlineWidth);
                 break;
 
             case Mode.SilhouetteOnly:
-
-                outlineMaskMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.LessEqual
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_ZTest",
-                    (float)UnityEngine.Rendering.CompareFunction.Greater
-                );
-
-                outlineFillMaterial.SetFloat(
-                    "_OutlineWidth",
-                    0f
-                );
-
+                outlineMaskMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.LessEqual);
+                outlineFillMaterial.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Greater);
+                outlineFillMaterial.SetFloat("_OutlineWidth", 0f);
                 break;
         }
     }

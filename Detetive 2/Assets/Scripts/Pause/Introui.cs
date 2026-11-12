@@ -13,7 +13,7 @@ public class IntroUI : MonoBehaviour
     public RectTransform mensagemPC;
     public float duracaoAnimacaoPopup = 0.6f;
 
-    [Header("Texto (efeito máquina de escrever)")]
+    [Header("Texto")]
     public TMP_Text textoMensagem;
     public float velocidadeEscrita = 0.04f;
 
@@ -25,6 +25,14 @@ public class IntroUI : MonoBehaviour
     [Header("Configuração da investigação")]
     public float tempoParaInvestigar = 6f;
 
+    [Header("Lembrete do interrogatório")]
+    public float tempoAteLembrete = 20f;
+
+    public string mensagemObjetivo = "Vá investigar o suspeito.";
+
+    public string mensagemLembrete =
+        "Preciso ir logo para o interrogatório. Não posso perder mais tempo.";
+
     private Vector2 posicaoFinalPopup;
     private Vector2 posicaoInicialPopup;
 
@@ -34,9 +42,11 @@ public class IntroUI : MonoBehaviour
     private Coroutine sequenciaAtual;
     private Coroutine mensagemJogadorAtual;
     private Coroutine contadorInvestigacao;
+    private Coroutine lembreteInterrogatorio;
 
     private bool investigacaoAtivada = false;
     private bool dentroDoEmail = false;
+    private bool interrogatorioIniciado = false;
 
     public bool InvestigacaoAtivada
     {
@@ -113,29 +123,22 @@ public class IntroUI : MonoBehaviour
         }
     }
 
-    // =========================================
-    // CONTROLE DO EMAIL
-    // =========================================
-
     public void EntrouNoEmail()
     {
         Debug.Log("INTRO UI: Entrou no email.");
 
         if (investigacaoAtivada)
+        {
+            MostrarMensagem(mensagemObjetivo);
             return;
+        }
 
         dentroDoEmail = true;
 
-        // Cancela qualquer contagem anterior.
         CancelarContadorInvestigacao();
 
-        // Começa novamente do zero.
         contadorInvestigacao =
             StartCoroutine(ContarTempoInvestigacao());
-
-        Debug.Log(
-            "INTRO UI: Contagem de 6 segundos iniciada do zero."
-        );
     }
 
     public void SaiuDoEmail()
@@ -150,20 +153,23 @@ public class IntroUI : MonoBehaviour
         }
     }
 
-    // =========================================
-    // POPUP DO COMPUTADOR
-    // =========================================
-
     public void MostrarMensagem(string texto)
     {
+        if (investigacaoAtivada && !interrogatorioIniciado)
+        {
+            texto = mensagemObjetivo;
+        }
+
         if (sequenciaAtual != null)
             StopCoroutine(sequenciaAtual);
 
         sequenciaAtual =
-            StartCoroutine(MostrarPopupComTexto(texto));
+            StartCoroutine(
+                MostrarPopupComTexto(texto, investigacaoAtivada)
+            );
     }
 
-    IEnumerator MostrarPopupComTexto(string texto)
+    IEnumerator MostrarPopupComTexto(string texto, bool manterVisivel)
     {
         if (mensagemPC != null)
         {
@@ -231,16 +237,15 @@ public class IntroUI : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(6f);
+        if (!manterVisivel)
+        {
+            yield return new WaitForSeconds(6f);
 
-        EsconderMensagem();
+            EsconderMensagem();
+        }
 
         sequenciaAtual = null;
     }
-
-    // =========================================
-    // CONTADOR DA INVESTIGAÇÃO
-    // =========================================
 
     IEnumerator ContarTempoInvestigacao()
     {
@@ -273,25 +278,54 @@ public class IntroUI : MonoBehaviour
         }
 
         investigacaoAtivada = true;
-
         contadorInvestigacao = null;
 
-        Debug.Log(
-            "INTRO UI: 6 SEGUNDOS COMPLETOS!"
-        );
+        Debug.Log("INTRO UI: Investigação ativada!");
 
-        MostrarMensagem(
-            "Vá investigar o suspeito."
-        );
+        MostrarMensagem(mensagemObjetivo);
 
         MostrarMensagemJogador(
             "Vou lá fazer um rápido interrogatório com esse cara, antes de ir procurar e coletar as provas."
         );
+
+        if (lembreteInterrogatorio != null)
+            StopCoroutine(lembreteInterrogatorio);
+
+        lembreteInterrogatorio =
+            StartCoroutine(ContarLembreteInterrogatorio());
     }
 
-    // =========================================
-    // MENSAGEM DO JOGADOR
-    // =========================================
+    IEnumerator ContarLembreteInterrogatorio()
+    {
+        yield return new WaitForSeconds(tempoAteLembrete);
+
+        if (investigacaoAtivada && !interrogatorioIniciado)
+        {
+            MostrarMensagemJogador(mensagemLembrete);
+        }
+
+        lembreteInterrogatorio = null;
+    }
+
+    public void IniciouInterrogatorio()
+    {
+        interrogatorioIniciado = true;
+
+        if (lembreteInterrogatorio != null)
+        {
+            StopCoroutine(lembreteInterrogatorio);
+            lembreteInterrogatorio = null;
+        }
+
+        if (mensagemJogadorAtual != null)
+        {
+            StopCoroutine(mensagemJogadorAtual);
+            mensagemJogadorAtual = null;
+        }
+
+        EsconderMensagemJogador();
+        EsconderMensagem();
+    }
 
     public void MostrarMensagemJogador(string texto)
     {
@@ -379,12 +413,11 @@ public class IntroUI : MonoBehaviour
         mensagemJogadorAtual = null;
     }
 
-    // =========================================
-    // ESCONDER POPUP
-    // =========================================
-
     public void EsconderMensagem()
     {
+        if (investigacaoAtivada && !interrogatorioIniciado)
+            return;
+
         if (mensagemPC != null)
         {
             StartCoroutine(FadeOutMensagem());
@@ -399,13 +432,14 @@ public class IntroUI : MonoBehaviour
         if (cg == null)
             yield break;
 
+        float alphaInicial = cg.alpha;
         float t = 0f;
 
         while (t < 1f)
         {
             t += Time.deltaTime / 0.4f;
 
-            cg.alpha = Mathf.Lerp(1f, 0f, t);
+            cg.alpha = Mathf.Lerp(alphaInicial, 0f, t);
 
             yield return null;
         }
@@ -414,10 +448,6 @@ public class IntroUI : MonoBehaviour
 
         mensagemPC.gameObject.SetActive(false);
     }
-
-    // =========================================
-    // ESCONDER MENSAGEM DO JOGADOR
-    // =========================================
 
     public void EsconderMensagemJogador()
     {
@@ -435,13 +465,14 @@ public class IntroUI : MonoBehaviour
         if (cg == null)
             yield break;
 
+        float alphaInicial = cg.alpha;
         float t = 0f;
 
         while (t < 1f)
         {
             t += Time.deltaTime / 0.4f;
 
-            cg.alpha = Mathf.Lerp(1f, 0f, t);
+            cg.alpha = Mathf.Lerp(alphaInicial, 0f, t);
 
             yield return null;
         }
@@ -450,10 +481,6 @@ public class IntroUI : MonoBehaviour
 
         mensagemJogador.gameObject.SetActive(false);
     }
-
-    // =========================================
-    // CANCELAR CONTADOR
-    // =========================================
 
     public void CancelarContadorInvestigacao()
     {
@@ -469,13 +496,15 @@ public class IntroUI : MonoBehaviour
         }
     }
 
-    // =========================================
-    // RESETAR INVESTIGAÇÃO
-    // =========================================
-
     public void ResetarInvestigacao()
     {
         CancelarContadorInvestigacao();
+
+        if (lembreteInterrogatorio != null)
+        {
+            StopCoroutine(lembreteInterrogatorio);
+            lembreteInterrogatorio = null;
+        }
 
         if (mensagemJogadorAtual != null)
         {
@@ -491,6 +520,7 @@ public class IntroUI : MonoBehaviour
 
         investigacaoAtivada = false;
         dentroDoEmail = false;
+        interrogatorioIniciado = false;
 
         if (mensagemJogador != null)
         {
