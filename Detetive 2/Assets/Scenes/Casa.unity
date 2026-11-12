@@ -7513,6 +7513,33 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8498129247043533988, guid: 60be908c6d035074f8e0835432b98735, type: 3}
   m_PrefabInstance: {fileID: 761340181}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &784378771 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1890668632596332680, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
+  m_PrefabInstance: {fileID: 1122735153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &784378772
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 784378771}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 7985043580520754460, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
 --- !u!1 &785853428
 GameObject:
   m_ObjectHideFlags: 0
@@ -8455,8 +8482,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InteracaoMira
   cameraPlayer: {fileID: 1291685108}
   distanciaMaxima: 5
+  raioMira: 0.1
+  raizPlayer: {fileID: 0}
+  camadas:
+    serializedVersion: 2
+    m_Bits: 4294967291
   larguraNormal: 0
   larguraAoMirar: 8
+  debug: 0
 --- !u!114 &840304181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8472,9 +8505,6 @@ MonoBehaviour:
   outlineMode: 0
   outlineColor: {r: 1, g: 0.9864793, b: 0, a: 1}
   outlineWidth: 7
-  ativarAoMirar: 1
-  cameraPlayer: {fileID: 1291685108}
-  distanciaMaxima: 5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -11595,6 +11625,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -2026030285993248054, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1767457691}
+    - targetCorrespondingSourceObject: {fileID: 1890668632596332680, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 784378772}
     - targetCorrespondingSourceObject: {fileID: 2988847304606277007, guid: 02ad78cca7f19f843b49a2e580791919, type: 3}
       insertIndex: -1
       addedObject: {fileID: 679468877}
